@@ -1,0 +1,78 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 22/09/2016 06:31
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+  font-style: normal;
+}
+
+.flaticon-basket:before { content: "\f100"; }
+.flaticon-bouquet:before { content: "\f101"; }
+.flaticon-bucket:before { content: "\f102"; }
+.flaticon-chat-comment-oval-speech-bubble-with-text-lines:before { content: "\f103"; }
+.flaticon-construction:before { content: "\f104"; }
+.flaticon-construction-1:before { content: "\f105"; }
+.flaticon-construction-worker:before { content: "\f106"; }
+.flaticon-cut:before { content: "\f107"; }
+.flaticon-cut-1:before { content: "\f108"; }
+.flaticon-fence:before { content: "\f109"; }
+.flaticon-fountain:before { content: "\f10a"; }
+.flaticon-garden:before { content: "\f10b"; }
+.flaticon-gardener-with-shovel:before { content: "\f10c"; }
+.flaticon-gardening-shovel-tool-shape:before { content: "\f10d"; }
+.flaticon-group:before { content: "\f10e"; }
+.flaticon-handy-man-worker-silhouette:before { content: "\f10f"; }
+.flaticon-interface:before { content: "\f110"; }
+.flaticon-machine:before { content: "\f111"; }
+.flaticon-nature:before { content: "\f112"; }
+.flaticon-nature-1:before { content: "\f113"; }
+.flaticon-nature-2:before { content: "\f114"; }
+.flaticon-nature-3:before { content: "\f115"; }
+.flaticon-nature-4:before { content: "\f116"; }
+.flaticon-nature-5:before { content: "\f117"; }
+.flaticon-nature-6:before { content: "\f118"; }
+.flaticon-nature-7:before { content: "\f119"; }
+.flaticon-nature-8:before { content: "\f11a"; }
+.flaticon-people:before { content: "\f11b"; }
+.flaticon-people-1:before { content: "\f11c"; }
+.flaticon-people-2:before { content: "\f11d"; }
+.flaticon-people-3:before { content: "\f11e"; }
+.flaticon-people-4:before { content: "\f11f"; }
+.flaticon-people-5:before { content: "\f120"; }
+.flaticon-people-6:before { content: "\f121"; }
+.flaticon-people-7:before { content: "\f122"; }
+.flaticon-phone-call:before { content: "\f123"; }
+.flaticon-plant-on-a-hand:before { content: "\f124"; }
+.flaticon-scissors:before { content: "\f125"; }
+.flaticon-shovel:before { content: "\f126"; }
+.flaticon-shovel-and-ground:before { content: "\f127"; }
+.flaticon-smile:before { content: "\f128"; }
+.flaticon-sprout:before { content: "\f129"; }
+.flaticon-tool:before { content: "\f12a"; }
+.flaticon-tree-leaf:before { content: "\f12b"; }
+.flaticon-tree-with-many-leaves:before { content: "\f12c"; }
+.flaticon-trowel:before { content: "\f12d"; }
+.flaticon-water:before { content: "\f12e"; }
+.flaticon-watering:before { content: "\f12f"; }
+.flaticon-watering-can:before { content: "\f130"; }

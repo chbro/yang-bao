@@ -1,0 +1,46 @@
+<template>
+    <div class="xipu-search">
+        <img src="../assets/imgs/footer-logo.png" alt="云羊宝" class="logo">
+        <h2>东骏（有机）养殖生产管理追溯系统管理平台</h2>
+        <div>
+            <el-input placeholder="在此录入溯源码" size="medium" v-model="key"></el-input>
+            <el-button size="medium">搜索</el-button>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data () {
+        return {
+            key: null // 搜索关键词
+        }
+    }
+}
+</script>
+
+<style lang="stylus">
+@import '../assets/css/color'
+
+.xipu-search
+    background-color color-main
+    text-align center
+    padding-bottom 20px
+    .logo
+        margin-top 15px
+    h2
+        color #fff
+        font-size 18px
+        font-weight bold
+        margin-bottom 20px
+    .el-input
+        width 250px
+        vertical-align top
+
+    .el-button
+        background-color color-green
+        border-color color-green
+        color #fff
+        margin-left 10px
+        margin-bottom 50px
+</style>
