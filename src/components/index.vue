@@ -5,7 +5,8 @@
             <div class="container po-r">
                 <span class="block-title">追溯系统</span>
                 <div class="sec-title text-center">
-                    <vo-basic :data="chartData" :toggleCollapse="false" :pan="true" :zoom="true"></vo-basic>
+                    <img class="tree-logo" src="../assets/imgs/index/logo.png">
+                    <img src="../assets/imgs/index/tree-chart.png">
                 </div>
             </div>
 
@@ -20,12 +21,12 @@
             <div class="icon-group po-r">
                 <span class="block-title">溯源系统功能</span>
                 <div class="left-icons">
-                    <div v-for="(icon, i) in icons" :key="i">
+                    <router-link tag="div" v-for="(icon, i) in icons" :key="i" :to="icon.class">
                         <i class="el-icon-refresh"></i>
                         <span v-text="icon.text"></span>
-                    </div>
+                    </router-link>
                 </div>
-                <img src="../assets/imgs/footer-logo.png" width="24%">
+                <img src="../assets/imgs/index/icons-logo.png" width="24%">
             </div>
         </section>
 
@@ -37,46 +38,23 @@
 
 <script>
 import Search from '@/components/search'
-import { VoBasic } from 'vue-orgchart'
 
 export default {
     components: {
-        Search, VoBasic
+        Search
     },
 
     data () {
         return {
-            chartData: {
-                name: '（有机）养殖生产管理追溯系统',
-                children: [
-                    { name: '进销存系统' },
-                    {
-                        name: '有机养殖生产管理追溯系统',
-                        children: [
-                            { name: '专家课堂' },
-                            { name: '系谱档案' },
-                            { name: '卫生·疫控' },
-                            { name: '营养·生产' },
-                            { name: '疾病防治' },
-                            { name: '生产物资平台' },
-                            { name: '可视系统' },
-                            { name: '有机养殖环境追溯' },
-                            { name: '有机·监管' }
-                        ]
-                    },
-                    { name: '财务管理系统' }
-                ]
-            },
-
             icons: [
-                { class: 'hehe', text: '专家课堂' },
-                { class: 'hehe', text: '系谱档案' },
-                { class: 'hehe', text: '卫生疫控' },
-                { class: 'hehe', text: '营养生产' },
-                { class: 'hehe', text: '疾病防治' },
-                { class: 'hehe', text: '生产物资平台' },
-                { class: 'hehe', text: '可视系统' },
-                { class: 'hehe', text: '有机养殖环境追溯' }
+                { class: 'zhuanjia', text: '专家课堂' },
+                { class: 'xipu', text: '系谱档案' },
+                { class: 'weisheng', text: '卫生疫控' },
+                { class: 'yingyang', text: '营养生产' },
+                { class: 'jibing', text: '疾病防治' },
+                { class: 'shengchan', text: '生产物资平台' },
+                { class: 'keshi', text: '可视系统' },
+                { class: 'yangzhi', text: '有机养殖环境追溯' }
             ]
         }
     }
@@ -127,8 +105,10 @@ export default {
             padding 0 10px
             text-align justify
 .block-title
-    display inline-block
     position absolute
+    display inline-block
+    width 8em
+    text-align center
     top 0
     left 50%
     transform translate(-50%, -50%)
@@ -136,15 +116,16 @@ export default {
     color #fff
     border 2px solid #fff
     border-radius .2em
-    padding .4em 1em
+    padding .4em 0
     font-weight bold
 
 .icon-group
     padding 30px 10%
     .left-icons
-        width 75%
         display inline-block
+        width 75%
         vertical-align middle
+        cursor pointer
         >div
             display inline-block
             width 25%
@@ -154,4 +135,11 @@ export default {
                 display block
                 font-size 50px
                 margin-top 15px
+
+.tree-logo
+    display block
+    margin 30px auto 10px
+    width 105px
+.sec-title
+    margin-bottom 10px
 </style>

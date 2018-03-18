@@ -24,7 +24,7 @@ export default {
     },
 
     mounted () {
-        this.isNotLogin = this.$route.name !== 'login'
+        this.isNotLogin = !['login', 'register'].includes(this.$route.name)
     }
 }
 </script>

@@ -22,9 +22,9 @@
         <header class="header">
             <div class="container">
                 <div class="logo pull-left">
-                    <a href="index.html">
+                    <router-link to="/">
                         <img src="../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
-                    </a>
+                    </router-link>
                 </div>
                 <div class="header-right-info pull-right clearfix">
                     <div class="single-header-info">

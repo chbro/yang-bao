@@ -98,3 +98,8 @@ export default {
     }
 }
 </script>
+
+<style lang="stylus">
+a, a:hover
+    color #2891d1
+</style>

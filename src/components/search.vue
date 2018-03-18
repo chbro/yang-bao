@@ -1,6 +1,6 @@
 <template>
     <div class="xipu-search">
-        <img src="../assets/imgs/footer-logo.png" alt="云羊宝" class="logo">
+        <img src="../assets/imgs/index/logo.png" alt="云羊宝" class="logo">
         <h2>东骏（有机）养殖生产管理追溯系统管理平台</h2>
         <div>
             <el-input placeholder="在此录入溯源码" size="medium" v-model="key"></el-input>

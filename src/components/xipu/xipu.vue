@@ -1,19 +1,16 @@
 <template>
     <div>
-        <search/>
+        <search></search>
 
-        <div class="xipu-contaner">
+        <div class="xipu-container">
             <div class="bread-wrapper">
                 <el-breadcrumb separator="-">
-                    <el-breadcrumb-item to="{ path: '/' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item :to="{ path: '/' }">云羊宝</el-breadcrumb-item>
-                    <el-breadcrumb-item>有机养殖生产管理追溯系统</el-breadcrumb-item>
-                    <el-breadcrumb-item>系谱档案</el-breadcrumb-item>
+                    <el-breadcrumb-item v-for="(item, i) in bread" :key="i" to="item.to">{{ item.label }}</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
 
             <h2>系谱档案</h2>
-            <div class="query-form" ref="query-form">
+            <div class="query-form">
                 <div class="label-group">
                     <label v-for="(query, i) in query_labels" :key="i">
                         <span class="label-span">{{ query.label }}：</span>
@@ -48,14 +45,16 @@
                 <el-button class="query-btn" size="small" @click="launchQuery()">查询</el-button>
             </div>
 
-            <div class="query-result">
+            <div class="query-result" v-show="tableData.length">
                 <el-table
                     :data="tableData"
                     style="width: 100%">
-                    <el-table-column v-for="(column, i) in query_labels" :key="i" :label="column.label"></el-table-column>
-                    <el-table-column label="初登时间"></el-table-column>
-                    <el-table-column label="初登体重"></el-table-column>
-                    <el-table-column label="操作"></el-table-column>
+                    <el-table-column v-for="(column, i) in query_res" :key="i" :label="column.label" :prop="column.prop"></el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <router-link :to="'/xipu_detail/' + tableData[scope.$index].id">查看</router-link>
+                        </template>
+                    </el-table-column>
                 </el-table>
 
                 <el-pagination
@@ -78,15 +77,22 @@ export default {
 
     data () {
         return {
+            bread: [
+                {label: '首页', to: ''},
+                {label: '云羊宝', to: 'index'},
+                {label: '有机养殖生产管理追溯系统', to: ''},
+                {label: '系谱档案', to: 'xipu'}
+            ],
             select: {
                 'sex': [
                     {label: '男', value: 0},
                     {label: '女', value: 1}
                 ],
                 'color': [
-                    {label: '黑', value: 0},
-                    {label: '白', value: 1},
-                    {label: '灰', value: 2}
+                    {label: '黑色', value: 0},
+                    {label: '白色', value: 1},
+                    {label: '灰色', value: 2},
+                    {label: '灰色', value: 2}
                 ]
             },
             query_labels: [
@@ -103,6 +109,14 @@ export default {
                 {label: '母父号', model: 'fa_mother'},
                 {label: '母母号', model: 'mo_father'}
             ],
+            query_res: [
+                {label: '原耳牌', prop: 'erpai'},
+                {label: '免疫耳牌', prop: 'erpai_immune'},
+                {label: '颜色', prop: 'color'},
+                {label: '商标耳牌', prop: 'erpai_brand'},
+                {label: '种羊基地', prop: 'base'},
+                {label: '初登时间', prop: 'erpai'}
+            ],
             queries: {
                 erpai: null,
                 erpai_immune: null,
@@ -118,7 +132,6 @@ export default {
                 mo_mother: null,
                 time: null
             },
-
             tableData: []
         }
     },
@@ -131,6 +144,10 @@ export default {
                     query[v] = this.queries[v]
                 }
             })
+            this.tableData.push(
+                {id: 1, erpai: 12345, erpai_immune: 456465, erpai_brand: 879, color: '黑色'},
+                {id: 2, erpai: 12345, erpai_immune: 456465, erpai_brand: 879, color: '黑色'}
+            )
             console.log(query)
         }
     }
@@ -138,34 +155,15 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../assets/css/color'
+@import '~@/assets/css/color'
+@import '~@/assets/css/common'
 
-.xipu-contaner
-    width 80%
-    margin 0 auto
-    color color-main
-    text-align center
-
-    .bread-wrapper
-        border 1px solid color-main
-        height 45px
-        position relative
-        margin-top 15px
-        .el-breadcrumb
-            position absolute
-            top 0
-            bottom 0
-            line-height 45px
-            padding-left 20px
-            span[role="link"]
-                color color-main
-
-    >h2
-        font-size 24px
+.xipu-container
     .query-form
         color #fff
         background-color color-main
         padding-top 30px
+        margin-bottom 40px
         .label-group
             display flex
             flex-wrap wrap
@@ -224,7 +222,20 @@ export default {
             &.active
                 background-color color-main
                 color #fff
+        .el-pagination
+            margin 30px 0
+            text-align right
 
         .has-gutter
-            background-color color-main
+            tr, th
+                color #fff
+                background-color color-main
+
+        .el-table
+            .el-table__row
+                div
+                    text-align left
+                td
+                    background-color color-lightblue
+                    color color-main
 </style>

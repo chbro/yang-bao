@@ -72,8 +72,8 @@ export default {
         let month = date.getMonth() + 1
         let day = date.getDate()
 
-        let weekdayChinese = ['一', '二', '三', '四', '五', '六', '日']
-        let weekday = weekdayChinese[date.getDay() - 1]
+        let weekdayChinese = ['日', '一', '二', '三', '四', '五', '六']
+        let weekday = weekdayChinese[date.getDay()]
         month = formatDate(month)
         day = formatDate(day)
         this.datestr = `${year}-${month}-${day} 星期${weekday}`
