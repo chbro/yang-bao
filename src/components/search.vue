@@ -1,6 +1,6 @@
 <template>
     <div class="xipu-search">
-        <img src="../assets/imgs/index/logo.png" alt="云羊宝" class="logo">
+        <img src="../assets/imgs/index/logo-input.png" alt="云羊宝" class="logo">
         <h2>东骏（有机）养殖生产管理追溯系统管理平台</h2>
         <div>
             <el-input placeholder="在此录入溯源码" size="medium" v-model="key"></el-input>
@@ -33,14 +33,17 @@ export default {
         font-size 18px
         font-weight bold
         margin-bottom 20px
+        margin-top -10px
     .el-input
         width 250px
         vertical-align top
 
     .el-button
+        width 70px
+        min-width 70px
+        margin-left 10px
+        margin-bottom 50px
         background-color color-green
         border-color color-green
         color #fff
-        margin-left 10px
-        margin-bottom 50px
 </style>

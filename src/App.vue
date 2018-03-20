@@ -17,6 +17,14 @@ export default {
         AppHead, AppFoot
     },
 
+    watch: {
+        '$route' (to) {
+            document.documentElement.scrollTop = 0
+            document.body.scrollTop = 0
+            this.isNotLogin = !['login', 'register', 'findpass'].includes(to.name)
+        }
+    },
+
     data () {
         return {
             isNotLogin: false
@@ -24,7 +32,7 @@ export default {
     },
 
     mounted () {
-        this.isNotLogin = !['login', 'register'].includes(this.$route.name)
+        this.isNotLogin = !['login', 'register', 'findpass'].includes(this.$route.name)
     }
 }
 </script>

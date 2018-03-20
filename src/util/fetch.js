@@ -1,4 +1,10 @@
-let baseUrl = ''
+/* eslint-disable */
+
+import { jumpToLogin } from './jskit'
+
+const baseUrl = 'http://192.168.1.24:9010'
+const tokenStr = 'sheep-token'
+const authStr = 'Authorization'
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
@@ -24,8 +30,14 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            mode: "cors",
-            cache: "force-cache"
+            mode: 'cors',
+            cache: 'force-cache'
+        }
+
+        // 带上登录token
+        let token = localStorage.getItem(tokenStr)
+        if (token) {
+            requestConfig.headers[authStr] = token
         }
 
         if (type == 'POST') {
@@ -36,8 +48,22 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
         
         try {
             const response = await fetch(url, requestConfig);
+
+            // 拦截请求, token失效时跳转到登录页面
+            if (response.status === 401) {
+                jumpToLogin()
+            }
+            // 请求成功时刷新token
+            let newToken = response.headers.get(authStr)
+            if (newToken) {
+                window.localStorage.setItem(tokenStr, newToken)
+            }
+
             const responseJson = await response.json();
-            return responseJson
+
+            if (response) {
+                return responseJson
+            }
         } catch (error) {
             throw new Error(error)
         }
@@ -56,7 +82,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             }
 
             requestObj.open(type, url, true);
-            requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             requestObj.send(sendData);
 
             requestObj.onreadystatechange = () => {

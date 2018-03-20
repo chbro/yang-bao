@@ -91,7 +91,6 @@ export default {
                 'color': [
                     {label: '黑色', value: 0},
                     {label: '白色', value: 1},
-                    {label: '灰色', value: 2},
                     {label: '灰色', value: 2}
                 ]
             },
@@ -207,9 +206,11 @@ export default {
         display inline-block
         margin-left 20px
         .el-input
-            width 150px
+            width 100px
             input
                 border-radius 0
+                width w=100px !important
+                min-width w !important
             &+span
                 display inline-block
                 margin 0 10px
