@@ -13,66 +13,52 @@
             </ul>
         </section>
 
-        <header class="header">
-            <div class="container">
-                <div class="logo pull-left">
-                    <router-link to="/">
-                        <img src="../../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
-                    </router-link>
+        <header class="contact-info container">
+            <div class="logo">
+                <router-link to="/">
+                    <img src="../../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
+                </router-link>
+            </div>
+            <div class="header-right-info">
+                <div class="info-item">
+                    <div class="icon-box">
+                        <i class="iconfont icon-email"></i>
+                    </div>
+                    <div class="content">
+                        <h3>EMAIL</h3>
+                        <p>382102369@qq.com</p>
+                    </div>
                 </div>
-                <div class="header-right-info pull-right clearfix">
-                    <div class="single-header-info">
-                        <div class="icon-box">
-                            <div class="inner-box">
-                                <i class="flaticon-interface"></i>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h3>EMAIL</h3>
-                            <p>382102369@qq.com</p>
-                        </div>
+                <div class="info-item">
+                    <div class="icon-box">
+                        <i class="iconfont icon-call"></i>
                     </div>
-                    <div class="single-header-info">
-                        <div class="icon-box">
-                            <div class="inner-box">
-                                <i class="flaticon-phone-call"></i>
-                            </div>
-                        </div>
-                        <div class="content">
-                            <h3>Call Now</h3>
-                            <p><b>(0856)-6995166</b></p>
-                        </div>
+                    <div class="content">
+                        <h3>CALL NOW</h3>
+                        <p><b>(0856)-6995166</b></p>
                     </div>
-                    <div class="single-header-info">
-                        <a href="#" class="thm-btn">留言/Contact Us</a>
-                    </div>
+                </div>
+                <div class="info-item">
+                    <button>留言/Contact Us</button>
                 </div>
             </div>
         </header>
-        <nav class="mainmenu-area stricky" ref="indexNav">
-            <div class="container">
-                <div class="navigation pull-left">
-                    <div class="nav-header">
-                        <ul>
-                            <li><a href="index.html">首页</a></li>
-                            <li><a href="about.html">集团</a></li>
-                            <li><a href="service.html">产品</a></li>
-                            <li><a href="service-details.html">有机</a></li>
-                            <li><a href="contact.html">效益</a></li>
-                            <li><a href="contact.html">加盟</a></li>
-                            <li><a href="contact.html">新闻</a></li>
-                            <li><a href="contact.html">联系我们</a></li>
-                        </ul>
-                    </div>
-                    <div class="nav-footer">
-                        <button><i class="fa fa-bars"></i></button>
-                    </div>
-                </div>
-                <div class="search-box pull-right">
-                    <form action="#">
-                        <input type="text" placeholder="搜索-Search...">
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>
+
+        <nav class="header-menu container" ref="indexNav">
+            <div class="navigation">
+                <ul class="nav-tabs">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="about.html">集团</a></li>
+                    <li><a href="service.html">产品</a></li>
+                    <li><a href="service-details.html">有机</a></li>
+                    <li><a href="contact.html">效益</a></li>
+                    <li><a href="contact.html">加盟</a></li>
+                    <li><a href="contact.html">新闻</a></li>
+                    <li><a href="contact.html">联系我们</a></li>
+                </ul>
+                <div class="nav-search">
+                    <input placeholder="搜索-Search...">
+                    <button type="submit"><i class="el-icon-search"></i></button>
                 </div>
             </div>
         </nav>
@@ -96,15 +82,11 @@ export default {
 
             if (st > 180) {
                 if (!nav.classList.contains('fadeInDown')) {
-                    nav.classList.add('stricky-fixed')
                     nav.classList.add('fadeInDown')
-                    nav.classList.add('animated')
                 }
             } else {
                 if (nav.classList.contains('fadeInDown')) {
-                    nav.classList.remove('stricky-fixed')
                     nav.classList.remove('fadeInDown')
-                    nav.classList.remove('animated')
                 }
             }
         }
@@ -123,6 +105,8 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '~@/assets/css/color'
+
 .app-header
     .container
         padding 0 5%
@@ -136,6 +120,7 @@ export default {
                 color #000
         .social-icons
             float right
+            line-height 53px
             li
                 float right
                 cursor pointer
@@ -146,8 +131,93 @@ export default {
                     border-left 1px solid #eaeaea
                 &:hover
                     background-color color-green
+                    color #fff
+                    i
+                        color #fff
                 i
                     color #a4a4a4
                     margin-right 5px
                     font-size 20px
+.contact-info
+    overflow hidden
+    margin 30px auto
+    .logo
+        float left
+    .header-right-info
+        float right
+        .info-item
+            display inline-block
+            vertical-align middle
+            margin-right 10px
+            .icon-box
+                display inline-block
+                vertical-align bottom
+                margin-right 10px
+                padding 20px
+                border-radius 50%
+                border 1px solid #ddd
+                i
+                    font-size 30px
+                    color color-green
+            button
+                cursor pointer
+                background: #6aaf08;
+                border-radius: 30px;
+                display: inline-block;
+                color: #fff;
+                font-size: 12px;
+                font-family: 'Raleway', sans-serif;
+                text-transform: uppercase;
+                font-weight: bold;
+                padding: 12px 35px;
+                border: 2px solid transparent;
+                transition: all .3s ease;
+                &:hover
+                    background-color #fff
+                    color color-green
+                    border-color color-green
+        .content
+            display inline-block
+            font-size 13px
+
+.header-menu
+    background-color color-main
+    border-bottom 4px solid color-green
+    .navigation
+        overflow hidden
+        .nav-tabs
+            float left
+            li
+                float left
+                height h=66px
+                line-height h
+                a
+                    color #fff
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: color .3s ease;
+                    margin 0 20px
+                    &:hover
+                        color color-green
+        .nav-search
+            float right
+            input, button
+                background-color: transparent;
+                border: none;
+                outline: none;
+                font-size: 15px;
+                color: #dad9d9;
+                line-height: 65px;
+            input
+                width: 80%;
+            button
+                width 15%
+    &.fadeInDown
+        box-sizing border-box
+        position fixed
+        top 0
+        z-index 9
+        width 100%
+        padding 0 5%
 </style>

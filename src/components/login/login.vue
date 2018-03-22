@@ -144,7 +144,7 @@ export default {
 
 .login-main
     background-color color-main
-    height 720px
+    padding-bottom 15px
     .head_title
         padding-top 80px
     .logo

@@ -2,7 +2,7 @@
     <div>
         <el-container style="border: 1px solid #eee" class="container bg-blue">
             <el-aside width="200px" class="main-aside">
-                <div><img src="../assets/imgs/index/LOGO.png" width="120px"></div>
+                <div><img src="../assets/imgs/index/logo.png" width="120px"></div>
                 <el-tree :data="treedata" accordion></el-tree>
             </el-aside>
 

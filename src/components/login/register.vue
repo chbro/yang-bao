@@ -112,7 +112,6 @@ export default {
             } else {
                 callback()
             }
-            callback()
         }
         return {
             ruleForm: {
@@ -212,47 +211,47 @@ export default {
     }
     .reg-box
         .el-input__inner{
-          width 32%
-          min-width 150px
+            width 32%
+            min-width 150px
         }
         .el-input p{
-          display inline
-          color #000
-          background-color red
+            display inline
+            color #000
+            background-color red
         }
         .el-button{
-          width 30%
-          min-width 150px
-          margin-bottom 50px
+            width 30%
+            min-width 150px
+            margin-bottom 50px
         }
         .el-input{
-          width 25%
+            width 25%
         }
         .el-input__inner{
-          width 100%
+            width 100%
         }
     .reg-box p.note{
-      display: inline-block;
-      color: #000;
-      font-size: 14px;
-      padding-top: 0;
-      min-width: 150px;
-      width: 54%;
-      text-align left
+        display: inline-block;
+        color: #000;
+        font-size: 14px;
+        padding-top: 0;
+        min-width: 150px;
+        width: 54%;
+        text-align left
     }
     .reg-box p.note span{
-      color red
+        color red
     }
     .el-dropdown-link {
       cursor: pointer;
       color: #409EFF;
     }
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
-  .select-q
-    .el-input
-      width auto
-      input
-        width auto
+    .el-icon-arrow-down {
+        font-size: 12px;
+    }
+    .select-q
+        .el-input
+            width auto
+            input
+                width auto
 </style>

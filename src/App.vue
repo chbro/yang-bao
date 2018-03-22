@@ -21,7 +21,7 @@ export default {
         '$route' (to) {
             document.documentElement.scrollTop = 0
             document.body.scrollTop = 0
-            this.isNotLogin = !['login', 'register', 'findpass'].includes(to.name)
+            this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(to.name)
         }
     },
 
@@ -32,7 +32,7 @@ export default {
     },
 
     mounted () {
-        this.isNotLogin = !['login', 'register', 'findpass'].includes(this.$route.name)
+        this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(this.$route.name)
     }
 }
 </script>
@@ -47,6 +47,7 @@ body, html
 ul
     list-style none
     padding 0
+    margin 0
 a
     text-decoration none
     color color-main
