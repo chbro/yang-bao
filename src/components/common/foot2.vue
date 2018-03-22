@@ -7,7 +7,7 @@
                         <div class="col-md-3 col-sm-6">
                             <div class="footer-widget about-widget">
                                 <a href="#">
-                                    <img src="../assets/imgs/footer-logo.png" alt="Awesome Image" />
+                                    <img src="../../assets/imgs/footer-logo.png" alt="Awesome Image" />
                                 </a>
                                 <p>&nbsp;ADD：贵州省铜仁市沿河县官舟镇枣树村 </p>
                                 <ul class="contact">
@@ -43,21 +43,21 @@
                                 <h3 class="title">最新动态</h3>
                                 <ul>
                                     <li>
-                                        <span class="border"><img src="../assets/imgs/blog/s1.jpg" alt=""></span>
+                                        <span class="border"><img src="../../assets/imgs/blog/s1.jpg" alt=""></span>
                                         <div class="content">
                                             <a href="#">国务院扶贫办到贵州省努比亚牧业调研</a>
                                             <span>31 Dec, 2017</span>
                                         </div>
                                     </li>
                                     <li>
-                                        <span class="border"><img src="../assets/imgs/blog/s2.jpg" alt=""></span>
+                                        <span class="border"><img src="../../assets/imgs/blog/s2.jpg" alt=""></span>
                                         <div class="content">
                                             <a href="#">贵州省努比亚牧业被列入全市重点企业</a>
                                             <span>31 Dec, 2017</span>
                                         </div>
                                     </li>
                                     <li>
-                                        <span class="border"><img src="../assets/imgs/blog/s3.jpg" alt=""></span>
+                                        <span class="border"><img src="../../assets/imgs/blog/s3.jpg" alt=""></span>
                                         <div class="content">
                                             <a href="#">新华社记者对松桃“10＋1”扶贫模式进行专访</a>
                                             <span>31 Dec, 2017</span>

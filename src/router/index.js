@@ -6,6 +6,9 @@ import Xipu from '@/components/xipu/xipu'
 import XipuDetail from '@/components/xipu/xipu_detail'
 import Register from '@/components/login/register'
 import Login from '@/components/login/login'
+import Broadcast from '@/components/broadcast'
+import Chat from '@/components/chat/chat'
+import ProChat from '@/components/chat/prochat'
 
 Vue.use(Router)
 
@@ -17,6 +20,9 @@ export default new Router({
         {path: '/xipu', name: 'xipu', component: Xipu},
         {path: '/xipu_detail/:id', name: 'xipu_detail', component: XipuDetail},
         {path: '/register', name: 'register', component: Register},
-        {path: '/login', name: 'login', component: Login}
+        {path: '/broadcast', name: 'broadcast', component: Broadcast},
+        {path: '/login', name: 'login', component: Login},
+        {path: '/chat', name: 'chat', component: Chat},
+        {path: '/prochat', name: 'prochat', component: ProChat}
     ]
 })

@@ -23,7 +23,7 @@
             <div class="container">
                 <div class="logo pull-left">
                     <router-link to="/">
-                        <img src="../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
+                        <img src="../../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
                     </router-link>
                 </div>
                 <div class="header-right-info pull-right clearfix">
