@@ -1,28 +1,43 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+// 用户模块
 import Index from '@/components/index'
-import Admin from '@/components/admin'
+import Login from '@/components/login/login'
+import Register from '@/components/login/register'
+import FindPass from '@/components/login/findpass'
+
 import Xipu from '@/components/xipu/xipu'
 import XipuDetail from '@/components/xipu/xipu_detail'
-import Register from '@/components/login/register'
-import Login from '@/components/login/login'
 import Broadcast from '@/components/broadcast'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
+
+// 管理员模块
+import Admin from '@/components/admin/admin'
+import AdminIndex from '@/components/admin/index'
+import AdminUser from '@/components/admin/user'
 
 Vue.use(Router)
 
 /* eslint-disable object-property-newline */
 export default new Router({
     routes: [
+        // 用户模块
         {path: '/', name: 'index', component: Index},
-        {path: '/admin', name: 'admin', component: Admin},
+        {path: '/login', name: 'login', component: Login},
+        {path: '/register', name: 'register', component: Register},
+        {path: '/findpass', name: 'findpass', component: FindPass},
         {path: '/xipu', name: 'xipu', component: Xipu},
         {path: '/xipu_detail/:id', name: 'xipu_detail', component: XipuDetail},
-        {path: '/register', name: 'register', component: Register},
         {path: '/broadcast', name: 'broadcast', component: Broadcast},
-        {path: '/login', name: 'login', component: Login},
         {path: '/chat', name: 'chat', component: Chat},
-        {path: '/prochat', name: 'prochat', component: ProChat}
+        {path: '/prochat', name: 'prochat', component: ProChat},
+
+        // 管理员模块
+        {path: '/admin', component: Admin, children: [
+            {path: '', name: 'admin_index', component: AdminIndex},
+            {path: 'user', name: 'admin_user', component: AdminUser}
+        ]}
     ]
 })

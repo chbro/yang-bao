@@ -1,33 +1,36 @@
 <template>
-    <div class="reg-main">
-        <div class="head_title" style="text-align: center;">
-            <img src="../../assets/imgs/user-logo-2.png" alt="logo" class="logo">
+    <div class="login-main">
+        <div class="head_title">
+            <router-link to="/login"><img src="../../assets/imgs/index/logo-input.png" alt="logo"></router-link>
+            <h3>东俊（有机）养殖生产管理追溯系统管理平台</h3>
         </div>
 
-        <div class="reg-box">
+        <div class="box reg-box">
             <p>会员注册</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="用户名" prop="username">
                     <el-input style="display:inline-block;" type="test" v-model="ruleForm.username" auto-complete="off"></el-input>
-                    <p class="note">&nbsp;&nbsp;&nbsp;&nbsp;<span>*</span>账户名是您以后登录所用的账号，可以由字母a-z或数字组成</p>
+                    <p class="note"><span>*</span>账户名是您以后登录所用的账号，可以由字母a-z或数字组成</p>
                 </el-form-item>
                 <el-form-item label="email" prop="email">
                     <el-input type="test" v-model="ruleForm.email" auto-complete="off"></el-input>
-                    <p class="note">&nbsp;&nbsp;&nbsp;&nbsp;<span>*</span>您将使用此邮箱登录，请输入正确的常用邮箱</p>
+                    <p class="note"><span>*</span>您将使用此邮箱登录，请输入正确的常用邮箱</p>
                 </el-form-item>
                 <el-form-item label="密码" prop="pass">
                     <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
-                    <p class="note">&nbsp;&nbsp;&nbsp;&nbsp;<span>*</span>6-20位字符。密码由字母a-z及数字组成</p>
+                    <p class="note"><span>*</span>6-20位字符。密码由字母a-z及数字组成</p>
                 </el-form-item>
-                <el-form-item label="密码强度">
-                    <el-tag>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;弱&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-tag>
-                    <el-tag type="success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-tag>
-                    <el-tag type="info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;强&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-tag>
+                <el-form-item label="密码强度" class="pass-level">
+                    <template v-show="strength">
+                        <el-tag type="warning" v-if="strength === 1 || strength === 0">弱</el-tag>
+                        <el-tag type="info" v-else-if="strength === 2">中</el-tag>
+                        <el-tag type="success" v-else-if="strength === 3">强</el-tag>
+                    </template>
                 </el-form-item>
 
                 <el-form-item label="确认密码" prop="checkPass">
                     <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
-                    <p class="note">&nbsp;&nbsp;&nbsp;&nbsp;<span>*</span>请再次输入密码</p>
+                    <p class="note"><span>*</span>请再次输入密码</p>
                 </el-form-item>
                 <el-form-item label="MSN" prop="MSN">
                     <el-input type="test" v-model="ruleForm.MSN" auto-complete="off"></el-input>
@@ -67,6 +70,8 @@
 </template>
 <script>
 import { Register } from '@/util/getdata'
+import { checkPassStrength, validateName, validateEmail } from '@/util/jskit'
+import md5 from 'md5'
 
 export default {
     data () {
@@ -93,26 +98,7 @@ export default {
                 callback()
             }
         }
-        var checkusername = (rule, value, callback) => {
-            let len = value.length
-            if (value === '') {
-                callback(new Error('用户名不能为空'))
-            } else if (len < 4 || len > 20) {
-                callback(new Error('用户名长度必须是4-20'))
-            } else {
-                callback()
-            }
-        }
-        var checkemail = (rule, value, callback) => {
-            let mailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
-            if (value === '') {
-                callback(new Error('email不能为空'))
-            } else if (!mailReg.test(value)) {
-                callback(new Error('请输入正确的email'))
-            } else {
-                callback()
-            }
-        }
+
         return {
             ruleForm: {
                 pass: '',
@@ -134,10 +120,10 @@ export default {
                     { validator: validatePass2, trigger: 'blur' }
                 ],
                 username: [
-                    { validator: checkusername, trigger: 'blur' }
+                    { validator: validateName, trigger: 'blur' }
                 ],
                 email: [
-                    { validator: checkemail, trigger: 'blur' }
+                    { validator: validateEmail, trigger: 'blur' }
                 ]
             },
             options: [
@@ -147,16 +133,24 @@ export default {
                 {value: '选项4', label: '您的小学教师的姓名是？'},
                 {value: '选项5', label: '您毕业的学校是？'}
             ],
-            value: ''
+            value: '',
+            strength: 0
         }
     },
+
+    watch: {
+        'ruleForm.pass' (newV) {
+            this.strength = checkPassStrength(newV)
+        }
+    },
+
     methods: {
         submitForm (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     let data = {
                         pkUserid: this.ruleForm.username,
-                        userPwd: this.ruleForm.pass,
+                        userPwd: md5(this.ruleForm.pass),
                         userTelephone: this.ruleForm.telephone
                     }
                     Register(data).then(res => {
@@ -172,7 +166,6 @@ export default {
                         this.$message.error('注册失败')
                     })
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
@@ -181,70 +174,39 @@ export default {
 }
 </script>
 <style lang="stylus">
-@import '../../assets/css/color'
+@import '~@/assets/css/color'
+@import '~@/assets/css/login-common'
 
-.reg-main
-    background-color color-main
-    height 1500px
-    .head_title{
-        padding-top 100px
-    }
-    .logo{
-        text-align center
-    }
-    .reg-box {
-        width 840px
-        min-width 180px
-        background-color #ffffff
-        margin 0 auto
-        margin-top 25px
-    }
-    .reg-box p{
-        color color-main
-        text-align center
-        font-size 1.5em
-        padding-top 5%
-    }
-    .demo-ruleForm{
-        width 100%
-        margin-left 5%
-    }
+.login-main
     .reg-box
-        .el-input__inner{
-            width 32%
+        width 840px
+        .el-input__inner
             min-width 150px
-        }
-        .el-input p{
-            display inline
-            color #000
-            background-color red
-        }
-        .el-button{
-            width 30%
-            min-width 150px
+        .el-button
+            width 30% !important
             margin-bottom 50px
-        }
-        .el-input{
-            width 25%
-        }
-        .el-input__inner{
-            width 100%
-        }
-    .reg-box p.note{
-        display: inline-block;
-        color: #000;
-        font-size: 14px;
-        padding-top: 0;
-        min-width: 150px;
-        width: 54%;
-        text-align left
-    }
-    .reg-box p.note span{
-        color red
-    }
+        .el-input
+            width 32% !important
+            p
+                display inline
+                color #000
+                background-color red
+        .note
+            display: inline-block;
+            color: #000;
+            font-size: 14px;
+            padding-top: 0;
+            min-width: 150px;
+            width: 54%;
+            text-align left
+            margin 0
+            margin-left 15px
+            span
+                color red
+                margin-right 5px
     .el-dropdown-link {
-      cursor: pointer;
-      color: #409EFF;
+        cursor: pointer;
+        color: #409EFF;
     }
     .el-icon-arrow-down {
         font-size: 12px;
@@ -254,4 +216,9 @@ export default {
             width auto
             input
                 width auto
+
+    // password level
+    .pass-level
+        .el-tag
+            padding 0 30px
 </style>

@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <el-container style="border: 1px solid #eee" class="container bg-blue">
+    <div class="app-home">
+        <el-container class="container bg-blue">
             <el-aside width="200px" class="main-aside">
-                <div><img src="../assets/imgs/index/logo.png" width="120px"></div>
-                <el-tree :data="treedata" accordion></el-tree>
+                <div><img src="../../assets/imgs/index/logo-input.png" width="120px"></div>
+                <el-tree :data="treedata" accordion @node-click="clickTree"></el-tree>
             </el-aside>
 
             <el-container class="app-main">
@@ -43,58 +43,7 @@
                     </div>
 
                     <div class="main-content">
-                        <p class="card-title">有机养殖环境追溯</p>
-
-                        <div class="border-main">
-                            <div class="summary">
-                                <el-input size="small" v-for="(item, i) in summary" :key="i" v-model="summaryModel[item.model]">
-                                    <template slot="prepend">{{ item.label }}</template>
-                                </el-input>
-                            </div>
-
-                            <div class="card">
-                                <p class="card-title">粗饲料配方</p>
-                                <div class="border-main">
-                                    <div class="card-item">
-                                        <el-input size="small">
-                                            <template slot="prepend">青料:</template>
-                                        </el-input> , 用量
-                                        <el-input class="input-days" size="small"></el-input>%/天。
-                                        <span><i class="el-icon-caret-right"></i>增加青料设置</span>
-                                    </div>
-                                    <div class="card-item">
-                                        <el-input size="small">
-                                            <template slot="prepend">干料:</template>
-                                        </el-input> , 用量
-                                        <el-input class="input-days" size="small"></el-input>%/天。
-                                        <span><i class="el-icon-caret-right"></i>增加干料设置</span>
-                                    </div>
-                                    <div class="card-item">
-                                        <el-input size="small">
-                                            <template slot="prepend">其他:</template>
-                                        </el-input> , 用量
-                                        <el-input class="input-days" size="small"></el-input>%/天。
-                                        <span><i class="el-icon-caret-right"></i>增加“其他”设置</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="admin-submit">
-                                <el-input v-model="submit.operator" size="small">
-                                    <template slot="prepend">操作员:</template>
-                                </el-input>
-                                <el-input v-model="submit.reviewer" size="small">
-                                    <template slot="prepend">技术审核:</template>
-                                </el-input>
-                                <el-input v-model="submit.executor" size="small">
-                                    <template slot="prepend">监督执行:</template>
-                                </el-input>
-                            </div>
-                            <div class="admin-send">
-                                <el-button type="primary">取消</el-button>
-                                <el-button type="primary">提交/更新</el-button>
-                            </div>
-                        </div>
+                        <router-view></router-view>
                     </div>
                 </el-main>
 
@@ -112,6 +61,14 @@ export default {
     data () {
         return {
             treedata: [
+                {
+                    label: '权限管理',
+                    children: [
+                        {label: '用户管理', to: '/admin/user'},
+                        {label: '权限管理', to: '/admin/access'},
+                        {label: '角色管理', to: '/admin/role'}
+                    ]
+                },
                 {label: '可视系统', children: [{label: '1-1'}]},
                 {label: '有机养殖环境追溯', children: [{label: '2-1'}]}
             ],
@@ -125,26 +82,7 @@ export default {
 
             msg_cnt: 10,
             options: [1, 2],
-            search_key: null,
-            submit: {
-                operator: null,
-                reviewer: null,
-                executor: null
-            },
-            summary: [
-                {label: '栋号:', model: 'house_id'},
-                {label: '使用日期:', model: 'date'},
-                {label: '羊数:', model: 'num'},
-                {label: '阶段:', model: 'stage'},
-                {label: '饮水:', model: 'water'}
-            ],
-            summaryModel: {
-                house_id: null,
-                date: null,
-                num: null,
-                stage: null,
-                water: null
-            }
+            search_key: null
         }
     },
 
@@ -161,12 +99,20 @@ export default {
         month = formatDate(month)
         day = formatDate(day)
         this.datestr = `${year}-${month}-${day} 星期${weekday}`
+    },
+
+    methods: {
+        clickTree (node, data) {
+            if (node.to) {
+                this.$router.push(node.to)
+            }
+        }
     }
 }
 </script>
 
 <style lang="stylus">
-@import '../assets/css/color'
+@import '~@/assets/css/color'
 
 .fl-l
     float left
@@ -177,7 +123,12 @@ export default {
     border-top 0
     padding 10px
 
+.app-home
+    padding 20px 0 50px
+    background-color color-main
+
 .main-aside
+    min-height 500px
     border-right 5px solid #fff
     text-align center
     .el-tree-node__content
@@ -187,10 +138,11 @@ export default {
         background-color color-main
     div[role="group"]
         .el-tree-node__content,
-        .el-tree-node:focus>.el-tree-node__content,
-        .el-tree-node__content:hover
+        .el-tree-node:focus>.el-tree-node__content
             background-color #fff
             color color-main
+        .el-tree-node__content:hover
+            background-color #ddd
     .el-tree>div
         border-bottom 1px solid #ddd
 
@@ -213,8 +165,8 @@ export default {
 .app-main
     div.el-input-group__prepend
         width 100px
-        background-color color-main
         color #fff
+        background-color color-main
     .el-input
         input,
         .el-input-group__prepend
@@ -330,4 +282,11 @@ export default {
     .el-button
         padding 5px 20px
         border-radius 0
+
+.app-home
+    .container
+        padding 0 10%
+        .el-aside,
+        .app-main
+            border 1px solid #fff
 </style>

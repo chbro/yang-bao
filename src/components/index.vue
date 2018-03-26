@@ -22,7 +22,7 @@
             <div class="icon-group po-r">
                 <span class="block-title">溯源系统功能</span>
                 <div class="left-icons">
-                    <router-link tag="div" to="" v-for="(item, i) in icons" :key="i">
+                    <router-link tag="div" to="/xipu" v-for="(item, i) in icons" :key="i">
                         <i :class="'iconfont icon-' + item.class"></i>
                         <span v-text="item.text"></span>
                     </router-link>

@@ -1,19 +1,19 @@
 <template>
     <div class="login-main">
-        <div class="head_title" style="text-align: center;">
-            <img src="../../assets/imgs/user-logo-2.png" alt="logo" class="logo">
-            <!-- <p class="title">东俊（有机）养殖生产管理追溯系统管理平台</p> -->
+        <div class="head_title">
+            <router-link to="/login"><img src="../../assets/imgs/index/logo-input.png" alt="logo"></router-link>
+            <h3>东俊（有机）养殖生产管理追溯系统管理平台</h3>
         </div>
 
         <div class="box">
             <p>登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input style="width:90%;min-width:150px;" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
+                    <el-input type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="pass">
-                    <el-input style="width:90%;min-width:150px;" type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
+                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="code">
@@ -24,7 +24,7 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button style="width:90%;min-width:150px;" type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
                 </el-form-item>
 
                 <el-form-item>
@@ -33,13 +33,15 @@
             </el-form>
         </div>
         <div class="link">
-            <router-link to="/register">新用户注册</router-link> | <router-link to="/">找回密码</router-link>
+            <router-link to="/register">新用户注册</router-link> | <router-link to="/findpass">找回密码</router-link>
         </div>
     </div>
 </template>
 <script>
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
+import { validateName, validateCode } from '@/util/jskit'
+import md5 from 'md5'
 
 export default {
     components: {
@@ -54,25 +56,6 @@ export default {
             }
         }
 
-        var validateUser = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入用户名'))
-            } else {
-                callback()
-            }
-        }
-
-        var validateCode = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入验证码'))
-            } else if (value !== this.identifyCode) {
-                // callback(new Error('验证码不正确'))
-                callback()
-            } else {
-                callback()
-            }
-        }
-
         return {
             ruleForm: {
                 username: '',
@@ -81,7 +64,7 @@ export default {
             },
             rules: {
                 username: [
-                    { validator: validateUser, trigger: 'blur' }
+                    { validator: validateName, trigger: 'blur' }
                 ],
                 pass: [
                     { validator: validatePass, trigger: 'blur' }
@@ -102,11 +85,8 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     let data = {
-
-                        // pkUserid: this.ruleForm.username,
-                        // userPwd: this.ruleForm.pass,
-                        pkUserid: '0003',
-                        userPwd: '12345ac'
+                        pkUserid: this.ruleForm.username,
+                        userPwd: md5(this.ruleForm.pass)
                     }
                     Login(data).then(res => {
                         if (res.meta.code === 0) {
@@ -118,7 +98,6 @@ export default {
                         this.$message.error('登录失败')
                     })
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
@@ -140,29 +119,10 @@ export default {
 }
 </script>
 <style lang="stylus">
-@import '../../assets/css/color'
+@import '~@/assets/css/color'
+@import '~@/assets/css/login-common'
 
 .login-main
-    background-color color-main
-    padding-bottom 15px
-    .head_title
-        padding-top 80px
-    .logo
-        text-align center
-    .box
-        width 420px
-        min-width 180px
-        background-color #ffffff
-        margin 0 auto
-        margin-top 25px
-    .box p
-        color color-main
-        text-align center
-        font-size 1.5em
-        padding-top 5%
-    .demo-ruleForm
-        width 100%
-        margin-left 5%
     .code
         float right
         margin-right 38%

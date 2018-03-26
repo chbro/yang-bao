@@ -5,9 +5,16 @@
                 <p><span>“云羊宝”-中国努比亚有机山羊品牌官方网</span>&nbsp;&nbsp;&nbsp;&nbsp;http://www.nubiangoat.cn</p>
             </div>
             <ul class="social-icons">
+                <el-popover
+                    ref="popover"
+                    placement="bottom-end"
+                    width="200"
+                    trigger="hover">
+                    <img src="../../assets/imgs/weixin.png" width="200px">
+                </el-popover>
                 <li><i class="iconfont icon-laptop"></i>PC端</li>
                 <li><i class="iconfont icon-phone"></i>移动端</li>
-                <li><i class="iconfont icon-wechat"></i>公众号</li>
+                <li v-popover:popover><i class="iconfont icon-wechat"></i>公众号</li>
                 <li><i class="iconfont icon-h5"></i>小程序</li>
                 <li><i class="iconfont icon-wbcloudy"></i>云羊宝</li>
             </ul>
@@ -16,7 +23,7 @@
         <header class="contact-info container">
             <div class="logo">
                 <router-link to="/">
-                    <img src="../../assets/imgs/logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
+                    <img src="../../assets/imgs/header-logo.png" alt="“云羊宝”-中国努比亚有机山羊品牌官方网"/>
                 </router-link>
             </div>
             <div class="header-right-info">
@@ -127,7 +134,7 @@ export default {
                 border-right 1px solid #eaeaea
                 padding 0 16px
                 transition background-color .3s ease
-                &:first-child
+                &:last-child
                     border-left 1px solid #eaeaea
                 &:hover
                     background-color color-green
@@ -160,6 +167,7 @@ export default {
                     font-size 30px
                     color color-green
             button
+                outline 0
                 cursor pointer
                 background: #6aaf08;
                 border-radius: 30px;

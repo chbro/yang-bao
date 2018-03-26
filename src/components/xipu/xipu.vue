@@ -29,7 +29,7 @@
                     <span class="label-span">初登时间：</span>
                     <el-date-picker
                         size="small"
-                        v-model="queries.time"
+                        v-model="queries.birthTime"
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="起始日期"
@@ -37,9 +37,9 @@
                     </el-date-picker>
                     <div class="quert-weight">
                         <span class="label-span">初登体重：</span>
-                        <el-input size="small" v-model="queries.left_weight"></el-input> 公斤
+                        <el-input size="small" v-model="queries.birthWeightStart"></el-input> 公斤
                         <span>至</span>
-                        <el-input size="small" v-model="queries.right_weight"></el-input> 公斤
+                        <el-input size="small" v-model="queries.birthWeightEnd"></el-input> 公斤
                     </div>
                 </div>
                 <el-button class="query-btn" size="small" @click="launchQuery()">查询</el-button>
@@ -69,6 +69,7 @@
 
 <script>
 import Search from '@/components/search'
+import { queryXipu } from '@/util/getdata'
 
 export default {
     components: {
@@ -85,51 +86,58 @@ export default {
             ],
             select: {
                 'sex': [
-                    {label: '男', value: 0},
-                    {label: '女', value: 1}
+                    {label: '请选择', value: 0},
+                    {label: '公', value: 1},
+                    {label: '母', value: 2}
                 ],
                 'color': [
-                    {label: '黑色', value: 0},
-                    {label: '白色', value: 1},
-                    {label: '灰色', value: 2}
+                    {label: '请选择', value: 0},
+                    {label: '棕色', value: 1},
+                    {label: '暗红', value: 2},
+                    {label: '杂色', value: 3}
                 ]
             },
             query_labels: [
-                {label: '原耳牌', model: 'erpai'},
-                {label: '免疫耳牌', model: 'erpai_immune'},
-                {label: '商标耳牌', model: 'erpai_brand'},
-                {label: '种羊基地', model: 'base'},
+                {label: '原耳牌', model: 'selfEartag'},
+                {label: '免疫耳牌', model: 'immuneEartag'},
+                {label: '商标耳牌', model: 'trademarkEartag'},
+                {label: '种羊基地', model: 'breedingSheepBase'},
                 {label: '颜色', model: 'color'},
                 {label: '性别', model: 'sex'},
-                {label: '父号', model: 'father'},
-                {label: '母号', model: 'mother'},
-                {label: '父父号', model: 'fa_father'},
-                {label: '父母号', model: 'fa_mother'},
-                {label: '母父号', model: 'fa_mother'},
-                {label: '母母号', model: 'mo_father'}
+                {label: '父号', model: 'earTagOfFather'},
+                {label: '母号', model: 'earTagOfMother'},
+                {label: '父父号', model: 'earTagOfFathersFather'},
+                {label: '父母号', model: 'earTagOfFathersMother'},
+                {label: '母父号', model: 'earTagOfMothersFather'},
+                {label: '母母号', model: 'earTagOfMothersMother'}
             ],
             query_res: [
-                {label: '原耳牌', prop: 'erpai'},
-                {label: '免疫耳牌', prop: 'erpai_immune'},
+                {label: '原耳牌', prop: 'selfEartag'},
+                {label: '免疫耳牌', prop: 'immuneEartag'},
                 {label: '颜色', prop: 'color'},
-                {label: '商标耳牌', prop: 'erpai_brand'},
-                {label: '种羊基地', prop: 'base'},
-                {label: '初登时间', prop: 'erpai'}
+                {label: '商标耳牌', prop: 'trademarkEartag'},
+                {label: '种羊基地', prop: 'breedingSheepBase'},
+                {label: '初登时间', prop: 'gmtCreate'}
             ],
             queries: {
-                erpai: null,
-                erpai_immune: null,
-                erpai_brand: null,
-                base: null,
+                selfEartag: null,
+                immuneEartag: null,
+                trademarkEartag: null,
+                breedingSheepBase: null,
                 color: null,
                 sex: null,
-                father: null,
-                mother: null,
-                fa_father: null,
-                fa_mother: null,
-                mo_father: null,
-                mo_mother: null,
-                time: null
+                earTagOfFather: null,
+                earTagOfMother: null,
+                earTagOfFathersFather: null,
+                earTagOfFathersMother: null,
+                earTagOfMothersFather: null,
+                earTagOfMothersMother: null,
+                birthTime: null,
+                birthWeightStart: null,
+                birthWeightEnd: null,
+                remark: null,
+                gmtCreate: null,
+                gmtModified: null
             },
             tableData: []
         }
@@ -139,14 +147,25 @@ export default {
         launchQuery () {
             let query = {}
             Object.keys(this.queries).forEach(v => {
-                if (this.queries[v] !== null) {
-                    query[v] = this.queries[v]
+                let val = this.queries[v]
+                if (val !== null && val !== undefined && val !== '') {
+                    query[v] = val
                 }
             })
-            this.tableData.push(
-                {id: 1, erpai: 12345, erpai_immune: 456465, erpai_brand: 879, color: '黑色'},
-                {id: 2, erpai: 12345, erpai_immune: 456465, erpai_brand: 879, color: '黑色'}
-            )
+            if (!Object.keys(query).length) {
+                this.$message.warning('请输入查询条件')
+                return
+            }
+
+            queryXipu(query).then(res => {
+                if (res.meta.code === 0) {
+                    console.log(res.data)
+                } else {
+                    this.$message.error(res.meta.errorMsg || '查询失败')
+                }
+            }, _ => {
+                this.$message.error('查询失败')
+            })
             console.log(query)
         }
     }
@@ -181,7 +200,7 @@ export default {
                         outline 0 none
                 .el-select
                     .el-input
-                        width 182px
+                        width 100%
         .label-span
             display inline-block
             width 30%
@@ -191,7 +210,7 @@ export default {
             text-align left
             padding-left 45px
             .label-span
-                width 78px
+                width 85px
                 margin-right 10px
             .el-date-editor
                 border-radius 0

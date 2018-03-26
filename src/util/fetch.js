@@ -2,7 +2,8 @@
 
 import { jumpToLogin } from './jskit'
 
-const baseUrl = 'http://192.168.1.24:9010'
+// const baseUrl = 'http://218.199.68.33:9090'
+const baseUrl = 'http://192.168.1.120:9010'
 const tokenStr = 'sheep-token'
 const authStr = 'Authorization'
 
