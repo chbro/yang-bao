@@ -46,7 +46,6 @@
                         <router-view></router-view>
                     </div>
                 </el-main>
-
             </el-container>
         </el-container>
 
@@ -65,7 +64,7 @@ export default {
                     label: '权限管理',
                     children: [
                         {label: '用户管理', to: '/admin/user'},
-                        {label: '权限管理', to: '/admin/access'},
+                        {label: '权限管理', to: '/admin/auth'},
                         {label: '角色管理', to: '/admin/role'}
                     ]
                 },

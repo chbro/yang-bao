@@ -45,7 +45,7 @@
                 <el-button class="query-btn" size="small" @click="launchQuery()">查询</el-button>
             </div>
 
-            <div class="query-result" v-show="tableData.length">
+            <div class="query-result" v-if="tableData.length">
                 <el-table
                     :data="tableData"
                     style="width: 100%">
@@ -58,9 +58,12 @@
                 </el-table>
 
                 <el-pagination
-                    :page-sizes="[10, 20, 30]"
                     layout="sizes, prev, pager, next, total, jumper"
-                    :total="1000">
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="page"
+                    :page-sizes="[10, 20, 30]"
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -139,12 +142,15 @@ export default {
                 gmtCreate: null,
                 gmtModified: null
             },
-            tableData: []
+            tableData: [],
+
+            total: 0,
+            page: 1
         }
     },
 
     methods: {
-        launchQuery () {
+        getQuery () {
             let query = {}
             Object.keys(this.queries).forEach(v => {
                 let val = this.queries[v]
@@ -152,21 +158,34 @@ export default {
                     query[v] = val
                 }
             })
+            return query
+        },
+
+        launchQuery ({currentPage, pageSize}) {
+            let query = this.getQuery()
             if (!Object.keys(query).length) {
                 this.$message.warning('请输入查询条件')
                 return
             }
 
+            query.page = currentPage || this.page
+            query.size = pageSize || this.size
             queryXipu(query).then(res => {
                 if (res.meta.code === 0) {
                     console.log(res.data)
                 } else {
                     this.$message.error(res.meta.errorMsg || '查询失败')
                 }
-            }, _ => {
-                this.$message.error('查询失败')
             })
             console.log(query)
+        },
+
+        handleCurrentChange (currentPage) {
+            this.launchQuery({currentPage})
+        },
+
+        handleSizeChange (pageSize) {
+            this.launchQuery({pageSize})
         }
     }
 }

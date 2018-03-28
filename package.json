@@ -13,6 +13,7 @@
   "dependencies": {
     "element-ui": "^2.2.1",
     "md5": "^2.2.1",
+    "rui-vue-emoji": "^1.1.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

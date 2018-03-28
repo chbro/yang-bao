@@ -52,3 +52,18 @@ export const validateCode = (rule, value, callback) => {
         callback()
     }
 }
+
+export const keepLastIndex = obj => {
+    let range
+    if (window.getSelection) {
+        obj.focus()
+        range = window.getSelection()
+        range.selectAllChildren(obj)
+        range.collapseToEnd()
+    } else if (document.selection) {
+        range = document.selection.createRange()
+        range.moveToElementText(obj)
+        range.collapse(false)
+        range.select()
+    }
+}

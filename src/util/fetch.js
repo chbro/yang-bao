@@ -1,11 +1,14 @@
 /* eslint-disable */
 
 import { jumpToLogin } from './jskit'
+import Vue from 'vue'
 
-// const baseUrl = 'http://218.199.68.33:9090'
-const baseUrl = 'http://192.168.1.120:9010'
+// const baseUrl = 'http://192.168.1.120:9010'
+// const baseUrl = 'http://192.168.1.112:9090'
+const baseUrl = 'http://218.199.68.33:9090'
 const tokenStr = 'sheep-token'
 const authStr = 'Authorization'
+let app = new Vue()
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
@@ -53,6 +56,10 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             // 拦截请求, token失效时跳转到登录页面
             if (response.status === 401) {
                 jumpToLogin()
+                return
+            } else if (String(response.status).charAt(0) !== '2') {
+                app.$message.error('请求失败')
+                return
             }
             // 请求成功时刷新token
             let newToken = response.headers.get(authStr)
@@ -66,7 +73,9 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
                 return responseJson
             }
         } catch (error) {
-            throw new Error(error)
+            app.$message.error(error.message || '请求失败')
+            return false
+            // throw new Error(error)
         }
     } else {
         return new Promise((resolve, reject) => {

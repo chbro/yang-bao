@@ -98,9 +98,19 @@
 </template>
 
 <script>
+import { getXipuDetail } from '@/util/getdata'
+
 export default {
     mounted () {
-        console.log(this.$route.params.id)
+        getXipuDetail(this.$route.params.id).then(res => {
+            if (res.meta.code === 0) {
+                this.details = res.data
+            } else {
+                this.$message.error(res.meta.errorMsg || '获取详情失败')
+            }
+        }, _ => {
+            this.$message.error('获取详情失败')
+        })
     },
 
     data () {

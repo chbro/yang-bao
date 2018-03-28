@@ -17,6 +17,8 @@ import ProChat from '@/components/chat/prochat'
 import Admin from '@/components/admin/admin'
 import AdminIndex from '@/components/admin/index'
 import AdminUser from '@/components/admin/user'
+import AdminRole from '@/components/admin/role'
+import AdminAuth from '@/components/admin/auth'
 
 Vue.use(Router)
 
@@ -37,7 +39,9 @@ export default new Router({
         // 管理员模块
         {path: '/admin', component: Admin, children: [
             {path: '', name: 'admin_index', component: AdminIndex},
-            {path: 'user', name: 'admin_user', component: AdminUser}
+            {path: 'user', name: 'admin_user', component: AdminUser},
+            {path: 'role', name: 'admin_role', component: AdminRole},
+            {path: 'auth', name: 'admin_auth', component: AdminAuth}
         ]}
     ]
 })

@@ -19,9 +19,9 @@ export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${
 /**
  * 系谱档案查询，展示
  */
-export const queryXipu = data => fetch('/allfunction/gf/findshow', data, 'POST')
+export const queryXipu = data => fetch('/gf/findshow', data, 'POST')
 
-export const getXipuDetail = id => fetch('/messages')
+export const getXipuDetail = id => fetch('/gf/findshowbyid?id=' + id)
 
 /**
  * 权限CURD
