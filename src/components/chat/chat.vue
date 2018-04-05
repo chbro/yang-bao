@@ -1,45 +1,94 @@
 <template>
     <div class="chat-wrapper">
-        <el-container>
-            <el-header height="20%">
-                <img src="../../assets/imgs/index/LOGO-2.png" alt="Logo">
-                <el-menu :default-active="activeIndex2" class="el-menu-demo chat-menu" mode="horizontal" @select="handleSelect" text-color="#fff" active-text-color="#ffd04b">
-                    <el-menu-item index="1">咨询</el-menu-item>
-                    <el-menu-item index="2">留言</el-menu-item>
-                    <el-menu-item index="3">自助</el-menu-item>
-                    <el-menu-item index="4">电话</el-menu-item>
-                </el-menu>
-            </el-header>
-            <el-container>
-                <el-main>
-                    <div class="dialog_box">
-                        <div class="dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+            <el-tabs type="border-card">
+                <el-tab-pane label="咨询">
+                    <el-container>
+                        <el-main>
+                            <div class="dialog_box">
+                                <div class="dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+                            </div>
+                            <div class="input_box">
+                                <div class="chat-option">
+                                    <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button>
+                                    <input hidden ref="file" type="file" @change="sendFile()" class="file"><img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()">
+                                    <input hidden ref="file" type="file" @change="sendFile()" class="file"><img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()">
+                                </div>
+                                <vue-emoji style="top:68px;"
+                                    v-show='showEmoji'
+                                    ref='emoji'
+                                    @select='handleEmojiSelect'
+                                    @hide="showEmoji = false"
+                                ></vue-emoji>
+                                <div class="chat-input">
+                                    <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
+                                </div>
+                                <!-- <el-button @click="close()">关闭</el-button>
+                                <el-popover
+                                    ref="popover4"
+                                    placement="right"
+                                    width="400"
+                                    trigger="click">
+                                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                         <el-form-item>
+                                            <e-p>评价</e-p>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-popover> -->
+
+                                <el-button v-popover:popover4>关闭</el-button>
+                            </div>
+                        </el-main>
+                        <el-aside width="25%">
+                            <ul>
+                                <li>类型：</li>
+                                <li>姓名：</li>
+                                <li>邮件：</li>
+                                <li>电话：</li>
+                            </ul>
+                            <div class="id1"></div>
+                        </el-aside>
+                    </el-container>
+                </el-tab-pane>
+                <el-tab-pane label="留言">
+                    <div class="message">
+                        <el-form>
+                            <el-form-item>
+                                <el-input v-model="name" auto-complete="off" placeholder="Full Name"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input v-model="email" auto-complete="off" placeholder="Email Address"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input type="textarea" :rows="4" v-model="message" placeholder="Your Message"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" class="submit_message">提交</el-button>
+                            </el-form-item>
+                        </el-form>
                     </div>
-                    <div class="input_box">
-                        <div class="chat-option">
-                            <button ref='btn' @click='showEmoji = !showEmoji'>emoji</button>
-                            <input ref="file" type="file" @change="sendFile()">
-                        </div>
-                        <vue-emoji
-                            v-show='showEmoji'
-                            ref='emoji'
-                            @select='handleEmojiSelect'
-                            @hide="showEmoji = false"
-                        ></vue-emoji>
-                        <div @keypress.enter="send($event)" contenteditable ref='edit' class="chat-input"></div>
-                        <el-button @click="send()">发送</el-button>
+                </el-tab-pane>
+                <el-tab-pane label="电话">
+                    <div class="telephone">
+                        <p>输入您的手机号码，点击“拨打”按钮，系统将自动为您建立免费通话！</p>
+                        <el-form>
+                            <el-form-item>
+                                <el-input v-model="telephone_number" auto-complete="off" placeholder="手机">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input v-model="code" auto-complete="off" placeholder="验证码">
+                                </el-input>
+                            </el-form-item>
+                            <el-item-form>
+                                <el-button type="primary" class="submit_telephone">拨打</el-button>
+                            </el-item-form>
+                        </el-form>
+                        <p>请输入合法的手机号码，如：13987654321。</p>
+                        <P>非来电免费手机只产生接听费用，无其他额外费用</p>
                     </div>
-                </el-main>
-                <el-aside width="25%">
-                    <ul>
-                        <li>类型：</li>
-                        <li>姓名：</li>
-                        <li>邮件：</li>
-                        <li>电话：</li>
-                    </ul>
-                </el-aside>
-            </el-container>
-        </el-container>
+                </el-tab-pane>
+            </el-tabs>
+                <!-- <img src="../../assets/imgs/index/LOGO-2.png" alt="Logo"> -->
     </div>
 </template>
 
@@ -76,6 +125,10 @@ export default {
         this.websocket.onerror = evt => {
             this.$message.error('连接错误')
         }
+
+        window.onbeforeunload = function () {
+            return false
+        }
     },
 
     data () {
@@ -84,9 +137,17 @@ export default {
             activeIndex2: '1',
             myText: 'sdd',
             showEmoji: false,
-            items: [],
+            items: [
+                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;你好&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;hello&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;请问在吗？&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">&nbsp;&nbsp;&nbsp;你好啊，请问有什么问题？</span></p>', class: 'chat_professor'}
+            ],
             value: '',
-            websocket: null
+            websocket: null,
+            email: '',
+            name: '',
+            message: ''
         }
     },
 
@@ -131,6 +192,14 @@ export default {
             reader.onload = evt => {
                 console.log({data: evt.target.result})
             }
+        },
+
+        selectFile () {
+            this.$refs.file.click()
+        },
+
+        close () {
+
         }
     }
 }
@@ -140,90 +209,111 @@ export default {
 @import '~@/assets/css/color'
 
 .chat-wrapper
-    width 800px
-    height 700px
+    width 700px
+    height 510px
     margin 50px auto 0
-.is-vertical
-    height 100%
-    width 100%
-    border 1px solid #eee
-
-.el-header
-    width 100%
-    background-color color-main
-    // color #333
-    border-bottom 4px solid #58B22E
-    img
-        height 92%
-        margin-top 1%
-        margin-left 5%
-    .el-menu
-        display inline-block
-        background-color color-main
-        width 60%
-        margin-left 20%
-        .el-menu-item
-            width 25%
-            text-align center
-            font-size 1.1em
-        .is-active
-            color green
-.el-container
-    width 100%;
-    height 80%
-.el-main
-    height 99%
-    width 75%
-    padding 0
-    overflow hidden
-    .dialog_box
-        height 75%
-        width 99%
-        background-color #fff
-        margin-top 0px
-        margin-left 0px
-        overflow-y auto
-        max-height 70%
-        border 1px solid #CCCCCC
-        margin-bottom 2px
-        margin-top 1%
-    .input_box
-        height 25%
-        width 100%
-        // background-color #444
-        .el-button
-            width 8%
-            padding 10px
-.el-aside
-    color #333
-    height 99%
-    background-color rgb(238, 241, 246)
-    border 1px solid #CCCCCC
-    margin-right 2px
-    margin-top 1%
-    ul
-        margin-left 10%
-.chat-menu
-    border-bottom 0
-    .el-menu-item
-        &:hover
-            color #58B22E !important
-            backface-color #2891D1 !important
-        &.is-active
-            border-bottom 0
-            color #58B22E !important
-            backface-color #2891D1 !important
-
-.chat-input
-    box-sizing border-box
-    display inline-block
-    width 90%
-    padding 10px
-    vertical-align bottom
-    height 100px
-    outline 0
-
-.dialog-item
-    &.user
-        text-align right
+    background-color #666
+    .el-tabs__content
+        height 429px
+    .el-tabs--border-card > .el-tabs__content
+        padding 0
+    .el-tabs__nav-scroll
+        height 85px
+        background url("../../assets/imgs/header-logo.png")
+        background-repeat no-repeat
+        background-position 15px 2px
+        //background-color color-main
+        .el-tabs__nav
+            float right
+            height 100%
+    .el-tabs--border-card > .el-tabs__header .el-tabs__item
+            line-height 85px
+    .el-tabs__item
+        height 100%
+    .el-main
+        height 429px
+        .dialog_box
+            height 60%
+            border 1px solid #e4e7ed
+            .dialog-item
+                font-size 1.1em
+                margin-left 15px
+                &.chat_user
+                    color #000
+                    margin-right 15px
+                    text-align right
+                    p
+                        margin 1%
+                        .chat_user_message
+                            background-color #3385ff
+                            color #ffffff
+                            border-radius 10px
+                            margin-right 1%
+                        .chat_user_name
+                            color #777777
+                &.chat_professor
+                    color #777777
+                    p
+                        margin 0
+                    .chat_professor_message
+                        margin-left 10px
+                        background-color rgba(240,240,240,0.5)
+                        border-radius 10px
+                    //.chat_professor_name
+        .input_box
+            height 40%
+            .chat-option
+                height 27%
+                width 100%
+                .emoji
+                    border none
+                    background none
+                    margin-top 2%
+                .file_picture
+                    padding-left 1.5%
+            .rui-emoji
+                top 80px
+                left 20px
+        .chat-input
+            border 1px solid #e4e7ed
+            height 100px
+            .chat_area
+                height 95px
+                width 83%
+                overflow-x hidden
+                overflow-y auto
+                border none
+                margin-left 1%
+                word-wrap break-word//换行
+                outline 0
+    .el-aside
+        background-color #f5f7fa
+        height 429px
+        li
+            padding 5%
+        .id1
+            background-image: url("http://www.looyu.com/images/yiduiyi.png")
+            cursor pointer
+            height 220px
+            width 100%
+            margin-top 10px
+            background-position center bottom
+    .el-button
+        margin-left 410px
+        margin-top -45px
+        display block
+    .rui-emoji
+        top 68px !important
+        left 22px !important
+    .message
+        width 80%
+        margin 50px auto 0
+        .submit_message
+            margin 0
+            width 100%
+    .telephone
+        width 80%
+        margin 50px auto 0
+    .submit_telephone
+        margin 0
 </style>
