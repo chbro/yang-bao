@@ -58,29 +58,23 @@
                     <div class="my_input_box">
                         <div class="my_chat_option">
                             <el-tooltip content="表情" placement="top">
-                                <button ref='btn' @click='showEmoji = !showEmoji' class="my_emoji"><img src="../../assets/imgs/smile.png" alt="表情" class="emoji_picture"></button>
+                                <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="my_emoji"><img src="../../assets/imgs/smile.png" alt="表情" class="emoji_picture"></button> -->
+                                <i class="iconfont icon-smile my_emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
                             </el-tooltip>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传图片" placement="top">
-                                    <img src="../../assets/imgs/picture.png" alt="上传图片" class="my_picture_picture" @click="selectFile()">
+                                    <!-- <img src="../../assets/imgs/picture.png" alt="上传图片" class="my_picture_picture" @click="selectFile()"> -->
+                                    <i class="iconfont icon-xitongtupianziyuan my_picture_picture" @click="selectFile()"></i>                                    
                                 </el-tooltip>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传文件" placement="top">
-                                    <img src="../../assets/imgs/file.png" alt="上传文件" class="my_file_picture" @click="selectFile()">
+                                    <!-- <img src="../../assets/imgs/file.png" alt="上传文件" class="my_file_picture" @click="selectFile()"> -->
+                                    <i class="iconfont icon-3801wenjian my_file_picture" @click="selectFile()"></i>
                                 </el-tooltip>
                             <el-tooltip content="邀请专家" placement="top">
-                                <el-button type="text" @click="dialogTableVisible = true"><img src="../../assets/imgs/person-stalker.png" alt="邀请专家" class=""></el-button>
+                                <!-- <el-button type="text" @click="dialogTableVisible = true"><img src="../../assets/imgs/person-stalker.png" alt="邀请专家" class=""></el-button> -->
+                                <i class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
                             </el-tooltip>
-                            <el-dialog title="我的同事" :visible.sync="dialogTableVisible">
-                                <el-tree
-                                    :props="props"
-                                    :load="loadNode"
-                                    lazy
-                                    show-checkbox
-                                    @check-change="handleCheckChange">
-                                </el-tree>
-                                <el-button @click="invite()" class="inviation">确认邀请</el-button>
-                            </el-dialog>
                         </div>
                         <vue-emoji style="top:68px;"
                             v-show='showEmoji'
@@ -113,9 +107,9 @@ export default {
         return {
             showEmoji: false,
             items: [
-                {html: '<p><span class="user_message">&nbsp;&nbsp;&nbsp;你好，啊hello&nbsp;&nbsp;&nbsp;</span><span class="username">客户</span></p>', class: 'user'},
-                {html: '<p><span class="user_message">&nbsp;&nbsp;&nbsp;你好，啊&nbsp;&nbsp;&nbsp;</span><span>客户</span></p>', class: 'user'},
-                {html: '<p><span class="user_message">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span>客户</span></p>', class: 'user'},
+                {html: '<p><span class="user_message">你好，啊hello</span><span class="username">客户</span></p>', class: 'user'},
+                {html: '<p><span class="user_message">你好，啊&nbsp;&nbsp;&nbsp;</span><span>客户</span></p>', class: 'user'},
+                {html: '<p><span class="user_message">sdfsdfdsfsdf</span><span>客户</span></p>', class: 'user'},
                 {html: '<p><span class="professorname">专家</span><span class="professor_message">&nbsp;&nbsp;&nbsp;你好，请问有什么问题?&nbsp;&nbsp;&nbsp;</span></p>', class: 'professor'}
             ],
             value: '',
@@ -255,21 +249,13 @@ export default {
                     label: '二级 3-2'
                 }]
             }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
-            },
 
             defaultProps3: {
                 children: 'children',
                 label: 'label'
             },
-            props: {
-                label: 'name',
-                children: 'zones'
-            },
+            
             count: 1,
-            dialogTableVisible: false
         }
     },
     mounted () {
@@ -304,8 +290,6 @@ export default {
         send (e) {
             e && e.preventDefault()
             let edit = this.$refs.edit
-            // this.items.push({html: edit.innerHTML, class: 'user'})
-            // console.log(this.websocket)
             let data = {
                 message: edit.innerHTML,
                 to: [3],
@@ -336,41 +320,8 @@ export default {
             this.$refs.file.click()
         },
 
-        handleCheckChange (data, checked, indeterminate) {
-            console.log(data, checked, indeterminate)
-        },
         handleNodeClick (data) {
             console.log(data)
-        },
-        loadNode (node, resolve) {
-            if (node.level === 0) {
-                return resolve([{ name: 'region1' }, { name: 'region2' }])
-            }
-            if (node.level > 3) return resolve([])
-
-            var hasChild
-            if (node.data.name === 'region1') {
-                hasChild = true
-            } else if (node.data.name === 'region2') {
-                hasChild = false
-            } else {
-                hasChild = Math.random() > 0.5
-            }
-
-            setTimeout(() => {
-                var data
-                if (hasChild) {
-                    data = [{
-                        name: 'zone' + this.count++
-                    }, {
-                        name: 'zone' + this.count++
-                    }]
-                } else {
-                    data = []
-                }
-
-                resolve(data)
-            }, 500)
         },
 
         invite () {
@@ -459,30 +410,43 @@ export default {
                         color #ffffff
                         border-radius 10px
                         margin-right 1%
-                        max-width 100px
                         overflow hidden
+                        padding 0 10px
+                        display inline-block
+                        max-width 80%
                 &.professor
                     color #777777
                     .professor_message
                         margin-left 10px
                         background-color rgba(240,240,240,0.5)
                         border-radius 10px
+                        padding 0 10px
+                        display inline-block
+                        max-width 80%
         .my_input_box
             height 35%
             .my_chat_option
-                height 27%
+                height 15%
                 width 100%
-                //background-color orange
+                padding-top 1.5%
                 .my_emoji
                     border none
                     background none
                     margin-top 2%
+                    font-size 1.8em
                     cursor pointer
                 .my_picture_picture
                     cursor pointer
+                    font-size 1.8em
+                    padding-left 0.5%
                 .my_file_picture
                     padding-left 0.5%
                     cursor pointer
+                    font-size 1.8em
+                .my_inviation
+                    cursor pointer
+                    font-size 1.8em
+                    padding-left 0.5%
                 .inviation
                     margin-left 88%
             .rui-emoji

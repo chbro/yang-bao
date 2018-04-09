@@ -9,9 +9,14 @@
                             </div>
                             <div class="input_box">
                                 <div class="chat-option">
-                                    <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button>
-                                    <input hidden ref="file" type="file" @change="sendFile()" class="file"><img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()">
-                                    <input hidden ref="file" type="file" @change="sendFile()" class="file"><img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()">
+                                    <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button> -->
+                                    <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
+                                    <input hidden ref="file" type="file" @change="sendFile()" class="file">
+                                        <!-- <img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()"> -->
+                                        <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i>
+                                    <input hidden ref="file2" type="file" @change="sendFile()" class="file">
+                                        <!-- <img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()"> -->
+                                        <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
                                 </div>
                                 <vue-emoji style="top:68px;"
                                     v-show='showEmoji'
@@ -22,20 +27,32 @@
                                 <div class="chat-input">
                                     <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
                                 </div>
-                                <!-- <el-button @click="close()">关闭</el-button>
-                                <el-popover
-                                    ref="popover4"
-                                    placement="right"
-                                    width="400"
-                                    trigger="click">
-                                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                                         <el-form-item>
-                                            <e-p>评价</e-p>
-                                        </el-form-item>
-                                    </el-form>
-                                </el-popover> -->
+                                <el-button type="text" @click="dialogFormVisible = true" class="close">关闭</el-button>
 
-                                <el-button v-popover:popover4>关闭</el-button>
+                                    <el-dialog title="评价" :visible.sync="dialogFormVisible">
+                                        <el-form :model="form">
+                                            <el-form-item label="评价" :label-width="formLabelWidth">
+                                                <el-radio>非常满意</el-radio>
+                                                <el-radio>满意</el-radio>
+                                                <el-radio>一般</el-radio>
+                                                <el-radio>不满意</el-radio>
+                                                <el-radio>很差</el-radio>
+                                            </el-form-item>
+                                            <el-form-item label="描述" :label-width="formLabelWidth">
+                                                <el-input
+                                                    type="textarea"
+                                                    :rows="3"
+                                                    placeholder="请输入内容"
+                                                    v-model="form.name">
+                                                </el-input>
+                                            </el-form-item>
+                                        </el-form>
+                                        <div slot="footer" class="dialog-footer">
+                                            <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
+                                            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                                        </div>
+                                    </el-dialog>
+                               <el-button @click="send()" class="send">发送</el-button>
                             </div>
                         </el-main>
                         <el-aside width="25%">
@@ -79,16 +96,15 @@
                                 <el-input v-model="code" auto-complete="off" placeholder="验证码">
                                 </el-input>
                             </el-form-item>
-                            <el-item-form>
+                            <el-form-item>
                                 <el-button type="primary" class="submit_telephone">拨打</el-button>
-                            </el-item-form>
+                            </el-form-item>
                         </el-form>
                         <p>请输入合法的手机号码，如：13987654321。</p>
                         <P>非来电免费手机只产生接听费用，无其他额外费用</p>
                     </div>
                 </el-tab-pane>
             </el-tabs>
-                <!-- <img src="../../assets/imgs/index/LOGO-2.png" alt="Logo"> -->
     </div>
 </template>
 
@@ -133,15 +149,33 @@ export default {
 
     data () {
         return {
+            dialogFormVisible: false,
+            form: {
+                name: '',
+                region: '',
+                date1: '',
+                date2: '',
+                delivery: false,
+                type: [],
+                resource: '',
+                desc: ''
+            },
+            formLabelWidth: '120px',
+
+            telephone_number: '',
+            code: '',
+
             activeIndex: '1',
             activeIndex2: '1',
             myText: 'sdd',
             showEmoji: false,
             items: [
-                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;你好&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;hello&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_user_message">&nbsp;&nbsp;&nbsp;请问在吗？&nbsp;&nbsp;&nbsp;</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">&nbsp;&nbsp;&nbsp;你好啊，请问有什么问题？</span></p>', class: 'chat_professor'}
+                {html: '<p><span class="chat_user_message">你好</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'},
+                {html: '<p><span class="chat_user_message">hello</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'},
+                {html: '<p><span class="chat_user_message">请问在吗请问在吗?</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
+                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？请问有什么问题？</span></p>', class: 'chat_professor'}
             ],
             value: '',
             websocket: null,
@@ -222,7 +256,6 @@ export default {
         background url("../../assets/imgs/header-logo.png")
         background-repeat no-repeat
         background-position 15px 2px
-        //background-color color-main
         .el-tabs__nav
             float right
             height 100%
@@ -235,8 +268,9 @@ export default {
         .dialog_box
             height 60%
             border 1px solid #e4e7ed
+            overflow-y scroll
             .dialog-item
-                font-size 1.1em
+                font-size 1em
                 margin-left 15px
                 &.chat_user
                     color #000
@@ -249,6 +283,9 @@ export default {
                             color #ffffff
                             border-radius 10px
                             margin-right 1%
+                            padding 0 10px
+                            display inline-block
+                            max-width 80%
                         .chat_user_name
                             color #777777
                 &.chat_professor
@@ -259,18 +296,26 @@ export default {
                         margin-left 10px
                         background-color rgba(240,240,240,0.5)
                         border-radius 10px
+                        padding 0 10px
+                        display inline-block
+                        max-width 80%
                     //.chat_professor_name
         .input_box
             height 40%
             .chat-option
                 height 27%
                 width 100%
+                padding 15px 0 0 0
                 .emoji
                     border none
                     background none
-                    margin-top 2%
+                    font-size 1.5em
+                .picture_picture
+                    padding-left 1.5%
+                    font-size 1.5em
                 .file_picture
                     padding-left 1.5%
+                    font-size 1.5em
             .rui-emoji
                 top 80px
                 left 20px
@@ -286,6 +331,14 @@ export default {
                 margin-left 1%
                 word-wrap break-word//换行
                 outline 0
+        .close
+            position relative
+            top -5px
+            right 80px
+            //background-color orange
+            width 70px
+            border 1px solid #e4e7ed
+
     .el-aside
         background-color #f5f7fa
         height 429px
@@ -296,7 +349,7 @@ export default {
             cursor pointer
             height 220px
             width 100%
-            margin-top 10px
+            margin-top 24.5px
             background-position center bottom
     .el-button
         margin-left 410px
