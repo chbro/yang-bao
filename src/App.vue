@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <app-head v-show="isNotLogin"></app-head>
+        <app-head v-show="isNotLogin && !isAdmin"></app-head>
         <router-view/>
-        <app-foot></app-foot>
+        <app-foot v-show="!isAdmin"></app-foot>
     </div>
 </template>
 
@@ -22,17 +22,20 @@ export default {
             document.documentElement.scrollTop = 0
             document.body.scrollTop = 0
             this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(to.name)
+            this.isAdmin = window.location.hash.includes('admin')
         }
     },
 
     data () {
         return {
-            isNotLogin: false
+            isNotLogin: false,
+            isAdmin: false
         }
     },
 
     mounted () {
         this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(this.$route.name)
+        this.isAdmin = window.location.hash.includes('admin')
     }
 }
 </script>

@@ -1,117 +1,119 @@
 <template>
     <div class="chat-wrapper">
-            <el-tabs type="border-card">
-                <el-tab-pane label="咨询">
-                    <el-container>
-                        <el-main>
-                            <div class="dialog_box">
-                                <div class="dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+        <el-tabs type="border-card">
+            <el-tab-pane label="咨询">
+                <el-container>
+                    <el-main>
+                        <div class="dialog_box">
+                            <div class="dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+                        </div>
+                        <div class="input_box">
+                            <div class="chat-option">
+                                <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button> -->
+                                <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
+                                <input hidden ref="file" type="file" @change="sendFile()" class="file">
+                                    <!-- <img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()"> -->
+                                    <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i>
+                                <input hidden ref="file2" type="file" @change="sendFile()" class="file">
+                                    <!-- <img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()"> -->
+                                    <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
                             </div>
-                            <div class="input_box">
-                                <div class="chat-option">
-                                    <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button> -->
-                                    <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
-                                    <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                        <!-- <img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()"> -->
-                                        <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i>
-                                    <input hidden ref="file2" type="file" @change="sendFile()" class="file">
-                                        <!-- <img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()"> -->
-                                        <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
-                                </div>
-                                <vue-emoji style="top:68px;"
-                                    v-show='showEmoji'
-                                    ref='emoji'
-                                    @select='handleEmojiSelect'
-                                    @hide="showEmoji = false"
-                                ></vue-emoji>
-                                <div class="chat-input">
-                                    <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
-                                </div>
-                                <el-button type="text" @click="dialogFormVisible = true" class="close">关闭</el-button>
+                            <vue-emoji style="top:68px;"
+                                v-show='showEmoji'
+                                ref='emoji'
+                                @select='handleEmojiSelect'
+                                @hide="showEmoji = false"
+                            ></vue-emoji>
+                            <div class="chat-input">
+                                <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
+                            </div>
+                            <el-button type="text" @click="dialogFormVisible = true" class="close">关闭</el-button>
 
-                                    <el-dialog title="评价" :visible.sync="dialogFormVisible">
-                                        <el-form :model="form">
-                                            <el-form-item label="评价" :label-width="formLabelWidth">
-                                                <el-radio>非常满意</el-radio>
-                                                <el-radio>满意</el-radio>
-                                                <el-radio>一般</el-radio>
-                                                <el-radio>不满意</el-radio>
-                                                <el-radio>很差</el-radio>
-                                            </el-form-item>
-                                            <el-form-item label="描述" :label-width="formLabelWidth">
-                                                <el-input
-                                                    type="textarea"
-                                                    :rows="3"
-                                                    placeholder="请输入内容"
-                                                    v-model="form.name">
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-form>
-                                        <div slot="footer" class="dialog-footer">
-                                            <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
-                                            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                                        </div>
-                                    </el-dialog>
-                               <el-button @click="send()" class="send">发送</el-button>
-                            </div>
-                        </el-main>
-                        <el-aside width="25%">
-                            <ul>
-                                <li>类型：</li>
-                                <li>姓名：</li>
-                                <li>邮件：</li>
-                                <li>电话：</li>
-                            </ul>
-                            <div class="id1"></div>
-                        </el-aside>
-                    </el-container>
-                </el-tab-pane>
-                <el-tab-pane label="留言">
-                    <div class="message">
-                        <el-form>
-                            <el-form-item>
-                                <el-input v-model="name" auto-complete="off" placeholder="Full Name"></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="email" auto-complete="off" placeholder="Email Address"></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-input type="textarea" :rows="4" v-model="message" placeholder="Your Message"></el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" class="submit_message">提交</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="电话">
-                    <div class="telephone">
-                        <p>输入您的手机号码，点击“拨打”按钮，系统将自动为您建立免费通话！</p>
-                        <el-form>
-                            <el-form-item>
-                                <el-input v-model="telephone_number" auto-complete="off" placeholder="手机">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="code" auto-complete="off" placeholder="验证码">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" class="submit_telephone">拨打</el-button>
-                            </el-form-item>
-                        </el-form>
-                        <p>请输入合法的手机号码，如：13987654321。</p>
-                        <P>非来电免费手机只产生接听费用，无其他额外费用</p>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
+                                <el-dialog title="评价" :visible.sync="dialogFormVisible">
+                                    <el-form :model="form">
+                                        <el-form-item label="评价" :label-width="formLabelWidth">
+                                            <el-radio-group v-model="satisfy">
+                                                <el-radio :label="5">非常满意</el-radio>
+                                                <el-radio :label="4">满意</el-radio>
+                                                <el-radio :label="3">一般</el-radio>
+                                                <el-radio :label="2">不满意</el-radio>
+                                                <el-radio :label="1">很差</el-radio>
+                                            </el-radio-group>
+                                        </el-form-item>
+                                        <el-form-item label="描述" :label-width="formLabelWidth">
+                                            <el-input
+                                                type="textarea"
+                                                :rows="3"
+                                                placeholder="请输入内容"
+                                                v-model="form.desciption">
+                                            </el-input>
+                                        </el-form-item>
+                                    </el-form>
+                                    <div slot="footer" class="dialog-footer">
+                                        <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
+                                        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                                    </div>
+                                </el-dialog>
+                           <el-button @click="send()" class="send">发送</el-button>
+                        </div>
+                    </el-main>
+                    <el-aside width="25%">
+                        <ul>
+                            <li>类型：</li>
+                            <li>姓名：</li>
+                            <li>邮件：</li>
+                            <li>电话：</li>
+                        </ul>
+                        <div class="id1"></div>
+                    </el-aside>
+                </el-container>
+            </el-tab-pane>
+            <el-tab-pane label="留言">
+                <div class="message">
+                    <el-form>
+                        <el-form-item>
+                            <el-input v-model="name" auto-complete="off" placeholder="Full Name"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-input v-model="email" auto-complete="off" placeholder="Email Address"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-input type="textarea" :rows="4" v-model="message" placeholder="Your Message"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" class="submit_message">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="电话">
+                <div class="telephone">
+                    <p>输入您的手机号码，点击“拨打”按钮，系统将自动为您建立免费通话！</p>
+                    <el-form>
+                        <el-form-item>
+                            <el-input v-model="telephone_number" auto-complete="off" placeholder="手机">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-input v-model="code" auto-complete="off" placeholder="验证码">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" class="submit_telephone">拨打</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <p>请输入合法的手机号码，如：13987654321。</p>
+                    <P>非来电免费手机只产生接听费用，无其他额外费用</p>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 
 <script>
-import { keepLastIndex } from '@/util/jskit'
-import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
+import 'rui-vue-emoji/dist/vue-emoji.css'
+import { keepLastIndex } from '@/util/jskit'
 
 export default {
     components: {
@@ -147,11 +149,16 @@ export default {
         }
     },
 
+    destroyed () {
+        window.onbeforeunload = undefined
+    },
+
     data () {
         return {
+            satisfy: 5,
             dialogFormVisible: false,
             form: {
-                name: '',
+                desciption: '',
                 region: '',
                 date1: '',
                 date2: '',
@@ -265,6 +272,7 @@ export default {
         height 100%
     .el-main
         height 429px
+        overflow-y hidden
         .dialog_box
             height 60%
             border 1px solid #e4e7ed
@@ -272,6 +280,7 @@ export default {
             .dialog-item
                 font-size 1em
                 margin-left 15px
+                line-height 25px
                 &.chat_user
                     color #000
                     margin-right 15px
@@ -298,7 +307,7 @@ export default {
                         border-radius 10px
                         padding 0 10px
                         display inline-block
-                        max-width 80%
+                        max-width 65%
                     //.chat_professor_name
         .input_box
             height 40%
@@ -306,16 +315,10 @@ export default {
                 height 27%
                 width 100%
                 padding 15px 0 0 0
-                .emoji
-                    border none
-                    background none
-                    font-size 1.5em
-                .picture_picture
-                    padding-left 1.5%
-                    font-size 1.5em
-                .file_picture
-                    padding-left 1.5%
-                    font-size 1.5em
+                i
+                    margin-right 5px
+                    cursor pointer
+                    font-size 20px
             .rui-emoji
                 top 80px
                 left 20px

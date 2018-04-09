@@ -9,27 +9,27 @@
             <p>登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
+                    <el-input :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="pass">
-                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
+                    <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="code">
-                    <el-input style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
+                    <el-input :minlength="4" :maxlength="4" style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
                     <div class="code" @click="refreshCode" title="点击更换验证码">
                         <s-identify :identifyCode="identifyCode"></s-identify>
                     </div>
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </el-form-item>
 
-                <el-form-item>
+                <!-- <el-form-item>
                     <el-checkbox>保存登录/Remember ME</el-checkbox>
-                </el-form-item>
+                </el-form-item> -->
             </el-form>
         </div>
         <div class="link">
@@ -40,7 +40,7 @@
 <script>
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
-import { validateName, validateCode } from '@/util/jskit'
+import { validateName } from '@/util/jskit'
 import md5 from 'md5'
 
 export default {
@@ -51,6 +51,15 @@ export default {
         var validatePass = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入密码'))
+            } else {
+                callback()
+            }
+        }
+        let validateCode = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入验证码'))
+            } else if (value.toLowerCase() !== this.identifyCode.toLowerCase()) {
+                callback(new Error('验证码不正确'))
             } else {
                 callback()
             }
@@ -73,7 +82,8 @@ export default {
                     { validator: validateCode, trigger: 'blur' }
                 ]
             },
-            identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
+            // identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
+            identifyCodes: '1234567890',
             identifyCode: ''
         }
     },
@@ -90,7 +100,7 @@ export default {
                     }
                     Login(data).then(res => {
                         if (res.meta.code === 0) {
-                            console.log('logged in')
+                            this.$router.push('/admin')
                         } else {
                             this.$message.error(res.meta.errorMsg || '登录失败')
                         }

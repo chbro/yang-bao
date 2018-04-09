@@ -43,11 +43,9 @@ export const validateEmail = (rule, value, callback) => {
     }
 }
 
-export const validateCode = (rule, value, callback) => {
-    if (value === '') {
-        callback(new Error('请输入验证码'))
-    } else if (value.toLowerCase() !== this.identifyCode.toLowerCase()) {
-        callback(new Error('验证码不正确'))
+export const validatePhone = (rule, value, callback) => {
+    if (!/^1[34578]\d{9}$/.test(value)) {
+        callback(new Error('请输入正确的手机号'))
     } else {
         callback()
     }
@@ -66,4 +64,12 @@ export const keepLastIndex = obj => {
         range.collapse(false)
         range.select()
     }
+}
+
+export const checkSubmit = info => {
+    let { operator, reviewer, executor } = info
+    if (!(operator && reviewer && executor)) {
+        return false
+    }
+    return true
 }

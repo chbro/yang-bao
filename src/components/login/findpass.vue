@@ -1,5 +1,5 @@
 <template>
-    <div class="login-main">
+    <div class="login-main find-pass">
         <div class="head_title">
             <router-link to="/login"><img src="../../assets/imgs/index/logo-input.png" alt="logo"></router-link>
             <h3>东俊（有机）养殖生产管理追溯系统管理平台</h3>
@@ -14,25 +14,32 @@
                 </el-form-item>
 
                 <el-form-item prop="bywhich">
-                    <el-select v-model="form.bywhich" auto-complete="off" placeholder="找回方式">
-                        <el-option label="验证问题" value="0"></el-option>
-                        <el-option label="邮箱验证" value="1"></el-option>
+                    <el-select @change="getQues" v-model="form.bywhich" auto-complete="off" placeholder="找回方式">
+                        <el-option label="请选择" value="0"></el-option>
+                        <el-option label="验证问题" value="1"></el-option>
                         <el-option label="短信验证" value="2"></el-option>
+                        <!-- <el-option label="邮箱验证" value="3"></el-option> -->
                     </el-select>
                 </el-form-item>
 
+                <template v-if="questions">
+                    <el-form-item :label="val" v-for="(val, key, idx) in questions" :key="idx">
+                        <el-input v-model="form['answer_' + (idx+1)]"></el-input>
+                    </el-form-item>
+                </template>
+
                 <template v-if="canModify">
                     <el-form-item prop="newpass">
-                        <el-input type="text" v-model="form.newpass" auto-complete="off" placeholder="输入新密码"></el-input>
+                        <el-input type="password" v-model="form.newpass" auto-complete="off" placeholder="输入新密码"></el-input>
                     </el-form-item>
 
                     <el-form-item prop="newpass_repeat">
-                        <el-input type="text" v-model="form.newpass_repeat" auto-complete="off" placeholder="确认新密码"></el-input>
+                        <el-input type="password" v-model="form.newpass_repeat" auto-complete="off" placeholder="确认新密码"></el-input>
                     </el-form-item>
                 </template>
 
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('form')">提交</el-button>
+                    <el-button :disabled="disableBtn" type="primary" @click="submitForm('form')">提交</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -40,8 +47,9 @@
 </template>
 
 <script>
-import { FindPass } from '@/util/getdata'
+import { FindPass, GetQuestions } from '@/util/getdata'
 import { validateName } from '@/util/jskit'
+import md5 from 'md5'
 
 export default {
     data () {
@@ -74,7 +82,10 @@ export default {
                 username: null,
                 bywhich: null,
                 newpass: null,
-                newpass_repeat: null
+                newpass_repeat: null,
+                answer_1: null,
+                answer_2: null,
+                answer_3: null
             },
             rules: {
                 username: [
@@ -87,26 +98,64 @@ export default {
                     { validator: validatePass2, trigger: 'blur' }
                 ]
             },
-            canModify: true
+            canModify: false,
+            questions: null,
+            disableBtn: false
         }
     },
 
     methods: {
+        getQues () {
+            let name = this.form.username
+
+            if (!name) {
+                this.$message.warning('请输入用户名')
+                return
+            }
+            if (this.form.bywhich === '1') {
+                GetQuestions(name).then(res => {
+                    if (res.meta.code === 0) {
+                        this.questions = res.data
+                        this.canModify = true
+                    } else {
+                        this.$message.error(res.meta.errorMsg || '获取问题失败')
+                    }
+                })
+            }
+        },
+
         submitForm (form) {
+            if (!this.canModify) {
+                return
+            }
+
             this.$refs[form].validate(valid => {
                 if (valid) {
+                    let form = this.form
                     let data = {
-                        pkUserid: this.form.username
+                        pkUserid: form.username,
+                        userPwd: md5(form.newpass),
+                        question_1: this.questions.question_1,
+                        question_2: this.questions.question_2,
+                        question_3: this.questions.question_3,
+                        answer_1: this.form.answer_1,
+                        answer_2: this.form.answer_2,
+                        answer_3: this.form.answer_3
                     }
+
+                    this.disableBtn = true
                     FindPass(data).then(res => {
                         if (res.meta.code === 0) {
                             this.$message.success('密码重置成功')
-                            this.$router.push('/login')
+                            setTimeout(() => {
+                                this.$router.push('/login')
+                            }, 2000)
                         } else {
                             this.$message.error(res.meta.errorMsg || '验证失败')
                         }
+                        this.disableBtn = false
                     }, _ => {
-                        this.$message.error('验证失败')
+                        this.disableBtn = false
                     })
                 } else {
                     return false
@@ -117,7 +166,10 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '~@/assets/css/login-common'
 
+.find-pass
+    .el-form-item__label
+        float none
 </style>

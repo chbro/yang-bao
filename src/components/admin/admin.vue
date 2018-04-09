@@ -1,110 +1,194 @@
 <template>
     <div class="app-home">
+        <admin-head></admin-head>
         <el-container class="container bg-blue">
-            <el-aside width="200px" class="main-aside">
-                <div><img src="../../assets/imgs/index/logo-input.png" width="120px"></div>
-                <el-tree :data="treedata" accordion @node-click="clickTree"></el-tree>
+            <el-aside :width="side_width" class="main-aside">
+                <div class="tree-switch" @click="toggleTree()">
+                    <div>
+                        <i class="el-icon-caret-right"></i>
+                    </div>会员管理平台
+                    <i class="el-icon-d-arrow-right" ref="switchIcon"></i>
+                </div>
+                <el-tree v-show="showTree" :data="treedata" :indent="40" accordion @node-click="clickTree"></el-tree>
             </el-aside>
 
             <el-container class="app-main">
-                <el-header class="main-header">
-                    <div class="header-title">
-                        <p><span class="span-large">东骏</span>（有机）养殖生产管理追溯系统管理平台</p>
-                        <span class="span-date">日期：{{ datestr }}</span>
-                    </div>
-
-                    <div class="admin-tabs">
-                        <el-button type="primary">溯源管理</el-button>
-                        <el-button type="primary">进销存系统</el-button>
-                        <el-button type="primary">财务管理管理</el-button>
-                        <el-button type="primary">退出</el-button>
-                    </div>
-                    <div class="tab-right">
-                        <span>用户：{{user.name}}</span>
-                        <span>部门：{{user.department}}</span>
-                        <span><i class="el-icon-refresh"></i>刷新</span>
-                        <span><i class="el-icon-printer"></i>通讯录</span>
-                        <span><i class="el-icon-message"></i>（{{ msg_cnt }}）</span>
-                    </div>
-                </el-header>
-
                 <el-main>
+                    <span class="hide-span" @click="toggleAside"><i ref="hidespan" class="el-icon-arrow-left"></i></span>
                     <div class="admin-hl pos">
-                        <b><i class="el-icon-caret-right"></i>位置：</b>溯源管理
+                        <b><i class="el-icon-arrow-down"></i>位置：</b>
+                        <el-breadcrumb separator=" ">
+                             <el-breadcrumb-item v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
+                        </el-breadcrumb>
                         <span class="fs"><i class="el-icon-menu"></i>全屏</span>
                     </div>
-                    <div class="admin-search">
-                        <div class="options">
-                            <el-button class="admin-hl hl-btn" type="primary" v-for="(item, i) in options" :key="i">{{ item }}</el-button>
-                        </div>
-                        <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
-                            <el-button slot="append" icon="el-icon-search">搜索</el-button>
-                        </el-input>
-                    </div>
 
-                    <div class="main-content">
-                        <router-view></router-view>
+                    <div class="bg-blue pad">
+                        <div class="admin-search">
+                            <div class="options">
+                                <el-button @click="changeActive(item.to, i)" class="admin-hl hl-btn" :class="{'active': item.active}" type="primary" v-for="(item, i) in options" :key="i">{{ item.label }}</el-button>
+                            </div>
+                            <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
+                                <el-button slot="append" icon="el-icon-search">搜索</el-button>
+                            </el-input>
+                        </div>
+
+                        <div class="main-content">
+                            <router-view></router-view>
+                        </div>
                     </div>
                 </el-main>
             </el-container>
         </el-container>
-
-        <section class="sponsors-section" style="background-color: #2891d1">
-            <div class="container"></div>
-        </section>
+        <admin-foot></admin-foot>
     </div>
 </template>
 
 <script>
+import AdminHead from '@/components/common/admin_head'
+import AdminFoot from '@/components/common/admin_foot'
+
 export default {
+    components: {
+        AdminHead, AdminFoot
+    },
+
     data () {
         return {
+            /* eslint-disable object-property-newline */
+            side_width: '15%',
+
             treedata: [
-                {
-                    label: '权限管理',
-                    children: [
-                        {label: '用户管理', to: '/admin/user'},
-                        {label: '权限管理', to: '/admin/auth'},
-                        {label: '角色管理', to: '/admin/role'}
-                    ]
-                },
+                {label: '专家课堂'},
+                {label: '系谱档案'},
+                {label: '卫生·疫控', children: [
+                    {label: '专家咨询', to: 'consult'},
+                    {label: '卫生消毒方案', to: 'disinfectplan'},
+                    {label: '卫生消毒实施档案', to: 'disinfectprac'},
+                    {label: '免疫方案', to: 'immuneplan'},
+                    {label: '免疫实施档案', to: 'immuneprac'},
+                    {label: '驱虫方案', to: 'antiscolicplan'},
+                    {label: '驱虫实施档案', to: 'antiscolicprac'}
+                ]},
+                {label: '营养·生产', children: [
+                    {label: '专家咨询', to: 'consult'},
+                    {label: '阶段营养方案', to: 'stageplan'},
+                    {label: '阶段营养实施档案', to: 'stageprac'},
+                    {label: '配种产子管理方案', to: 'breedplan'},
+                    {label: '配种产子实施档案', to: 'breedprac'}
+                ]},
+                {label: '权限管理', children: [
+                    {label: '权限管理', to: 'auth'},
+                    {label: '用户管理', to: 'authuser'},
+                    {label: '角色管理', to: 'authrole'}
+                ]},
                 {label: '可视系统', children: [{label: '1-1'}]},
                 {label: '有机养殖环境追溯', children: [{label: '2-1'}]}
             ],
+            options: [],
+            search_key: null,
+            showTree: true,
+            bread: [
+                {text: '溯源管理'}
+            ]
+        }
+    },
 
-            datestr: '',
+    methods: {
+        changeActive (name, index) {
+            this.options.forEach(v => v.active && delete v.active)
+            this.options[index].active = true
+            this.$router.push({name})
+        },
 
-            user: {
-                name: '二狗',
-                department: 'UED'
-            },
+        toggleAside () {
+            if (this.side_width !== '0') {
+                this.side_width = '0'
+                this.$refs.hidespan.classList.remove('el-icon-arrow-left')
+                this.$refs.hidespan.classList.add('el-icon-arrow-right')
+            } else {
+                this.side_width = '15%'
+                this.$refs.hidespan.classList.remove('el-icon-arrow-right')
+                this.$refs.hidespan.classList.add('el-icon-arrow-left')
+            }
+        },
 
-            msg_cnt: 10,
-            options: [1, 2],
-            search_key: null
+        toggleTree () {
+            let classlist = this.$refs.switchIcon.classList
+            if (classlist.contains('normal')) {
+                classlist.remove('normal')
+            } else {
+                classlist.add('normal')
+            }
+            this.showTree = !this.showTree
+        },
+
+        clickTree (node, data) {
+            if (data.isLeaf) {
+                let arr = [{text: '溯源管理'}]
+                let parent = data.parent
+                if (Object.prototype.toString.call(parent.data) === '[object Object]') {
+                    arr.push({text: parent.data.label})
+                }
+                arr.push({text: node.label})
+                this.bread = arr
+
+                this.options = data.parent.data.children
+                this.options.forEach(v => {
+                    if (v.label === node.label) {
+                        v.active = true
+                    } else if (v.active) {
+                        delete v.active
+                    }
+                })
+                if (node.to) {
+                    this.$router.push({name: node.to})
+                }
+            }
         }
     },
 
     mounted () {
-        let formatDate = num => num < 10 ? ('0' + num) : ('' + num)
+        let map = {
+            expert: '专家课堂',
+            genealogic: '系谱档案',
+            health: {text: '卫生·疫控', children: {
+                consult: '专家咨询',
+                disinfectplan: '卫生消毒方案',
+                disinfectprac: '卫生消毒实施档案',
+                immuneplan: '免疫方案',
+                immuneprac: '免疫实施档案',
+                antiscolicplan: '驱虫方案',
+                antiscolicprac: '驱虫实施档案'
+            }},
+            nutrition: {text: '营养·生产', children: {
+                consult: '专家咨询',
+                stageplan: '阶段营养方案',
+                stageprac: '阶段营养实施档案',
+                breedplan: '配种产子管理方案',
+                breedprac: '配种产子实施档案'
+            }},
+            auth: '权限管理',
+            visual: '可视系统',
+            trace: '有机养殖环境追溯'
+        }
 
-        let date = new Date()
-        let year = date.getFullYear()
-        let month = date.getMonth() + 1
-        let day = date.getDate()
+        let path = this.$route.path.substr(7)
+        let [parent, child] = path.split('/')
+        let arr = [{text: '溯源管理'}]
 
-        let weekdayChinese = ['日', '一', '二', '三', '四', '五', '六']
-        let weekday = weekdayChinese[date.getDay()]
-        month = formatDate(month)
-        day = formatDate(day)
-        this.datestr = `${year}-${month}-${day} 星期${weekday}`
-    },
-
-    methods: {
-        clickTree (node, data) {
-            if (node.to) {
-                this.$router.push(node.to)
-            }
+        if (parent) {
+            let children = map[parent].children
+            arr.push({text: map[parent].text})
+            child && arr.push({text: children[child]})
+            this.bread = arr
+            Object.keys(children).forEach(v => {
+                let obj = {label: children[v], to: v}
+                if (v === child) {
+                    obj.active = true
+                }
+                this.options.push(obj)
+            })
         }
     }
 }
@@ -112,27 +196,33 @@ export default {
 
 <style lang="stylus">
 @import '~@/assets/css/color'
+@import '~@/assets/css/admin-form'
 
 .fl-l
     float left
+.pad
+    padding-left 8px
 .bg-blue
     background-color color-main
-.border-main
-    border 1px solid color-main
-    border-top 0
-    padding 10px
 
 .app-home
-    padding 20px 0 50px
     background-color color-main
 
 .main-aside
     min-height 500px
-    border-right 5px solid #fff
-    text-align center
-    .el-tree-node__content
+    padding-left 5px
+    transition width .3s
+    .el-tree
+        padding-left 5px
         background-color color-main
+        >div
+            border-bottom 1px solid #ddd
+            >.el-tree-node__content
+                padding-left 20px !important
+
+    .el-tree-node__content
         color #fff
+        height 40px
     .el-tree-node:focus>.el-tree-node__content, .el-tree-node__content:hover
         background-color color-main
     div[role="group"]
@@ -142,28 +232,41 @@ export default {
             color color-main
         .el-tree-node__content:hover
             background-color #ddd
-    .el-tree>div
-        border-bottom 1px solid #ddd
+        .el-tree-node__content
+            &::before
+                content '·'
+                font-size 30px
+                margin-right 5px
+    .el-tree-node__expand-icon
+        display none
 
-.main-header
-    height auto !important
-    font-size 14px
-    color #fff
-    .header-title
-        position relative
-        p
-            font-size 18px
-            margin 20px 0 0
-        .span-large
-            font-size 24px
-        .span-date
-            position absolute
-            bottom 0
-            right 20px
+    .tree-switch
+        border-top 1px solid #bbb
+        border-bottom 1px solid #bbb
+        line-height 30px
+        cursor pointer
+        color #fff
+        >div
+            display inline-block
+            margin-right 10px
+            border-radius 50%
+            background-color #fff
+            color color-main
+            line-height 1
+        .el-icon-d-arrow-right
+            float right
+            margin-right 15px
+            margin-top 8px
+            transform rotate(90deg)
+            transition transform .3s
+            &.normal
+                transform rotate(0)
 
 .app-main
     div.el-input-group__prepend
-        width 100px
+        box-sizing border-box
+        padding-right 0
+        width 140px
         color #fff
         background-color color-main
     .el-input
@@ -174,16 +277,32 @@ export default {
             &:hover,
             &:focus
                 outline 0 none
-                border-color color-main
     .el-main
-        padding 0 20px
+        position relative
+        padding 0
+        padding-left 10px
+        background-color #fff
+        .hide-span
+            position absolute
+            left 0
+            top 50%
+            width 14px
+            height h=50px
+            line-height h
+            background-color color-main
+            color #fff
+            border-left 1px solid #fff
+            border-radius 4px
+            cursor pointer
+            i
+                font-size 12px
         .pos
             height h=30px
             line-height h
-            padding-left 10px
+            padding-left 0
             .fs
-                float right
-                margin-right 10px
+                position absolute
+                right 310px
         .search
             width 300px
             .el-input-group__append
@@ -193,99 +312,37 @@ export default {
         .hl-btn
             padding 6px 20px
     .main-content
+        min-height 400px
         margin-top 20px
         padding 10px
         background-color #fff
         color color-main
-        .card-title
-            margin 0
-            padding 10px 0
-            text-align center
-            font-size 15px
-            background-color color-main
-            color #fff
-
-// 右侧头部选项卡
-.admin-tabs,
-.tab-right
-    display inline-block
-.admin-tabs
-    vertical-align middle
-    margin 10px 10px 0 0
-    .el-button--primary
-        padding 8px 20px
-        margin-bottom 10px
-        margin-left 0
-        background-color #fff
-        color color-main
-        &:active
-            background-color color-main
-            color #fff
-.tab-right
-    span
-        margin-right 15px
-        i
-            margin-right 5px
 
 // 当前位置和搜索
 .admin-hl
-    color color-main
     background-color #fff
+    color color-main
     padding 0 20px
+    i
+        font-weight bolder
+        margin-right 5px
+    .el-breadcrumb
+        display inline-block
+        .el-breadcrumb__inner
+            color color-main
 .admin-search
+    padding-top 5px
     margin 5px 20px
     .options
         margin-bottom 5px
-// 头部填写的信息
-.summary
-    .el-input
-        width calc((100% - 40px) / 3)
-        margin-right 20px
-        margin-top 10px
-        &:nth-child(3n)
-            margin-right 0
-// 具体信息
-.card
-    margin-top 20px
-    .card-item
-        display inline-block
-        vertical-align middle
-        width 49%
-        .el-input--small
-            width 60%
-            input
-                width 150px
-            &.input-days
-                width 30px
-                margin-right 5px
-                input
-                    width 30px
-                    padding 0 2px
-        >span
-            display block
-            margin 10px 0
+        .el-button
+            border-bottom-left-radius 0
+            border-bottom-right-radius 0
 
-// 提交
-.admin-submit
-    margin-top 15px
-    font-size 0
-    .el-input
-        width calc((100% - 40px) / 3)
-        min-width 200px
-        margin-right 20px
-        &:last-child
-            margin-right 0
-.admin-send
-    margin-top 10px
-    text-align center
-    .el-button
-        padding 5px 20px
-        border-radius 0
-
-.app-home
-    .container
-        padding 0 10%
-        .el-aside,
-        .app-main
+        .active
             border 1px solid #fff
+            border-bottom 0
+            color #fff
+            background-color color-main
+
 </style>

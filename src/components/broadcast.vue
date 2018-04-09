@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { getVideoUrl } from '@/util/getdata'
+
 export default {
     data () {
         return {
@@ -13,18 +15,26 @@ export default {
     },
 
     mounted () {
+        getVideoUrl().then(res => {
         /* eslint-disable no-unused-vars, no-undef */
-        var player = new TcPlayer('app-video', {
-            'm3u8': 'http://2157.liveplay.myqcloud.com/2157_358535a.m3u8',
-            // 增加了一个flv的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
-            'flv': 'http://2157.liveplay.myqcloud.com/live/2157_358535a.flv',
-            'autoplay': true,
-            // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
-            'coverpic': 'http://www.test.com/myimage.jpg',
-            // 视频的显示宽度，请尽量使用视频分辨率宽度
-            'width': '480',
-            // 视频的显示高度，请尽量使用视频分辨率高度
-            'height': '320'
+            if (res.meta.code === 0) {
+                let url = res.data.liveBroadcastResp.data.getVideoUrl
+
+                var player = new TcPlayer('app-video', {
+                    'm3u8': url,
+                    // 增加了一个flv的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
+                    'flv': url,
+                    'autoplay': true,
+                    // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
+                    // 'coverpic': 'http://www.test.com/myimage.jpg',
+                    // 视频的显示宽度，请尽量使用视频分辨率宽度
+                    'width': '480',
+                    // 视频的显示高度，请尽量使用视频分辨率高度
+                    'height': '320'
+                })
+            } else {
+                this.$message.error(res.meta.errorMsg || '获取直播信息失败')
+            }
         })
     }
 }

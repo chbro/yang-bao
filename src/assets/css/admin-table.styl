@@ -1,0 +1,42 @@
+@import './color'
+
+.admin-table
+    .el-table__header-wrapper
+        th
+            border-left 2px solid color-lightblue
+            color #fff
+            background-color color-main
+            &:first-child
+                border-left 0
+            .cell
+                font-weight 500
+
+    .el-table__row
+        td
+            border-bottom 0
+
+    .opr
+        span
+            cursor pointer
+            &::before
+                content '|'
+                margin-right 5px
+            &:last-child::after
+                content '|'
+                margin-left 5px
+
+    &~.el-pagination
+        margin-top 20px
+        text-align right
+
+/*
+.el-table__row
+    td
+        border-bottom 0
+        &:first-child
+            border-left 1px solid color-main
+        &:last-child
+            border-right 1px solid color-main
+    &:last-child td
+        border-bottom 1px solid color-main
+*/

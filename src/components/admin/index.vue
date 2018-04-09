@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="admin-form">
         <p class="card-title">有机养殖环境追溯</p>
 
         <div class="border-main">
-            <div class="summary">
+            <div class="form-summary">
                 <el-input size="small" v-for="(item, i) in summary" :key="i" v-model="summaryModel[item.model]">
                     <template slot="prepend">{{ item.label }}</template>
                 </el-input>
@@ -36,17 +36,7 @@
                 </div>
             </div>
 
-            <div class="admin-submit">
-                <el-input v-model="submit.operator" size="small">
-                    <template slot="prepend">操作员:</template>
-                </el-input>
-                <el-input v-model="submit.reviewer" size="small">
-                    <template slot="prepend">技术审核:</template>
-                </el-input>
-                <el-input v-model="submit.executor" size="small">
-                    <template slot="prepend">监督执行:</template>
-                </el-input>
-            </div>
+            <submitter :submitter.sync="submitter"></submitter>
             <div class="admin-send">
                 <el-button type="primary">取消</el-button>
                 <el-button type="primary">提交/更新</el-button>
@@ -56,14 +46,16 @@
 </template>
 
 <script>
+import Submitter from '@/components/admin/submitter'
+
 export default {
+    components: {
+        Submitter
+    },
+
     data () {
         return {
-            submit: {
-                operator: null,
-                reviewer: null,
-                executor: null
-            },
+            submitter: {},
             summary: [
                 {label: '栋号:', model: 'house_id'},
                 {label: '使用日期:', model: 'date'},
@@ -82,7 +74,3 @@ export default {
     }
 }
 </script>
-
-<style lang="stylus">
-
-</style>

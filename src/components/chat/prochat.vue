@@ -64,7 +64,7 @@
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传图片" placement="top">
                                     <!-- <img src="../../assets/imgs/picture.png" alt="上传图片" class="my_picture_picture" @click="selectFile()"> -->
-                                    <i class="iconfont icon-xitongtupianziyuan my_picture_picture" @click="selectFile()"></i>                                    
+                                    <i class="iconfont icon-xitongtupianziyuan my_picture_picture" @click="selectFile()"></i>
                                 </el-tooltip>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传文件" placement="top">
@@ -254,10 +254,10 @@ export default {
                 children: 'children',
                 label: 'label'
             },
-            
-            count: 1,
+            count: 1
         }
     },
+
     mounted () {
         this.$refs.emoji.appendTo({
             area: this.$refs.edit,
@@ -268,6 +268,11 @@ export default {
             return false
         }
     },
+
+    destroyed () {
+        window.onbeforeunload = undefined
+    },
+
     methods: {
         handleSelect (key, keyPath) {
             console.log(key, keyPath)
@@ -429,24 +434,10 @@ export default {
                 height 15%
                 width 100%
                 padding-top 1.5%
-                .my_emoji
-                    border none
-                    background none
-                    margin-top 2%
-                    font-size 1.8em
+                i
+                    margin-right 5px
+                    font-size 20px
                     cursor pointer
-                .my_picture_picture
-                    cursor pointer
-                    font-size 1.8em
-                    padding-left 0.5%
-                .my_file_picture
-                    padding-left 0.5%
-                    cursor pointer
-                    font-size 1.8em
-                .my_inviation
-                    cursor pointer
-                    font-size 1.8em
-                    padding-left 0.5%
                 .inviation
                     margin-left 88%
             .rui-emoji

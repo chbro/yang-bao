@@ -27,19 +27,19 @@
                         <el-row :gutter="20">
                             <el-col :span="4">
                                 <span>原耳牌：</span>
-                                {{ details.erpai }}
+                                {{ details.selfEartag }}
                             </el-col>
                             <el-col :span="4">
                                 <span>免疫耳牌：</span>
-                                {{ details.erpai_immune }}
+                                {{ details.immuneEartag }}
                             </el-col>
                             <el-col :span="4">
                                 <span>商标耳牌：</span>
-                                {{ details.erpai_brand }}
+                                {{ details.tradeMarkEartag }}
                             </el-col>
                             <el-col :span="12">
                                 <span>种羊基地：</span>
-                                {{ details.base }}
+                                {{ details.breedingSheepBase }}
                             </el-col>
                         </el-row>
                     </div>
@@ -47,27 +47,27 @@
                         <el-row :gutter="20">
                             <el-col :span="4">
                                 <span>父号：</span>
-                                {{ details.father }}
+                                {{ details.earTagOfFather }}
                             </el-col>
                             <el-col :span="4">
                                 <span>母号：</span>
-                                {{ details.mother }}
+                                {{ details.earTagOfMother }}
                             </el-col>
                             <el-col :span="4">
                                 <span>父父号：</span>
-                                {{ details.fa_father }}
+                                {{ details.earTagOfFathersFather }}
                             </el-col>
                             <el-col :span="4">
                                 <span>父母号：</span>
-                                {{ details.fa_mother }}
+                                {{ details.earTagOfFathersMother }}
                             </el-col>
                             <el-col :span="4">
                                 <span>母父号：</span>
-                                {{ details.mo_father }}
+                                {{ details.earTagOfMothersFather }}
                             </el-col>
                             <el-col :span="4">
                                 <span>母母号：</span>
-                                {{ details.mo_mother }}
+                                {{ details.earTagOfMothersMother }}
                             </el-col>
                         </el-row>
                     </div>
@@ -75,17 +75,17 @@
                         <el-row :gutter="20">
                             <el-col :span="4">
                                 <span>初登时间：</span>
-                                {{ details.birth }}
+                                {{ details.birthTime }}
                             </el-col>
                             <el-col :span="20">
                                 <span>初登体重：</span>
-                                {{ details.birth_weight }}
+                                {{ details.birthWeight }}
                             </el-col>
                         </el-row>
                     </div>
                     <div class="details-note">
                         <p>备注：</p>
-                        <p class="note-content" v-text="details.note"></p>
+                        <p class="note-content" v-text="details.remark"></p>
                     </div>
                 </div>
             </div>
@@ -104,7 +104,7 @@ export default {
     mounted () {
         getXipuDetail(this.$route.params.id).then(res => {
             if (res.meta.code === 0) {
-                this.details = res.data
+                this.details = res.data.object
             } else {
                 this.$message.error(res.meta.errorMsg || '获取详情失败')
             }

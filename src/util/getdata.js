@@ -5,9 +5,11 @@ import fetch from './fetch'
  */
 export const Login = data => fetch('/login', data, 'POST')
 
-export const Register = data => fetch('/userAdd', data, 'POST')
+export const Register = data => fetch('/register', data, 'POST')
 
-export const FindPass = data => fetch('/findpass', data, 'POST')
+export const FindPass = data => fetch('/ensurequestion', data, 'POST')
+
+export const GetQuestions = data => fetch('/question?name=' + data)
 
 /**
  * 添加，展示留言
@@ -26,4 +28,9 @@ export const getXipuDetail = id => fetch('/gf/findshowbyid?id=' + id)
 /**
  * 权限CURD
  */
-export const getPermission = _ => fetch('/permit')
+export const getPermission = _ => fetch('/user/')
+
+/**
+ * 获取直播或者推流地址
+ */
+export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/geturl?userid=${id}&usertype=${type}`)

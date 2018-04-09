@@ -89,21 +89,21 @@ export default {
             ],
             select: {
                 'sex': [
-                    {label: '请选择', value: 0},
-                    {label: '公', value: 1},
-                    {label: '母', value: 2}
+                    {label: '请选择'},
+                    {label: '公', value: 0},
+                    {label: '母', value: 1}
                 ],
                 'color': [
-                    {label: '请选择', value: 0},
-                    {label: '棕色', value: 1},
-                    {label: '暗红', value: 2},
-                    {label: '杂色', value: 3}
+                    {label: '请选择'},
+                    {label: '棕色', value: 0},
+                    {label: '暗红', value: 1},
+                    {label: '杂色', value: 2}
                 ]
             },
             query_labels: [
                 {label: '原耳牌', model: 'selfEartag'},
                 {label: '免疫耳牌', model: 'immuneEartag'},
-                {label: '商标耳牌', model: 'trademarkEartag'},
+                {label: '商标耳牌', model: 'tradeMarkEartag'},
                 {label: '种羊基地', model: 'breedingSheepBase'},
                 {label: '颜色', model: 'color'},
                 {label: '性别', model: 'sex'},
@@ -118,14 +118,14 @@ export default {
                 {label: '原耳牌', prop: 'selfEartag'},
                 {label: '免疫耳牌', prop: 'immuneEartag'},
                 {label: '颜色', prop: 'color'},
-                {label: '商标耳牌', prop: 'trademarkEartag'},
+                {label: '商标耳牌', prop: 'tradeMarkEartag'},
                 {label: '种羊基地', prop: 'breedingSheepBase'},
                 {label: '初登时间', prop: 'gmtCreate'}
             ],
             queries: {
                 selfEartag: null,
                 immuneEartag: null,
-                trademarkEartag: null,
+                tradeMarkEartag: null,
                 breedingSheepBase: null,
                 color: null,
                 sex: null,
@@ -158,10 +158,17 @@ export default {
                     query[v] = val
                 }
             })
+
+            let birth = query.birthTime
+            if (Array.isArray(birth)) {
+                query.birthWeightStart = birth[0]
+                query.birthWeightEnd = birth[1]
+            }
+            delete query.birthTime
             return query
         },
 
-        launchQuery ({currentPage, pageSize}) {
+        launchQuery (currentPage, pageSize) {
             let query = this.getQuery()
             if (!Object.keys(query).length) {
                 this.$message.warning('请输入查询条件')
@@ -170,9 +177,11 @@ export default {
 
             query.page = currentPage || this.page
             query.size = pageSize || this.size
+            query.page--
             queryXipu(query).then(res => {
                 if (res.meta.code === 0) {
-                    console.log(res.data)
+                    this.total = res.data.size
+                    this.tableData = res.data.List
                 } else {
                     this.$message.error(res.meta.errorMsg || '查询失败')
                 }
@@ -181,11 +190,11 @@ export default {
         },
 
         handleCurrentChange (currentPage) {
-            this.launchQuery({currentPage})
+            this.launchQuery(currentPage)
         },
 
         handleSizeChange (pageSize) {
-            this.launchQuery({pageSize})
+            this.launchQuery(null, pageSize)
         }
     }
 }

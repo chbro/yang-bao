@@ -1,0 +1,122 @@
+@import './color'
+
+.el-autocomplete-suggestion
+    li
+        color color-main
+        border-bottom 1px solid color-main
+
+.admin-form
+    .time
+        display inline-block
+        font-size 0 !important
+        .time-span
+            box-sizing border-box
+            display inline-block
+            width 140px
+            height h=32px
+            line-height h
+            padding-left 20px
+            vertical-align top
+            font-size 14px
+            border 1px solid color-main
+            background-color color-main
+            color #fff
+            &+.el-input
+                width calc(100% - 140px)
+
+        &.select
+            width calc((100% - 40px) / 1.5 + 20px) !important
+            &+.el-input-group
+                margin-right 0
+        .el-autocomplete
+            width calc(100% - 140px)
+
+    .border-main
+        border 1px solid color-main
+        border-top 0
+        padding 10px
+
+    .card-title
+        margin 0
+        padding 10px 0
+        text-align center
+        font-size 15px
+        background-color color-main
+        color #fff
+
+    .form-summary
+        font-size 0
+        .el-input-group
+            width calc((100% - 40px) / 3)
+            margin-right 20px
+            margin-top 10px
+            font-size 14px
+            &:nth-child(3n)
+                margin-right 0
+            &.double-width
+                width calc((100% - 40px) / 1.5 + 20px)
+                margin-right 0
+                .time-span
+                    width 250px
+                .el-input
+                    width calc(100% - 250px)
+                &+.el-input-group
+                    margin-right 20px
+
+    .input-text,
+    .input-select
+        overflow hidden
+        .label
+            float left
+            width 100px
+            color #fff
+            font-size 15px
+            background-color color-main
+            border 1px solid color-main
+            outline 0
+
+    // 具体信息
+    .card
+        margin-top 20px
+        .ta-l
+            text-align left
+            padding-left 2em
+        .card-item
+            display inline-block
+            vertical-align middle
+            width 49%
+            .el-input--small
+                width 50%
+                input
+                    width 150px
+                &.input-days
+                    width 30px
+                    margin-right 5px
+                    input
+                        width 30px
+                        padding 0 2px
+            >span
+                display block
+                margin 10px 0
+        .el-textarea__inner
+            min-height 100px !important
+            border-top-left-radius 0
+            border-top-right-radius 0
+            border-color color-main
+
+    // 提交
+    .admin-submit
+        margin-top 15px
+        font-size 0
+        .el-input
+            width calc((100% - 40px) / 3)
+            min-width 200px
+            margin-right 20px
+            &:last-child
+                margin-right 0
+    .admin-send
+        margin-top 10px
+        text-align center
+        .el-button
+            padding 10px 20px
+            border-radius 0

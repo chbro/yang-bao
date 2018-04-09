@@ -16,9 +16,22 @@ import ProChat from '@/components/chat/prochat'
 // 管理员模块
 import Admin from '@/components/admin/admin'
 import AdminIndex from '@/components/admin/index'
-import AdminUser from '@/components/admin/user'
-import AdminRole from '@/components/admin/role'
-import AdminAuth from '@/components/admin/auth'
+import Consult from '@/components/admin/consult'
+
+// 用户权限
+import Auth from '@/components/admin/auth/auth'
+import AuthUser from '@/components/admin/auth/user'
+import AuthRole from '@/components/admin/auth/role'
+
+// 卫生疫控
+import DisinfectPlan from '@/components/admin/health/disinfect_plan'
+import DisinfectPrac from '@/components/admin/health/disinfect_prac'
+
+// 营养生产
+import StagePlan from '@/components/admin/nutrition/stage_plan'
+import StagePrac from '@/components/admin/nutrition/stage_prac'
+import BreedPlan from '@/components/admin/nutrition/breed_plan'
+import BreedPrac from '@/components/admin/nutrition/breed_prac'
 
 Vue.use(Router)
 
@@ -39,9 +52,19 @@ export default new Router({
         // 管理员模块
         {path: '/admin', component: Admin, children: [
             {path: '', name: 'admin_index', component: AdminIndex},
-            {path: 'user', name: 'admin_user', component: AdminUser},
-            {path: 'role', name: 'admin_role', component: AdminRole},
-            {path: 'auth', name: 'admin_auth', component: AdminAuth}
+
+            {path: 'auth', name: 'auth', component: Auth},
+            {path: 'auth/user', name: 'authuser', component: AuthUser},
+            {path: 'auth/role', name: 'authrole', component: AuthRole},
+            {path: 'consult', name: 'consult', component: Consult},
+
+            {path: 'health/disinfectplan', name: 'disinfectplan', component: DisinfectPlan},
+            {path: 'health/disinfectprac', name: 'disinfectprac', component: DisinfectPrac},
+
+            {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
+            {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},
+            {path: 'nutrition/stageplan', name: 'stageplan', component: StagePlan},
+            {path: 'nutrition/stageprac', name: 'stageprac', component: StagePrac}
         ]}
     ]
 })
