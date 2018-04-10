@@ -6,6 +6,13 @@
         border-bottom 1px solid color-main
 
 .admin-form
+    .el-input-group
+        width auto
+    .select
+        >span
+            vertical-align bottom !important
+    .block
+        display table
     .time
         display inline-block
         font-size 0 !important
@@ -24,7 +31,7 @@
             &+.el-input
                 width calc(100% - 140px)
 
-        &.select
+        &.select.double-width
             width calc((100% - 40px) / 1.5 + 20px) !important
             &+.el-input-group
                 margin-right 0

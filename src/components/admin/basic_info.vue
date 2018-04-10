@@ -2,7 +2,7 @@
     <div class="border-main">
         <div class="form-summary">
             <template v-for="(item, i) in items">
-                <el-input :key="i" v-if="item.type === undefined || item.type === 'text'" size="small" v-model="models[item.model]">
+                <el-input :class="{block: item.block}" :key="i" v-if="item.type === undefined || item.type === 'text'" size="small" v-model="models[item.model]">
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 
@@ -25,8 +25,8 @@
                     <el-autocomplete
                         size="small"
                         v-model="models[item.model]"
-                        :fetch-suggestions="fetchSuggestions"
-                        @select="onSelect">
+                        :fetch-suggestions="item.fetchSuggestions"
+                        @select="item.onSelect || function() {}">
                     </el-autocomplete>
                 </div>
 

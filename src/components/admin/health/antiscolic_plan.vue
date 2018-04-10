@@ -1,19 +1,15 @@
 <template>
     <div>
-
+        <admin-table name="驱虫" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
     </div>
 </template>
 
 <script>
-export default {
-    data () {
-        return {
+import AdminTable from '@/components/admin/table'
 
-        }
+export default {
+    components: {
+        AdminTable
     }
 }
 </script>
-
-<style lang="stylus">
-
-</style>

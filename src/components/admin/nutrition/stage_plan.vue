@@ -1,19 +1,15 @@
 <template>
     <div>
-        jd plan
+        <admin-table name="阶段营养" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
     </div>
 </template>
 
 <script>
-export default {
-    data () {
-        return {
+import AdminTable from '@/components/admin/table'
 
-        }
+export default {
+    components: {
+        AdminTable
     }
 }
 </script>
-
-<style lang="stylus">
-
-</style>

@@ -27,25 +27,26 @@ import ImmunePrac from '@/components/admin/health/immune_prac'
 import AntiscolicPlan from '@/components/admin/health/antiscolic_plan'
 import AntiscolicPrac from '@/components/admin/health/antiscolic_prac'
 
-// 可视系统
-import DiagnoseVisual from '@/components/admin/visual/diagnose'
-import ProductionVisual from '@/components/admin/visual/production'
-
-import Consult from '@/components/admin/consult'
-
-// 用户权限
-import Auth from '@/components/admin/auth/auth'
-import AuthUser from '@/components/admin/auth/user'
-import AuthRole from '@/components/admin/auth/role'
-
 // 营养生产
 import StagePlan from '@/components/admin/nutrition/stage_plan'
 import StagePrac from '@/components/admin/nutrition/stage_prac'
 import BreedPlan from '@/components/admin/nutrition/breed_plan'
 import BreedPrac from '@/components/admin/nutrition/breed_prac'
 
+// 用户权限
+import Auth from '@/components/admin/auth/auth'
+import AuthUser from '@/components/admin/auth/user'
+import AuthRole from '@/components/admin/auth/role'
+
+// 可视系统
+import DiagnoseVisual from '@/components/admin/visual/diagnose'
+import ProductionVisual from '@/components/admin/visual/production'
+
 // 有机养殖环境追溯
 import Charts from '@/components/admin/trace/charts'
+
+// 专家咨询
+import Consult from '@/components/admin/consult'
 
 Vue.use(Router)
 

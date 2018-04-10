@@ -85,3 +85,24 @@ export const checkForm = form => {
     }
     return true
 }
+
+export const getConFeed = (q, cb) => {
+    let conFeed = [
+        {value: '玉米'},
+        {value: '豆粕'},
+        {value: '麸皮'},
+        {value: '食盐'},
+        {value: '预混料'}
+    ]
+
+    cb(conFeed)
+}
+
+export const getDryFeed = (q, cb) => {
+    let dryFeed = [
+        {value: '干草'},
+        {value: '青草'}
+    ]
+
+    cb(dryFeed)
+}
