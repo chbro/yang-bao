@@ -82,7 +82,10 @@ export default {
                     {label: '用户管理', to: 'authuser'},
                     {label: '角色管理', to: 'authrole'}
                 ]},
-                {label: '可视系统', children: [{label: '1-1'}]},
+                {label: '可视系统', children: [
+                    {label: '诊断可视', to: 'diagnose'},
+                    {label: '生产环节可视', to: 'production'}
+                ]},
                 {label: '有机养殖环境追溯', children: [
                     {label: '追溯图表', to: 'charts'}
                 ]}

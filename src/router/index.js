@@ -27,6 +27,10 @@ import ImmunePrac from '@/components/admin/health/immune_prac'
 import AntiscolicPlan from '@/components/admin/health/antiscolic_plan'
 import AntiscolicPrac from '@/components/admin/health/antiscolic_prac'
 
+// 可视系统
+import DiagnoseVisual from '@/components/admin/visual/diagnose'
+import ProductionVisual from '@/components/admin/visual/production'
+
 import Consult from '@/components/admin/consult'
 
 // 用户权限
@@ -77,6 +81,9 @@ export default new Router({
             {path: 'consult', name: 'consult', component: Consult},
 
             {path: 'trace/charts', name: 'charts', component: Charts},
+
+            {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
+            {path: 'visual/production', name: 'production', component: ProductionVisual},
 
             {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
             {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},
