@@ -28,6 +28,14 @@
             width calc((100% - 40px) / 1.5 + 20px) !important
             &+.el-input-group
                 margin-right 0
+        &.radio
+            >span
+                display inline-block
+                font-size 14px
+                margin-left 20px
+                margin-right 50px
+                &:first-letter
+                    margin-right 30px
         .el-autocomplete
             width calc(100% - 140px)
 
@@ -78,15 +86,16 @@
     // 具体信息
     .card
         margin-top 20px
-        .ta-l
+        .card-title
             text-align left
             padding-left 2em
         .card-item
             display inline-block
-            vertical-align middle
+            vertical-align top
             width 49%
             .el-input--small
                 width 50%
+                margin-top 10px
                 input
                     width 150px
                 &.input-days
@@ -95,7 +104,7 @@
                     input
                         width 30px
                         padding 0 2px
-            >span
+            >span:last-child
                 display block
                 margin 10px 0
         .el-textarea__inner

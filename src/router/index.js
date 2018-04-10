@@ -14,8 +14,19 @@ import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
 
 // 管理员模块
-import Admin from '@/components/admin/admin'
-import AdminIndex from '@/components/admin/index'
+import Admin from '@/components/admin/index'
+
+// 系谱档案
+import Genealogic from '@/components/admin/genealogic/index'
+
+// 卫生疫控
+import DisinfectPlan from '@/components/admin/health/disinfect_plan'
+import DisinfectPrac from '@/components/admin/health/disinfect_prac'
+import ImmunePlan from '@/components/admin/health/immune_plan'
+import ImmunePrac from '@/components/admin/health/immune_prac'
+import AntiscolicPlan from '@/components/admin/health/antiscolic_plan'
+import AntiscolicPrac from '@/components/admin/health/antiscolic_prac'
+
 import Consult from '@/components/admin/consult'
 
 // 用户权限
@@ -23,15 +34,14 @@ import Auth from '@/components/admin/auth/auth'
 import AuthUser from '@/components/admin/auth/user'
 import AuthRole from '@/components/admin/auth/role'
 
-// 卫生疫控
-import DisinfectPlan from '@/components/admin/health/disinfect_plan'
-import DisinfectPrac from '@/components/admin/health/disinfect_prac'
-
 // 营养生产
 import StagePlan from '@/components/admin/nutrition/stage_plan'
 import StagePrac from '@/components/admin/nutrition/stage_prac'
 import BreedPlan from '@/components/admin/nutrition/breed_plan'
 import BreedPrac from '@/components/admin/nutrition/breed_prac'
+
+// 有机养殖环境追溯
+import Charts from '@/components/admin/trace/charts'
 
 Vue.use(Router)
 
@@ -51,15 +61,22 @@ export default new Router({
 
         // 管理员模块
         {path: '/admin', component: Admin, children: [
-            {path: '', name: 'admin_index', component: AdminIndex},
+
+            {path: 'genealogic', name: 'genealogic', component: Genealogic},
+
+            {path: 'health/disinfectplan', name: 'disinfectplan', component: DisinfectPlan},
+            {path: 'health/disinfectprac', name: 'disinfectprac', component: DisinfectPrac},
+            {path: 'health/immuneplan', name: 'immuneplan', component: ImmunePlan},
+            {path: 'health/immuneprac', name: 'immuneprac', component: ImmunePrac},
+            {path: 'health/antiscolicplan', name: 'antiscolicplan', component: AntiscolicPlan},
+            {path: 'health/antiscolicprac', name: 'antiscolicprac', component: AntiscolicPrac},
 
             {path: 'auth', name: 'auth', component: Auth},
             {path: 'auth/user', name: 'authuser', component: AuthUser},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'consult', name: 'consult', component: Consult},
 
-            {path: 'health/disinfectplan', name: 'disinfectplan', component: DisinfectPlan},
-            {path: 'health/disinfectprac', name: 'disinfectprac', component: DisinfectPrac},
+            {path: 'trace/charts', name: 'charts', component: Charts},
 
             {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
             {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},

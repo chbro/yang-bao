@@ -59,7 +59,7 @@
             </div>
 
             <div class="card">
-                <p class="card-title ta-l">备注:</p>
+                <p class="card-title">备注:</p>
                 <el-input type="textarea" v-model="models.note"></el-input>
             </div>
         </div>

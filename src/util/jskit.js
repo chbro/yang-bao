@@ -3,6 +3,9 @@
  * zym 2018-03-20 15:30:41
  */
 
+import Vue from 'vue'
+
+let app = new Vue()
 export const jumpToLogin = () => {
     localStorage.removeItem('sheep-token')
     window.location.replace(window.location.host + '/#/login')
@@ -69,6 +72,15 @@ export const keepLastIndex = obj => {
 export const checkSubmit = info => {
     let { operator, reviewer, executor } = info
     if (!(operator && reviewer && executor)) {
+        app.$message.warning('请完善提交人信息')
+        return false
+    }
+    return true
+}
+
+export const checkForm = form => {
+    if (Object.keys(form).some(v => form[v] === null || form[v] === '')) {
+        app.$message.warning('请完善表单信息')
         return false
     }
     return true

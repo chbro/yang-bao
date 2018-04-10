@@ -11,9 +11,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "echarts": "^4.0.4",
     "element-ui": "^2.2.1",
     "md5": "^2.2.1",
     "rui-vue-emoji": "^1.1.1",
+    "v-charts": "^1.16.8",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
