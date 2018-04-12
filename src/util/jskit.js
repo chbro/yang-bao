@@ -86,6 +86,27 @@ export const checkForm = form => {
     return true
 }
 
+export const checkCards = cards => {
+    try {
+        cards.forEach(v => {
+            v.items.forEach(v2 => {
+                v2.inputs.forEach(v3 => {
+                    if (!(v3.dose && v3.day)) {
+                        app.$message.warning('请完善配方和用量信息')
+                        throw new Error('break')
+                    }
+                })
+            })
+        })
+    } catch (e) {
+        if (e.message !== 'break') {
+            throw e
+        }
+        return false
+    }
+    return true
+}
+
 export const getConFeed = (q, cb) => {
     let conFeed = [
         {value: '玉米'},
@@ -105,4 +126,17 @@ export const getDryFeed = (q, cb) => {
     ]
 
     cb(dryFeed)
+}
+
+export const isReqSuccessful = (res) => {
+    if (!res.meta) {
+        app.$message.error('请求失败')
+        return false
+    }
+
+    if (res.meta.code === 0) {
+        return true
+    } else {
+        app.$message.error(res.meta.errorMsg || '请求失败')
+    }
 }

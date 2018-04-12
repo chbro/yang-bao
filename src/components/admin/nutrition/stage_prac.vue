@@ -20,7 +20,7 @@
 import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
 import Card from '@/components/admin/card'
-import { checkForm, checkSubmit, getDryFeed, getConFeed } from '@/util/jskit'
+import { checkForm, checkSubmit, checkCards, getDryFeed, getConFeed } from '@/util/jskit'
 
 export default {
     components: {
@@ -50,7 +50,7 @@ export default {
             items: [
                 {label: '栋号', model: 'house_id'},
                 {label: '使用日期', model: 'use_date', type: 'time'},
-                {label: '羊数', model: 'lamb_num', type: 'number'},
+                {label: '羊数', model: 'lamb_num', type: 'number', mr: true},
                 {label: '阶段', model: 'stage', type: 'select', fetchSuggestions: getStages},
                 {label: '饮水', model: 'water'}
             ],
@@ -95,6 +95,9 @@ export default {
     methods: {
         submit () {
             if (!checkForm(this.models)) {
+                return
+            }
+            if (!checkCards(this.cards)) {
                 return
             }
             if (!checkSubmit(this.submitter)) {

@@ -17,7 +17,7 @@
                     <span class="hide-span" @click="toggleAside"><i ref="hidespan" class="el-icon-arrow-left"></i></span>
                     <div class="admin-hl pos">
                         <b><i class="el-icon-arrow-down"></i>位置：</b>
-                        <el-breadcrumb separator=" ">
+                        <el-breadcrumb separator="-">
                              <el-breadcrumb-item v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
                         </el-breadcrumb>
                         <span class="fs"><i class="el-icon-menu"></i>全屏</span>
@@ -59,7 +59,12 @@ export default {
             side_width: '15%',
 
             treedata: [
-                {label: '专家课堂'},
+                {label: '权限管理', children: [
+                    {label: '权限管理', to: 'auth'},
+                    {label: '用户管理', to: 'authuser'},
+                    {label: '角色管理', to: 'authrole'}
+                ]},
+                {label: '专家课堂', to: 'consult'},
                 {label: '系谱档案', to: 'genealogic'},
                 {label: '卫生·疫控', children: [
                     {label: '专家咨询', to: 'consult'},
@@ -77,17 +82,26 @@ export default {
                     {label: '配种产子管理方案', to: 'breedplan'},
                     {label: '配种产子实施档案', to: 'breedprac'}
                 ]},
-                {label: '权限管理', children: [
-                    {label: '权限管理', to: 'auth'},
-                    {label: '用户管理', to: 'authuser'},
-                    {label: '角色管理', to: 'authrole'}
+                {label: '疫病防治', children: [
+                    {label: '专家咨询', to: 'consult'},
+                    {label: '疫病防治方案', to: 'preventionplan'},
+                    {label: '疫病防治实施档案', to: 'preventionprac'}
                 ]},
+                {label: '生产物资平台', to: 'https://baidu.com', out: true},
                 {label: '可视系统', children: [
                     {label: '诊断可视', to: 'diagnose'},
                     {label: '生产环节可视', to: 'production'}
                 ]},
                 {label: '有机养殖环境追溯', children: [
                     {label: '追溯图表', to: 'charts'}
+                ]},
+                {label: '有机·监管', children: [
+                    {label: '国家认证', to: 'nation'},
+                    {label: '企业监控认证', children: [
+                        {label: '生产可视截图', to: 'capture'},
+                        {label: '操作流程审核', to: 'audit'},
+                        {label: '回收化验指标', to: 'recovery_index'}
+                    ]}
                 ]}
             ],
             options: [],
@@ -214,6 +228,7 @@ export default {
     background-color color-main
 
 .app-home
+    min-width 1200px
     background-color color-main
 
 .main-aside

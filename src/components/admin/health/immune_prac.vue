@@ -79,12 +79,12 @@ export default {
         }
         return {
             items: [
-                {label: '免疫耳牌号', model: 'immunetag', block: true},
+                {label: '免疫耳牌号', model: 'immunetag', type: 'file', block: true},
                 {label: '接种羊群', model: 'sheep'},
                 {label: '疫苗种类', model: 'medicine', type: 'select', fetchSuggestions: getImmuneTypes},
-                {label: '接种方法', model: 'way', type: 'select', fetchSuggestions: getInfectWays},
+                {label: '接种方法', model: 'way', type: 'select', fetchSuggestions: getInfectWays, mr: true},
                 {label: '接种剂量', model: 'dose', type: 'select', fetchSuggestions: getDoses},
-                {label: '免疫期', model: 'dose', type: 'select', fetchSuggestions: getPeriods}
+                {label: '免疫期', model: 'period', type: 'select', fetchSuggestions: getPeriods}
             ],
             models: {
                 immunetag: null,
@@ -92,6 +92,7 @@ export default {
                 medicine: null,
                 way: null,
                 dose: null,
+                period: null,
                 note: null
             },
             submitter: {}
@@ -100,6 +101,7 @@ export default {
 
     methods: {
         submit () {
+            console.log(this.models, this.submitter)
             if (!checkForm(this.models)) {
                 return
             }

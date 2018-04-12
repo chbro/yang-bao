@@ -39,7 +39,7 @@ export default {
                 {label: '免疫耳牌号', model: 'immunetag', block: true},
                 {label: '消毒场所', model: 'place'},
                 {label: '消毒药名称', model: 'medicine', type: 'select', fetchSuggestions: getMedicines},
-                {label: '用药剂量', model: 'dose'}
+                {label: '用药剂量', model: 'dose', mr: true}
             ],
             models: {
                 immunetag: null,

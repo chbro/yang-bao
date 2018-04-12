@@ -25,6 +25,13 @@ export default {
         BasicInfo, Submitter
     },
 
+    mounted () {
+        let editId = this.$route.query.edit
+        if (editId) {
+            console.log(editId)
+        }
+    },
+
     data () {
         let medicines = [
             {value: '伊维菌素注射注射液', key: 0},
@@ -62,10 +69,10 @@ export default {
         /* eslint-disable object-property-newline */
         return {
             items: [
-                {label: '免疫耳牌号', model: 'immunetag', block: true},
+                {label: '免疫耳牌号', model: 'immunetag', type: 'file', block: true},
                 {label: '接种羊（群）', model: 'sheep'},
                 {label: '驱虫时间', model: 'time', type: 'time'},
-                {label: '药物名称', model: 'infect', type: 'select', fetchSuggestions: getMedicines},
+                {label: '药物名称', model: 'infect', type: 'select', fetchSuggestions: getMedicines, mr: true},
                 {label: '给药途径', model: 'way', type: 'select', fetchSuggestions: getWays},
                 {label: '给药剂量', model: 'dose', type: 'select', fetchSuggestions: getDoses}
             ],

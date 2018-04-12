@@ -1,69 +1,12 @@
 <template>
     <div class="admin-form">
-        <p class="card-title">有机养殖环境追溯</p>
+        <p class="card-title">配种产子实施档案</p>
 
-        <div class="border-main">
-            <div class="form-summary">
-                <el-input size="small" v-model="models.house_id">
-                    <template slot="prepend">栏/栋:</template>
-                </el-input>
-                <el-input size="small" v-model="models.immunetag">
-                    <template slot="prepend">母羊免疫耳牌:</template>
-                </el-input>
-                <el-input size="small" v-model="models.tradetag">
-                    <template slot="prepend">母羊商标耳牌:</template>
-                </el-input>
-                <el-input size="small" v-model="models.male_immunetag">
-                    <template slot="prepend">种公羊免疫耳牌:</template>
-                </el-input>
-                <el-input size="small" v-model="models.male_tradetag">
-                    <template slot="prepend">种公羊商标耳牌:</template>
-                </el-input>
-
-                <div class="time el-input-group">
-                    <span class="time-span">配种时间:</span>
-                    <el-date-picker
-                        size="small"
-                        v-model="models.breed_time"
-                        type="date">
-                    </el-date-picker>
-                </div>
-                <div class="time el-input-group">
-                    <span class="time-span">妊娠时间:</span>
-                    <el-date-picker
-                        size="small"
-                        v-model="models.pregnance_time"
-                        type="date">
-                    </el-date-picker>
-                </div>
-                <div class="time el-input-group double-width">
-                    <span class="time-span">产前免疫（三联四防）接种时间:</span>
-                    <el-date-picker
-                        size="small"
-                        v-model="models.antenatal_immunetime"
-                        type="date">
-                    </el-date-picker>
-                </div>
-                <div class="time el-input-group">
-                    <span class="time-span">产羔时间:</span>
-                    <el-date-picker
-                        size="small"
-                        v-model="models.lambing_time"
-                        type="date">
-                    </el-date-picker>
-                </div>
-                <div class="time el-input-group">
-                    <span class="time-span">产羔数量:</span>
-                    <el-input-number :min="1" size="small" v-model="models.lambing_num"></el-input-number>
-                </div>
-            </div>
-
-            <div class="card">
-                <p class="card-title">备注:</p>
-                <el-input type="textarea" v-model="models.note"></el-input>
-            </div>
+        <basic-info :items="items" :models="models"></basic-info>
+        <div class="card">
+            <p class="card-title">备注:</p>
+            <el-input type="textarea" v-model="models.note"></el-input>
         </div>
-
         <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
@@ -74,11 +17,12 @@
 
 <script>
 import Submitter from '@/components/admin/submitter'
-import { checkSubmit } from '@/util/jskit'
+import BasicInfo from '@/components/admin/basic_info'
+import { checkForm, checkSubmit } from '@/util/jskit'
 
 export default {
     components: {
-        Submitter
+        BasicInfo, Submitter
     },
 
     mounted () {
@@ -90,17 +34,17 @@ export default {
 
     data () {
         return {
-            summary: [
-                {label: '栏/栋:'},
-                {label: '母羊免疫耳牌:'},
-                {label: '母羊商标耳牌:'},
-                {label: '种公羊免疫耳牌:'},
-                {label: '种公羊商标耳牌:'},
-                {label: '配种时间:'},
-                {label: '妊娠时间:'},
-                {label: '产前免疫（三联四防）接种时间:'},
-                {label: '产羔时间:'},
-                {label: '产羔'}
+            items: [
+                {label: '栏/栋', model: 'house_id'},
+                {label: '母羊免疫耳牌', model: 'immunetag'},
+                {label: '母羊商标耳牌', model: 'tradetag', mr: true},
+                {label: '种公羊免疫耳牌', model: 'male_immunetag'},
+                {label: '种公羊商标耳牌', model: 'male_tradetag'},
+                {label: '配种时间', model: 'breed_time', mr: true, type: 'time'},
+                {label: '妊娠时间', model: 'pregnance_time', type: 'time'},
+                {label: '产前免疫（三联四防）接种时间', model: 'antenatal_immunetime', doubleWidth: true, mr: true, type: 'time'},
+                {label: '产羔时间', model: 'lambing_time', type: 'time'},
+                {label: '产羔', model: 'lambing_num', type: 'number'}
             ],
             models: {
                 house_id: null,
@@ -121,16 +65,13 @@ export default {
 
     methods: {
         submit () {
-            if (Object.keys(this.models).some(v => this.models[v] === null || this.models[v] === '')) {
-                this.$message.warning('请完善追溯信息')
+            if (!checkForm(this.models)) {
                 return
             }
-
             if (!checkSubmit(this.submitter)) {
-                this.$message.warning('请完善操作员信息')
                 return
             }
-            console.log(this.submitter, this.models)
+            console.log(this.models, this.submitter)
         }
     }
 }

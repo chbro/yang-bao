@@ -47,6 +47,7 @@ export default {
     components: {
         SIdentify
     },
+
     data () {
         var validatePass = (rule, value, callback) => {
             if (value === '') {
@@ -88,6 +89,7 @@ export default {
         }
     },
     mounted () {
+        window.md5 = md5
         this.makeCode(this.identifyCodes, 4)
     },
     methods: {

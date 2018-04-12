@@ -2,7 +2,7 @@
     <div id="pro_wrapper">
         <el-container>
             <el-header>
-                <img src="../../assets/imgs/header-logo.png" alt="LOGO">
+                <img src="~@/assets/imgs/header-logo.png" alt="LOGO">
                 <el-menu :default-active="activeIndex2" class="el-menu-demo chat-menu" mode="horizontal" @select="handleSelect" text-color="#fff" active-text-color="#ffd04b">
                     <el-menu-item index="3">退出</el-menu-item>
                     <el-menu-item index="2">商店</el-menu-item>
@@ -106,12 +106,7 @@ export default {
     data () {
         return {
             showEmoji: false,
-            items: [
-                {html: '<p><span class="user_message">你好，啊hello</span><span class="username">客户</span></p>', class: 'user'},
-                {html: '<p><span class="user_message">你好，啊&nbsp;&nbsp;&nbsp;</span><span>客户</span></p>', class: 'user'},
-                {html: '<p><span class="user_message">sdfsdfdsfsdf</span><span>客户</span></p>', class: 'user'},
-                {html: '<p><span class="professorname">专家</span><span class="professor_message">&nbsp;&nbsp;&nbsp;你好，请问有什么问题?&nbsp;&nbsp;&nbsp;</span></p>', class: 'professor'}
-            ],
+            items: [],
             value: '',
             activeIndex: '1',
             activeIndex2: '1',
@@ -264,6 +259,24 @@ export default {
             btn: this.$refs.btn,
             position: 'top left'
         })
+
+        let wsUri = 'ws://192.168.1.110:8080/websocket/11'
+        this.websocket = new WebSocket(wsUri)
+        this.websocket.onopen = evt => {
+            // console.log(evt, 1111)
+        }
+        this.websocket.onclose = evt => {
+            console.log('连接已关闭')
+        }
+        this.websocket.onmessage = evt => {
+            console.log(evt)
+            let data = JSON.parse(evt.data)
+            this.items.push({html: data.message, class: 'user'})
+        }
+        this.websocket.onerror = evt => {
+            console.log('连接错误')
+        }
+
         window.onbeforeunload = function () {
             return false
         }
@@ -277,14 +290,17 @@ export default {
         handleSelect (key, keyPath) {
             console.log(key, keyPath)
         },
+
         filterNode (value, data) {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
+
         filterNode3 (value, data) {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
+
         handleEmojiSelect (img) {
             let edit = this.$refs.edit
             img.src = img.src.replace('/images', '/static/images')

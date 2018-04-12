@@ -6,7 +6,6 @@ import Index from '@/components/index'
 import Login from '@/components/login/login'
 import Register from '@/components/login/register'
 import FindPass from '@/components/login/findpass'
-
 import Xipu from '@/components/xipu/xipu'
 import XipuDetail from '@/components/xipu/xipu_detail'
 import Broadcast from '@/components/broadcast'
@@ -14,39 +13,42 @@ import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
 
 // 管理员模块
-import Admin from '@/components/admin/index'
-
-// 系谱档案
-import Genealogic from '@/components/admin/genealogic/index'
-
-// 卫生疫控
-import DisinfectPlan from '@/components/admin/health/disinfect_plan'
-import DisinfectPrac from '@/components/admin/health/disinfect_prac'
-import ImmunePlan from '@/components/admin/health/immune_plan'
-import ImmunePrac from '@/components/admin/health/immune_prac'
-import AntiscolicPlan from '@/components/admin/health/antiscolic_plan'
-import AntiscolicPrac from '@/components/admin/health/antiscolic_prac'
-
-// 营养生产
-import StagePlan from '@/components/admin/nutrition/stage_plan'
-import StagePrac from '@/components/admin/nutrition/stage_prac'
-import BreedPlan from '@/components/admin/nutrition/breed_plan'
-import BreedPrac from '@/components/admin/nutrition/breed_prac'
-
+const Admin = () => import('@/components/admin/index')
 // 用户权限
-import Auth from '@/components/admin/auth/auth'
-import AuthUser from '@/components/admin/auth/user'
-import AuthRole from '@/components/admin/auth/role'
-
+const Auth = () => import('@/components/admin/auth/auth')
+const AuthUser = () => import('@/components/admin/auth/user')
+const AuthRole = () => import('@/components/admin/auth/role')
+// 专家课堂
+const Consult = () => import('@/components/admin/consult')
+// 系谱档案
+const Genealogic = () => import('@/components/admin/genealogic/index')
+// 卫生疫控
+const DisinfectPlan = () => import('@/components/admin/health/disinfect_plan')
+const DisinfectPrac = () => import('@/components/admin/health/disinfect_prac')
+const ImmunePlan = () => import('@/components/admin/health/immune_plan')
+const ImmunePrac = () => import('@/components/admin/health/immune_prac')
+const AntiscolicPlan = () => import('@/components/admin/health/antiscolic_plan')
+const AntiscolicPrac = () => import('@/components/admin/health/antiscolic_prac')
+// 营养生产
+const StagePlan = () => import('@/components/admin/nutrition/stage_plan')
+const StagePrac = () => import('@/components/admin/nutrition/stage_prac')
+const BreedPlan = () => import('@/components/admin/nutrition/breed_plan')
+const BreedPrac = () => import('@/components/admin/nutrition/breed_prac')
+// 疫病防治
+const PreventionPlan = () => import('@/components/admin/prevention/prevention_plan')
+const PreventionPrac = () => import('@/components/admin/prevention/prevention_prac')
 // 可视系统
-import DiagnoseVisual from '@/components/admin/visual/diagnose'
-import ProductionVisual from '@/components/admin/visual/production'
-
+const DiagnoseVisual = () => import('@/components/admin/visual/diagnose')
+const ProductionVisual = () => import('@/components/admin/visual/production')
 // 有机养殖环境追溯
-import Charts from '@/components/admin/trace/charts'
+const TraceCharts = () => import('@/components/admin/trace/charts')
+// 有机监管
+const Nation = () => import('@/components/admin/supervise/nation')
+const Audit = () => import('@/components/admin/supervise/audit')
+const Capture = () => import('@/components/admin/supervise/capture')
+const RecoveryIndex = () => import('@/components/admin/supervise/recovery_index')
 
-// 专家咨询
-import Consult from '@/components/admin/consult'
+const NotFound = () => import('@/components/not_found')
 
 Vue.use(Router)
 
@@ -66,6 +68,13 @@ export default new Router({
 
         // 管理员模块
         {path: '/admin', component: Admin, children: [
+            {path: '', name: 'auth', component: Auth},
+
+            // {path: 'auth', name: 'auth', component: Auth},
+            {path: 'auth/user', name: 'authuser', component: AuthUser},
+            {path: 'auth/role', name: 'authrole', component: AuthRole},
+
+            {path: 'consult', name: 'consult', component: Consult},
 
             {path: 'genealogic', name: 'genealogic', component: Genealogic},
 
@@ -76,20 +85,24 @@ export default new Router({
             {path: 'health/antiscolicplan', name: 'antiscolicplan', component: AntiscolicPlan},
             {path: 'health/antiscolicprac', name: 'antiscolicprac', component: AntiscolicPrac},
 
-            {path: 'auth', name: 'auth', component: Auth},
-            {path: 'auth/user', name: 'authuser', component: AuthUser},
-            {path: 'auth/role', name: 'authrole', component: AuthRole},
-            {path: 'consult', name: 'consult', component: Consult},
+            {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
+            {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},
+            {path: 'nutrition/stageplan', name: 'stageplan', component: StagePlan},
+            {path: 'nutrition/stageprac', name: 'stageprac', component: StagePrac},
 
-            {path: 'trace/charts', name: 'charts', component: Charts},
+            {path: 'prevention/preventionplan', name: 'preventionplan', component: PreventionPlan},
+            {path: 'prevention/preventionprac', name: 'preventionprac', component: PreventionPrac},
 
             {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
             {path: 'visual/production', name: 'production', component: ProductionVisual},
 
-            {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
-            {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},
-            {path: 'nutrition/stageplan', name: 'stageplan', component: StagePlan},
-            {path: 'nutrition/stageprac', name: 'stageprac', component: StagePrac}
-        ]}
+            {path: 'trace/charts', name: 'charts', component: TraceCharts},
+
+            {path: 'supervise/nation', name: 'nation', component: Nation},
+            {path: 'supervise/capture', name: 'capture', component: Capture},
+            {path: 'supervise/audit', name: 'audit', component: Audit},
+            {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex}
+        ]},
+        {path: '*', component: NotFound}
     ]
 })
