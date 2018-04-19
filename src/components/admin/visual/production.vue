@@ -14,7 +14,7 @@
 		</div>
 		<div class="production-view">
 			<el-card class="production-content">
-        		<el-button type="text" @click="productionShow0 = true">
+        		<el-button type="text" @click="productionShow = true">
         			<div class="production-image"></div>
         		</el-button>
 				<p>症状描述：</p>
@@ -30,7 +30,7 @@
 	                    <li>商标耳牌：aaa</li>
 	                    <li>检疫耳牌：</li>
 	                    <li>畜牧性别：</li>
-	                    <li>症状描述</li>
+	                    <li>症状描述:</li>
 	                    <li>解决方案：</li>
 	                    <li>就诊专家：</li>
 	                    <li>上传日期：</li>
@@ -170,31 +170,31 @@ export default {
 			}],
 
 			buy:[{
-				radio:'1',
+				radio:'1'
 			},{
-				radio:'2',
+				radio:'2'
 			}],
 			altitude:[{
-				radio:'1',
+				radio:'1'
 			},{
-				radio:'2',
+				radio:'2'
 			},{
-				radio:'3',
+				radio:'3'
 			},{
-				radio:'4',
+				radio:'4'
 			},{
-				radio:'5',
+				radio:'5'
 			}],
 			time:[{
-				radio:'1',
-			},{
-				radio:'2',
+				radio:'1'
+			}, {
+				radio: '2'
 			}],
 
-			productionShow0: false,
-			productionShow1: false,
-		}
-	}
+            productionShow0: false,
+            productionShow1: false
+	    }
+    }
 }
 </script>
 
@@ -203,22 +203,22 @@ export default {
     width 80%
     margin 10px auto
     span
-    	line-heigt 100%
+        line-heigt 100%
     .search-input
-	    width 50%
+        width 50%
 
 .production-view
-	display flex
-	flex-direction row
-	flex-wrap wrap
-	justify-content space-around
-	.production-content
-		font-size 15px
-		margin 10px 10px
-		.production-image
-			width 200px
-			height 100px
-			border 1px solid #ccc
+    display flex
+    flex-direction row
+    flex-wrap wrap
+    justify-content space-around
+    .production-content
+	    font-size 15px
+	    margin 10px 10px
+	    .production-image
+	        width 200px
+            height 100px
+            border 1px solid #ccc
 
 .el-dialog__wrapper
     .show-detail
@@ -238,12 +238,12 @@ export default {
        width 30%
 
 .comment-content
-	border 1px solid #ccc
-	width 80%
-	margin 20px auto
-	display flex
-	flex-direction row
-	justify-content space-around
+    border 1px solid #ccc
+    width 80%
+    margin 20px auto
+    display flex
+    flex-direction row
+    justify-content space-around
 
 .el-pagination
    text-align right

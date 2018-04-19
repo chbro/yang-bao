@@ -52,7 +52,7 @@ export default {
             cb(experts)
         }
         return {
-            items:[ {
+            items: [ {
                 label: '请选择上传文件',
                 model: 'upfile',
                 type: 'file',

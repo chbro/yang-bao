@@ -76,7 +76,7 @@ export default {
         ]
         let getPeriods = (q, cb) => {
             cb(periods)
-        }   
+        }
         return {
             items: [
                 {label: '免疫耳牌号', model: 'immunetag', type: 'file', block: true},

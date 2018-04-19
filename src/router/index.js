@@ -17,7 +17,6 @@ const SearchRes = () => import('@/components/search_res')
 const Admin = () => import('@/components/admin/index')
 // 用户权限
 const Auth = () => import('@/components/admin/auth/auth')
-const AuthUser = () => import('@/components/admin/auth/user')
 const AuthRole = () => import('@/components/admin/auth/role')
 // 专家课堂
 const Consult = () => import('@/components/admin/consult')
@@ -76,7 +75,6 @@ export default new Router({
 
             {path: 'welfare', name: 'welfare', component: Welfare},
 
-            {path: 'auth/user', name: 'authuser', component: AuthUser},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
 
             {path: 'consult', name: 'consult', component: Consult},
