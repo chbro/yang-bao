@@ -5,15 +5,13 @@
                 <el-container>
                     <el-main>
                         <div class="dialog_box">
-                            <div class="dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+                            <div class="dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
                         </div>
                         <div class="input_box">
                             <div class="chat-option">
                                 <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
-<!--                                 <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i> -->
                                 <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
+                                <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
                             </div>
                             <vue-emoji style="top:68px;"
                                 v-show='showEmoji'
@@ -82,26 +80,6 @@
                     </el-form>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="电话">
-                <div class="telephone">
-                    <p>输入您的手机号码，点击“拨打”按钮，系统将自动为您建立免费通话！</p>
-                    <el-form>
-                        <el-form-item>
-                            <el-input v-model="telephone_number" auto-complete="off" placeholder="手机">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-input v-model="code" auto-complete="off" placeholder="验证码">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" class="submit_telephone">拨打</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <p>请输入合法的手机号码，如：13987654321。</p>
-                    <P>非来电免费手机只产生接听费用，无其他额外费用</p>
-                </div>
-            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -110,7 +88,8 @@
 import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
-import { transferTalkFile } from '@/util/getdata'
+import { baseUrl } from '@/util/fetch'
+import { matchExpert } from '@/util/getdata'
 
 export default {
     components: {
@@ -118,6 +97,7 @@ export default {
     },
 
     mounted () {
+        // 表情组件初始化
         this.$refs.emoji.appendTo({
             area: this.$refs.edit,
             btn: this.$refs.btn,
@@ -127,7 +107,11 @@ export default {
         let wsUri = 'ws://192.168.1.110:8080/websocket/1'
         this.websocket = new WebSocket(wsUri)
         this.websocket.onclose = evt => {
-            console.log('连接已关闭')
+            this.$notify.error({
+                duration: 0,
+                title: '错误',
+                message: '连接已关闭'
+            })
         }
         this.websocket.onmessage = evt => {
             console.log(evt)
@@ -136,11 +120,23 @@ export default {
                 this.$message.error('发送失败')
                 return
             }
-            this.items.push({html: data.message, class: 'user'})
+            this.items.push({html: data.message, user: 1})
         }
         this.websocket.onerror = evt => {
-            console.log('连接错误')
+            this.$notify.error({
+                duration: 0,
+                title: '错误',
+                message: '连接错误'
+            })
         }
+
+        matchExpert(this.agentid).then(res => {
+            if (isReqSuccessful(res)) {
+                this.expertid = res.data.expert_id
+            }
+        }, res => {
+            this.$message.error(res.meta.errorMsg || '邀请专家加入聊天失败')
+        })
 
         window.onbeforeunload = function () {
             return false
@@ -148,7 +144,7 @@ export default {
     },
 
     destroyed () {
-        window.onbeforeunload = undefined
+        window.onbeforeunload = null
     },
 
     data () {
@@ -167,22 +163,20 @@ export default {
             },
             formLabelWidth: '120px',
 
-            telephone_number: '',
-            code: '',
-
             activeIndex: '1',
             activeIndex2: '1',
-            myText: 'sdd',
             showEmoji: false,
             items: [
-                {html: '<p><span class="chat_user_message">你好</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'}
+                {html: '你好', user: 1},
+                {html: '你好啊，请问有什么问题？'}
             ],
-            value: '',
             websocket: null,
             email: '',
             name: '',
-            message: ''
+            message: '',
+
+            agentid: 3,
+            expertid: null
         }
     },
 
@@ -199,10 +193,9 @@ export default {
         },
 
         send (e) {
+            // 按下button时e == undefiend
             e && e.preventDefault()
             let edit = this.$refs.edit
-            // this.items.push({html: edit.innerHTML, class: 'user'})
-            // console.log(this.websocket)
             let data = {
                 message: edit.innerHTML,
                 role_id: 1,
@@ -219,16 +212,10 @@ export default {
             let file = this.$refs.file.files[0]
 
             if (file === undefined) {
-                this.$message.warning('请选择文件')
+                this.$message.warning('未选择文件')
+                file.value = undefined
                 return
             }
-            let data = {
-                file,
-                hehe: 1
-            }
-            transferTalkFile(data)
-            console.log(data)
-            return
             let form = new FormData()
             form.append('file', file)
             form.append('user_id', 3)
@@ -236,22 +223,20 @@ export default {
             form.append('talk_id', 11)
             form.append('mode', 0)
 
-            window.fetch('http://192.168.1.110:8080/talk/upload', {
+            window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
                 body: form
             }).then(res => {
                 if (isReqSuccessful(res)) {
+                    this.$message.success('文件发送成功')
+                    this.data.push({html: '<i class="el-icon-document"></i>' + file.name, class: 'user'})
                     console.log(res)
+                } else {
+                    this.$message.error('文件发送失败')
                 }
+            }, _ => {
+                this.$message.error('文件发送失败')
             })
-        },
-
-        selectFile () {
-            this.$refs.file.click()
-        },
-
-        close () {
-
         }
     }
 }
@@ -263,7 +248,6 @@ export default {
 .chat-wrapper
     width 60%
     min-width 800px
-    height 510px
     margin 50px auto 0
     background-color #666
     .el-tabs__content
@@ -288,25 +272,27 @@ export default {
         .dialog_box
             height 60%
             border 1px solid #e4e7ed
-            overflow-y scroll
+            overflow-y auto
             .dialog-item
                 font-size 1em
                 margin-left 15px
                 line-height 25px
+                &.user
+                    text-align right
+                    padding-right 15px
+                    background-color #3385ff
+                    color #fff
+                    border-radius 10px
+                    margin-right 1%
+                    padding 0 10px
+                    display inline-block
+                    max-width 80%
                 &.chat_user
                     color #000
                     margin-right 15px
                     text-align right
                     p
                         margin 1%
-                        .chat_user_message
-                            background-color #3385ff
-                            color #ffffff
-                            border-radius 10px
-                            margin-right 1%
-                            padding 0 10px
-                            display inline-block
-                            max-width 80%
                         .chat_user_name
                             color #777777
                 &.chat_professor

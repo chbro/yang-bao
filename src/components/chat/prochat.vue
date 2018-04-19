@@ -2,8 +2,8 @@
     <div id="pro_wrapper">
         <el-container>
             <el-header>
-                <img src="~@/assets/imgs/header-logo.png" alt="LOGO">
-                <el-menu :default-active="activeIndex2" class="el-menu-demo chat-menu" mode="horizontal" @select="handleSelect" text-color="#fff" active-text-color="#ffd04b">
+                <img src="~@/assets/imgs/header-logo.png" alt="header-logo">
+                <el-menu :default-active="activeIndex2" class="chat-menu" mode="horizontal" @select="handleSelect" text-color="#fff" active-text-color="#ffd04b">
                     <el-menu-item index="3">退出</el-menu-item>
                     <el-menu-item index="2">商店</el-menu-item>
                     <el-menu-item index="1">
@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import { keepLastIndex } from '@/util/jskit'
+import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
+import { baseUrl } from '@/util/fetch'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 
@@ -327,22 +328,28 @@ export default {
             let file = this.$refs.file.files[0]
 
             if (file === undefined) {
+                this.$message.warning('未选择文件')
                 return
             }
-            console.log(file)
-            var reader = new FileReader()
-            reader.readAsArrayBuffer(file)
-            reader.onload = evt => {
-                console.log({data: evt.target.result})
-            }
-        },
+            let form = new FormData()
+            form.append('file', file)
+            form.append('user_id', 11)
+            form.append('user_name', 'zym2')
+            form.append('talk_id', 3)
+            form.append('mode', 0)
 
-        selectFile () {
-            this.$refs.file.click()
-        },
-
-        handleNodeClick (data) {
-            console.log(data)
+            window.fetch(baseUrl + '/talk/upload', {
+                method: 'POST',
+                body: form
+            }).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('文件发送成功')
+                    this.data.push({html: '<i class="el-icon-document"></i>' + file.name, class: 'user'})
+                    console.log(res)
+                } else {
+                    this.$message.success('文件发送失败')
+                }
+            })
         },
 
         invite () {

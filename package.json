@@ -17,6 +17,7 @@
     "rui-vue-emoji": "^1.1.1",
     "v-charts": "^1.16.8",
     "vue": "^2.5.2",
+    "vue-baidu-map": "^0.21.3",
     "vue-quill": "^1.4.0",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1"

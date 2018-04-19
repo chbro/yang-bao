@@ -5,6 +5,10 @@
         <basic-info :items="items" :models="models"></basic-info>
         <div class="card">
             <p class="card-title">消毒方法:</p>
+            <el-input type="textarea" v-model="models.way"></el-input>
+        </div>
+        <div class="card">
+            <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.note"></el-input>
         </div>
         <submitter :submitter.sync="submitter"></submitter>
@@ -18,7 +22,8 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import Submitter from '@/components/admin/submitter'
-import { checkForm, checkSubmit } from '@/util/jskit'
+import { checkForm, checkSubmit, isReqSuccessful } from '@/util/jskit'
+import { baseUrl } from '@/util/fetch'
 
 export default {
     components: {
@@ -36,14 +41,17 @@ export default {
         }
         return {
             items: [
-                {label: '免疫耳牌号', model: 'immunetag', block: true},
+                {label: '免疫耳牌号', model: 'immunetag', type: 'file'},
+                {label: '消毒时间', model: 'time', type: 'time'},
                 {label: '消毒场所', model: 'place'},
                 {label: '消毒药名称', model: 'medicine', type: 'select', fetchSuggestions: getMedicines},
                 {label: '用药剂量', model: 'dose', mr: true}
             ],
             models: {
                 immunetag: null,
+                time: null,
                 place: null,
+                way: null,
                 medicine: null,
                 dose: null,
                 note: null
@@ -60,7 +68,26 @@ export default {
             if (!checkSubmit(this.submitter)) {
                 return
             }
-            console.log(this.models, this.submitter)
+            let form = new FormData()
+            let { immunetag, time, medicine, dose, note, way, place } = this.models
+            place = place || 1
+            form.append('disinfectEartagFile', immunetag)
+            form.append('disinfectName', medicine)
+            form.append('disinfectTime', time)
+            form.append('factoryNum', place)
+            form.append('disinfectQuality', dose)
+            form.append('remark', note)
+            form.append('disinfectWay', way)
+            form.append('operator', this.submitter.operator)
+            window.fetch(baseUrl + '/df/saveshow', {
+                method: 'POST',
+                body: form
+            }).then(async res => {
+                let body = await res.json()
+                if (isReqSuccessful(body)) {
+                    console.log(body)
+                }
+            })
         }
     }
 }

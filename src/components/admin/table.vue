@@ -20,6 +20,7 @@
                 :label="name + '方案名称'">
             </el-table-column>
             <el-table-column
+                v-if="editurl"
                 label="操作"
                 width="240">
                 <template slot-scope="scope">

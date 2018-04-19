@@ -103,6 +103,7 @@ import { getGeneaDetail } from '@/util/getdata'
 export default {
     mounted () {
         getGeneaDetail(this.$route.params.id).then(res => {
+            console.log(res)
             if (res.meta.code === 0) {
                 this.details = res.data.object
             } else {

@@ -11,6 +11,7 @@ import XipuDetail from '@/components/xipu/xipu_detail'
 import Broadcast from '@/components/broadcast'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
+const SearchRes = () => import('@/components/search_res')
 
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
@@ -42,6 +43,8 @@ const DiagnoseVisual = () => import('@/components/admin/visual/diagnose')
 const ProductionVisual = () => import('@/components/admin/visual/production')
 // 有机养殖环境追溯
 const TraceCharts = () => import('@/components/admin/trace/charts')
+// 动物福利
+const Welfare = () => import('@/components/admin/welfare/index')
 // 有机监管
 const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
@@ -65,12 +68,14 @@ export default new Router({
         {path: '/broadcast', name: 'broadcast', component: Broadcast},
         {path: '/chat', name: 'chat', component: Chat},
         {path: '/prochat', name: 'prochat', component: ProChat},
+        {path: '/search', name: 'search', component: SearchRes},
 
         // 管理员模块
         {path: '/admin', component: Admin, children: [
             {path: '', name: 'auth', component: Auth},
 
-            // {path: 'auth', name: 'auth', component: Auth},
+            {path: 'welfare', name: 'welfare', component: Welfare},
+
             {path: 'auth/user', name: 'authuser', component: AuthUser},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
 

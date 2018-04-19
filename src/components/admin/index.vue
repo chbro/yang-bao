@@ -3,13 +3,7 @@
         <admin-head></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
-                <div class="tree-switch" @click="toggleTree()">
-                    <div>
-                        <i class="el-icon-caret-right"></i>
-                    </div>会员管理平台
-                    <i class="el-icon-d-arrow-right" ref="switchIcon"></i>
-                </div>
-                <el-tree v-show="showTree" :data="treedata" :indent="40" accordion @node-click="clickTree"></el-tree>
+                <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
             </el-aside>
 
             <el-container class="app-main">
@@ -26,7 +20,7 @@
                     <div class="bg-blue pad">
                         <div class="admin-search">
                             <div class="options">
-                                <el-button @click="changeActive(item.to, i)" class="admin-hl hl-btn" :class="{'active': item.active}" type="primary" v-for="(item, i) in options" :key="i">{{ item.label }}</el-button>
+                                <el-button @click="changeActive(item, i)" class="admin-hl hl-btn" :class="{'active': item.active}" type="primary" v-for="(item, i) in options" :key="i">{{ item.label }}</el-button>
                             </div>
                             <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -34,7 +28,7 @@
                         </div>
 
                         <div class="main-content">
-                            <router-view></router-view>
+                            <router-view :edit.sync="showEditTable"></router-view>
                         </div>
                     </div>
                 </el-main>
@@ -48,60 +42,89 @@
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
 
+/* eslint-disable object-property-newline */
 export default {
     components: {
         AdminHead, AdminFoot
     },
 
+    mounted () {
+        this.showEditTable = this.$route.query.hasOwnProperty('q')
+        console.log(this.showEditTable)
+        let path = this.$route.path.substr(7)
+        let [parent, child] = path.split('/')
+
+        if (parent && child) {
+            this.expanded_key = [child]
+
+            let arr = [{text: '溯源管理'}]
+            let mod = this.treedata[0].children.find(v => v.to === parent || v.name === parent)
+            let submod = mod.children.find(v => v.to === child || v.name === child)
+            arr.push({text: mod.label}, {text: submod.label})
+            this.bread = arr
+            this.options.push(
+                {label: submod.label, to: submod.name, active: 1},
+                {label: '已提交档案', edit: 1}
+            )
+        } else if (parent) {
+            this.bread = [{text: '溯源管理'}, {text: this.treedata[0].children.find(v => v.to === parent || v.name === parent).label}]
+        }
+    },
+
     data () {
         return {
-            /* eslint-disable object-property-newline */
             side_width: '15%',
-
+            expanded_key: null,
+            showEditTable: false,
             treedata: [
-                {label: '权限管理', children: [
-                    {label: '权限管理', to: 'auth'},
-                    {label: '用户管理', to: 'authuser'},
-                    {label: '角色管理', to: 'authrole'}
-                ]},
-                {label: '专家课堂', to: 'consult'},
-                {label: '系谱档案', to: 'genealogic'},
-                {label: '卫生·疫控', children: [
-                    {label: '专家咨询', to: 'consult'},
-                    {label: '卫生消毒方案', to: 'disinfectplan'},
-                    {label: '卫生消毒实施档案', to: 'disinfectprac'},
-                    {label: '免疫方案', to: 'immuneplan'},
-                    {label: '免疫实施档案', to: 'immuneprac'},
-                    {label: '驱虫方案', to: 'antiscolicplan'},
-                    {label: '驱虫实施档案', to: 'antiscolicprac'}
-                ]},
-                {label: '营养·生产', children: [
-                    {label: '专家咨询', to: 'consult'},
-                    {label: '阶段营养方案', to: 'stageplan'},
-                    {label: '阶段营养实施档案', to: 'stageprac'},
-                    {label: '配种产子管理方案', to: 'breedplan'},
-                    {label: '配种产子实施档案', to: 'breedprac'}
-                ]},
-                {label: '疫病防治', children: [
-                    {label: '专家咨询', to: 'consult'},
-                    {label: '疫病防治方案', to: 'preventionplan'},
-                    {label: '疫病防治实施档案', to: 'preventionprac'}
-                ]},
-                {label: '生产物资平台', to: 'https://baidu.com', out: true},
-                {label: '可视系统', children: [
-                    {label: '诊断可视', to: 'diagnose'},
-                    {label: '生产环节可视', to: 'production'}
-                ]},
-                {label: '有机养殖环境追溯', children: [
-                    {label: '追溯图表', to: 'charts'}
-                ]},
-                {label: '有机·监管', children: [
-                    {label: '国家认证', to: 'nation'},
-                    {label: '企业监控认证', children: [
-                        {label: '生产可视截图', to: 'capture'},
-                        {label: '操作流程审核', to: 'audit'},
-                        {label: '回收化验指标', to: 'recovery_index'}
+                {label: '会员管理平台', children: [
+                    {label: '专家课堂', to: 'consult'},
+                    {label: '系谱档案', to: 'genealogic'},
+                    {label: '卫生·疫控', name: 'health', children: [
+                        {label: '专家咨询', to: 'consult'},
+                        {label: '卫生与动物福利管理方案', to: 'welfare'},
+                        {label: '卫生与动物福利操作档案', to: 'welfare'},
+                        // {label: '卫生消毒方案', to: 'disinfectplan'},
+                        {label: '消毒实施档案', to: 'disinfectprac'},
+                        {label: '免疫方案', to: 'immuneplan'},
+                        {label: '免疫实施档案', to: 'immuneprac'},
+                        {label: '驱虫方案', to: 'antiscolicplan'},
+                        {label: '驱虫实施档案', to: 'antiscolicprac'}
+                    ]},
+                    {label: '营养·生产', name: 'nutrition', children: [
+                        {label: '专家咨询', to: 'consult'},
+                        {label: '阶段营养方案', to: 'stageplan'},
+                        {label: '阶段营养实施档案', to: 'stageprac'},
+                        {label: '配种产子管理方案', to: 'breedplan'},
+                        {label: '配种产子实施档案', to: 'breedprac'}
+                    ]},
+                    {label: '疫病防治', name: 'prevention', children: [
+                        {label: '专家咨询', to: 'consult'},
+                        {label: '疫病防治方案', to: 'preventionplan'},
+                        {label: '疫病防治实施档案', to: 'preventionprac'}
+                    ]},
+                    {label: '生产物资平台', to: 'https://baidu.com', out: true},
+                    {label: '可视系统', name: 'visual', children: [
+                        {label: '诊断可视', to: 'diagnose'},
+                        {label: '生产环节可视', to: 'production'}
+                    ]},
+                    {label: '有机养殖环境追溯', to: 'charts'},
+                    {label: '有机·监管', name: 'supervise', children: [
+                        {label: '国家认证', to: 'nation'},
+                        {label: '企业监控认证', children: [
+                            {label: '生产可视截图', to: 'capture'},
+                            {label: '操作流程审核', to: 'audit'},
+                            {label: '回收化验指标', to: 'recovery_index'}
+                        ]}
                     ]}
+                ]},
+                {label: '系统管理员平台', children: [
+                    {label: '权限管理', name: 'auth', children: [
+                        {label: '权限管理', to: 'auth'},
+                        {label: '用户管理', to: 'authuser'},
+                        {label: '角色管理', to: 'authrole'}
+                    ]},
+                    {label: '审核', to: 'review'}
                 ]}
             ],
             options: [],
@@ -114,10 +137,14 @@ export default {
     },
 
     methods: {
-        changeActive (name, index) {
-            this.options.forEach(v => v.active && delete v.active)
+        changeActive (item, index) {
+            delete this.options.find(v => v.active).active
             this.options[index].active = true
-            this.$router.push({name})
+            if (item.edit) {
+                this.showEditTable = true
+            } else if (item.name) {
+                this.$router.push({name: item.name})
+            }
         },
 
         toggleAside () {
@@ -130,16 +157,6 @@ export default {
                 this.$refs.hidespan.classList.remove('el-icon-arrow-right')
                 this.$refs.hidespan.classList.add('el-icon-arrow-left')
             }
-        },
-
-        toggleTree () {
-            let classlist = this.$refs.switchIcon.classList
-            if (classlist.contains('normal')) {
-                classlist.remove('normal')
-            } else {
-                classlist.add('normal')
-            }
-            this.showTree = !this.showTree
         },
 
         clickTree (node, data) {
@@ -162,54 +179,6 @@ export default {
                 })
                 node.to && this.$router.push({name: node.to})
             }
-        }
-    },
-
-    mounted () {
-        let map = {
-            expert: '专家课堂',
-            genealogic: '系谱档案',
-            health: {text: '卫生·疫控', children: {
-                consult: '专家咨询',
-                disinfectplan: '卫生消毒方案',
-                disinfectprac: '卫生消毒实施档案',
-                immuneplan: '免疫方案',
-                immuneprac: '免疫实施档案',
-                antiscolicplan: '驱虫方案',
-                antiscolicprac: '驱虫实施档案'
-            }},
-            nutrition: {text: '营养·生产', children: {
-                consult: '专家咨询',
-                stageplan: '阶段营养方案',
-                stageprac: '阶段营养实施档案',
-                breedplan: '配种产子管理方案',
-                breedprac: '配种产子实施档案'
-            }},
-            auth: '权限管理',
-            visual: '可视系统',
-            trace: {text: '有机养殖环境追溯', children: {
-                charts: '追溯图表'
-            }}
-        }
-
-        let path = this.$route.path.substr(7)
-        let [parent, child] = path.split('/')
-        let arr = [{text: '溯源管理'}]
-
-        if (parent && child) {
-            let children = map[parent].children
-            arr.push({text: map[parent].text})
-            child && arr.push({text: children[child]})
-            this.bread = arr
-            Object.keys(children).forEach(v => {
-                let obj = {label: children[v], to: v}
-                if (v === child) {
-                    obj.active = true
-                }
-                this.options.push(obj)
-            })
-        } else if (parent) {
-            this.bread = [{text: '溯源管理'}, {text: map[parent]}]
         }
     }
 }
@@ -262,28 +231,6 @@ export default {
                 margin-right 5px
     .el-tree-node__expand-icon
         display none
-
-    .tree-switch
-        border-top 1px solid #bbb
-        border-bottom 1px solid #bbb
-        line-height 30px
-        cursor pointer
-        color #fff
-        >div
-            display inline-block
-            margin-right 10px
-            border-radius 50%
-            background-color #fff
-            color color-main
-            line-height 1
-        .el-icon-d-arrow-right
-            float right
-            margin-right 15px
-            margin-top 8px
-            transform rotate(90deg)
-            transition transform .3s
-            &.normal
-                transform rotate(0)
 
 .app-main
     div.el-input-group__prepend

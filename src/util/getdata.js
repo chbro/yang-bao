@@ -28,6 +28,10 @@ export const getGeneaDetail = id => fetch('/gf/findshowbyid?id=' + id)
 export const postGeneaRec = data => fetch('/gf/saveshow', data, 'POST')
 
 /**
+ * 卫生疫控
+ */
+
+/**
  * 权限CURD
  */
 export const getPermission = _ => fetch('/user/')
@@ -38,12 +42,26 @@ export const getPermission = _ => fetch('/user/')
 export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/geturl?userid=${id}&usertype=${type}`)
 
 /**
- * 聊天模块
+ * 专家匹配
  */
-export const matchExpert = id => fetch('/getExpert/' + id)
+export const matchExpert = agentid => fetch('/getExpert/' + agentid)
 
+/**
+ * 文件下载
+ */
 export const downloadFile = path => fetch('/downloadFile' + path)
 
+/**
+ * 客户评价
+ */
 export const evaluateChat = data => fetch('/evaluation', data, 'POST')
 
-export const getTalkRecord = id => fetch('/getTalkRecord/' + id)
+/**
+ * 获取聊天记录概述
+ */
+export const getTalkRecords = _ => fetch('/getTalkRecord')
+
+/**
+ * 获取聊天记录详情
+ */
+export const getTalkRecordDetail = id => fetch('/getTalkRecord/' + id)
