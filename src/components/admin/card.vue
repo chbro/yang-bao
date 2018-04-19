@@ -13,7 +13,7 @@
                             size="small"
                             v-model="input.dose"
                             :fetch-suggestions="item.fetchSuggestions"
-                            @select="item.onSelect">
+                            @select="item.onSelect || function() {}">
                         </el-autocomplete>
                     </div>
                     , 用量<el-input :key="j + 'el-input'" v-model="input.day" class="input-days" size="small"></el-input>%/天。
@@ -32,7 +32,7 @@ export default {
             type: Object,
             default () {
                 return {
-                    title: '标题',
+                    title: '',
                     items: []
                 }
             }

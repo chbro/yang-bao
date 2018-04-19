@@ -98,11 +98,11 @@
 </template>
 
 <script>
-import { getXipuDetail } from '@/util/getdata'
+import { getGeneaDetail } from '@/util/getdata'
 
 export default {
     mounted () {
-        getXipuDetail(this.$route.params.id).then(res => {
+        getGeneaDetail(this.$route.params.id).then(res => {
             if (res.meta.code === 0) {
                 this.details = res.data.object
             } else {

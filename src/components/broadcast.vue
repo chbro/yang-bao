@@ -6,15 +6,11 @@
 
 <script>
 import { getVideoUrl } from '@/util/getdata'
+import '@/assets/TcPlayer-2.2.1.js'
 
 export default {
-    data () {
-        return {
-
-        }
-    },
-
     mounted () {
+        console.log(window.TcPlayer)
         getVideoUrl().then(res => {
         /* eslint-disable no-unused-vars, no-undef */
             if (res.meta.code === 0) {

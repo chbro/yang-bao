@@ -1,11 +1,25 @@
 @import './color'
 
+
 .el-autocomplete-suggestion
     li
         color color-main
         border-bottom 1px solid color-main
 
 .admin-form
+    .select-file.is-disabled .el-input__inner
+        background-color #fff
+        color #aaa
+        border-color color-main
+        cursor pointer
+
+    .el-input-group
+        width auto
+    .select
+        >span
+            vertical-align bottom !important
+    .block
+        display table
     .time
         display inline-block
         font-size 0 !important
@@ -24,7 +38,7 @@
             &+.el-input
                 width calc(100% - 140px)
 
-        &.select
+        &.select.double-width
             width calc((100% - 40px) / 1.5 + 20px) !important
             &+.el-input-group
                 margin-right 0
@@ -56,20 +70,17 @@
         font-size 0
         .el-input-group
             width calc((100% - 40px) / 3)
-            margin-right 20px
             margin-top 10px
+            margin-right 20px
             font-size 14px
-            &:nth-child(3n)
-                margin-right 0
             &.double-width
                 width calc((100% - 40px) / 1.5 + 20px)
-                margin-right 0
                 .time-span
                     width 250px
                 .el-input
                     width calc(100% - 250px)
-                &+.el-input-group
-                    margin-right 20px
+            &.mr
+                margin-right 0
 
     .input-text,
     .input-select

@@ -9,14 +9,11 @@
                         </div>
                         <div class="input_box">
                             <div class="chat-option">
-                                <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="emoji"><img src="../../assets/imgs/smile.png" alt="" class="emoji_picture"></button> -->
                                 <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
+<!--                                 <input hidden ref="file" type="file" @change="sendFile()" class="file">
+                                <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i> -->
                                 <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                    <!-- <img src="../../assets/imgs/picture.png" alt="" class="picture_picture" @click="selectFile()"> -->
-                                    <i class="iconfont icon-xitongtupianziyuan picture_picture" @click="selectFile()"></i>
-                                <input hidden ref="file2" type="file" @change="sendFile()" class="file">
-                                    <!-- <img src="../../assets/imgs/file.png" alt="" class="file_picture" @click="selectFile()"> -->
-                                    <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
+                                <i class="iconfont icon-3801wenjian file_picture" @click="selectFile()"></i>
                             </div>
                             <vue-emoji style="top:68px;"
                                 v-show='showEmoji'
@@ -50,7 +47,6 @@
                                         </el-form-item>
                                     </el-form>
                                     <div slot="footer" class="dialog-footer">
-                                        <!-- <el-button @click="dialogFormVisible = false">取 消</el-button> -->
                                         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
                                     </div>
                                 </el-dialog>
@@ -113,7 +109,8 @@
 <script>
 import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
-import { keepLastIndex } from '@/util/jskit'
+import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
+import { transferTalkFile } from '@/util/getdata'
 
 export default {
     components: {
@@ -127,21 +124,22 @@ export default {
             position: 'top left'
         })
 
-        let wsUri = 'ws://192.168.1.126:8080/websocket/2'
+        let wsUri = 'ws://192.168.1.110:8080/websocket/1'
         this.websocket = new WebSocket(wsUri)
-        this.websocket.onopen = evt => {
-            // console.log(evt, 1111)
-        }
         this.websocket.onclose = evt => {
-            this.$message.error('连接已关闭')
+            console.log('连接已关闭')
         }
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
+            if (data.order === 'order') {
+                this.$message.error('发送失败')
+                return
+            }
             this.items.push({html: data.message, class: 'user'})
         }
         this.websocket.onerror = evt => {
-            this.$message.error('连接错误')
+            console.log('连接错误')
         }
 
         window.onbeforeunload = function () {
@@ -178,11 +176,7 @@ export default {
             showEmoji: false,
             items: [
                 {html: '<p><span class="chat_user_message">你好</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'},
-                {html: '<p><span class="chat_user_message">hello</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'},
-                {html: '<p><span class="chat_user_message">请问在吗请问在吗?</span><span class="chat_user_name">客户</span></p>', class: 'chat_user'},
-                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？请问有什么问题？</span></p>', class: 'chat_professor'}
+                {html: '<p><span class="chat_professor_name">专家</span><span class="chat_professor_message">你好啊，请问有什么问题？你好啊，请问有什么问题？你好啊，请问有什么问题？</span></p>', class: 'chat_professor'}
             ],
             value: '',
             websocket: null,
@@ -211,11 +205,11 @@ export default {
             // console.log(this.websocket)
             let data = {
                 message: edit.innerHTML,
-                to: [3],
-                user_id: 2,
-                role: 'common',
-                mode: 0,
-                name: 'zym'
+                role_id: 1,
+                user_id: 3,
+                name: 'zym',
+                talk_id: 11,
+                mode: 0
             }
             this.websocket.send(JSON.stringify(data))
             edit.innerHTML = ''
@@ -225,14 +219,31 @@ export default {
             let file = this.$refs.file.files[0]
 
             if (file === undefined) {
+                this.$message.warning('请选择文件')
                 return
             }
-            console.log(file)
-            var reader = new FileReader()
-            reader.readAsArrayBuffer(file)
-            reader.onload = evt => {
-                console.log({data: evt.target.result})
+            let data = {
+                file,
+                hehe: 1
             }
+            transferTalkFile(data)
+            console.log(data)
+            return
+            let form = new FormData()
+            form.append('file', file)
+            form.append('user_id', 3)
+            form.append('user_name', 'zym')
+            form.append('talk_id', 11)
+            form.append('mode', 0)
+
+            window.fetch('http://192.168.1.110:8080/talk/upload', {
+                method: 'POST',
+                body: form
+            }).then(res => {
+                if (isReqSuccessful(res)) {
+                    console.log(res)
+                }
+            })
         },
 
         selectFile () {
@@ -250,7 +261,8 @@ export default {
 @import '~@/assets/css/color'
 
 .chat-wrapper
-    width 700px
+    width 60%
+    min-width 800px
     height 510px
     margin 50px auto 0
     background-color #666
@@ -348,12 +360,12 @@ export default {
         li
             padding 5%
         .id1
-            background-image: url("http://www.looyu.com/images/yiduiyi.png")
+            background: url("http://www.looyu.com/images/yiduiyi.png") no-repeat
             cursor pointer
             height 220px
             width 100%
             margin-top 24.5px
-            background-position center bottom
+            background-size cover
     .el-button
         margin-left 410px
         margin-top -45px

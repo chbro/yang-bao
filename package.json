@@ -5,7 +5,7 @@
   "author": "Zhou Yiming <1483364863@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 0.0.0.0",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
@@ -17,6 +17,8 @@
     "rui-vue-emoji": "^1.1.1",
     "v-charts": "^1.16.8",
     "vue": "^2.5.2",
+    "vue-quill": "^1.4.0",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -24,7 +26,7 @@
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
-    "babel-loader": "^7.1.1",
+    "babel-loader": "^7.1.4",
     "babel-plugin-component": "^1.1.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.22.0",
@@ -61,7 +63,7 @@
     "stylus-loader": "^3.0.2",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
-    "vue-loader": "^13.3.0",
+    "vue-loader": "^13.7.1",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",

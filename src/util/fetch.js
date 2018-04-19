@@ -3,9 +3,8 @@
 import { jumpToLogin } from './jskit'
 import Vue from 'vue'
 
-// const baseUrl = 'http://218.199.68.33:9090'
 // const baseUrl = 'http://192.168.1.100:9010'
-const baseUrl = 'http://192.168.1.120:9010'
+const baseUrl = 'http://180.76.180.95:9010'
 const tokenStr = 'sheep-token'
 const authStr = 'Authorization'
 let app = new Vue()

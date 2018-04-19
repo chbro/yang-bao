@@ -72,7 +72,7 @@
 
 <script>
 import Search from '@/components/search'
-import { queryXipu } from '@/util/getdata'
+import { queryGenea } from '@/util/getdata'
 
 export default {
     components: {
@@ -101,7 +101,7 @@ export default {
                 ]
             },
             query_labels: [
-                {label: '原耳牌', model: 'selfEartag'},
+                {label: '原耳牌', model: 'nativeEartag'},
                 {label: '免疫耳牌', model: 'immuneEartag'},
                 {label: '商标耳牌', model: 'tradeMarkEartag'},
                 {label: '种羊基地', model: 'breedingSheepBase'},
@@ -123,7 +123,7 @@ export default {
                 {label: '初登时间', prop: 'gmtCreate'}
             ],
             queries: {
-                selfEartag: null,
+                nativeEartag: null,
                 immuneEartag: null,
                 tradeMarkEartag: null,
                 breedingSheepBase: null,
@@ -161,8 +161,8 @@ export default {
 
             let birth = query.birthTime
             if (Array.isArray(birth)) {
-                query.birthWeightStart = birth[0]
-                query.birthWeightEnd = birth[1]
+                query.birthTimeStart = birth[0]
+                query.birthTimeEnd = birth[1]
             }
             delete query.birthTime
             return query
@@ -178,7 +178,7 @@ export default {
             query.page = currentPage || this.page
             query.size = pageSize || this.size
             query.page--
-            queryXipu(query).then(res => {
+            queryGenea(query).then(res => {
                 if (res.meta.code === 0) {
                     this.total = res.data.size
                     this.tableData = res.data.List
