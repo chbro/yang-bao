@@ -58,21 +58,17 @@
                     <div class="my_input_box">
                         <div class="my_chat_option">
                             <el-tooltip content="表情" placement="top">
-                                <!-- <button ref='btn' @click='showEmoji = !showEmoji' class="my_emoji"><img src="../../assets/imgs/smile.png" alt="表情" class="emoji_picture"></button> -->
                                 <i class="iconfont icon-smile my_emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
                             </el-tooltip>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传图片" placement="top">
-                                    <!-- <img src="../../assets/imgs/picture.png" alt="上传图片" class="my_picture_picture" @click="selectFile()"> -->
                                     <i class="iconfont icon-xitongtupianziyuan my_picture_picture" @click="selectFile()"></i>
                                 </el-tooltip>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <el-tooltip content="上传文件" placement="top">
-                                    <!-- <img src="../../assets/imgs/file.png" alt="上传文件" class="my_file_picture" @click="selectFile()"> -->
                                     <i class="iconfont icon-3801wenjian my_file_picture" @click="selectFile()"></i>
                                 </el-tooltip>
                             <el-tooltip content="邀请专家" placement="top">
-                                <!-- <el-button type="text" @click="dialogTableVisible = true"><img src="../../assets/imgs/person-stalker.png" alt="邀请专家" class=""></el-button> -->
                                 <i class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
                             </el-tooltip>
                         </div>
@@ -98,6 +94,7 @@ import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
 import { baseUrl } from '@/util/fetch'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
+import { getExpert } from '@/util/getdata'
 
 export default {
     components: {
@@ -107,6 +104,10 @@ export default {
     data () {
         return {
             showEmoji: false,
+            user: {
+                id: 11,
+                agentid: 3
+            },
             items: [],
             value: '',
             activeIndex: '1',
@@ -261,7 +262,7 @@ export default {
             position: 'top left'
         })
 
-        let wsUri = 'ws://192.168.1.110:8080/websocket/11'
+        let wsUri = 'ws://192.168.1.112:8080/websocket/11'
         this.websocket = new WebSocket(wsUri)
         this.websocket.onopen = evt => {
             // console.log(evt, 1111)
@@ -353,7 +354,14 @@ export default {
         },
 
         invite () {
-            alert('确认邀请')
+            getExpert(this.user.agentid).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('邀请成功')
+                    // to invite another professor
+                }
+            }, res => {
+                this.$message.error(res.meta.errorMsg || '邀请成功')
+            })
         }
     },
     watch: {

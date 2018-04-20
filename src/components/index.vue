@@ -6,9 +6,12 @@
                 <span class="block-title">追溯系统</span>
                 <div class="sec-title">
                     <img class="tree-logo" src="../assets/imgs/index/logo-input.png">
-                    <img src="../assets/imgs/index/tree-chart.png">
+                    <img src="../assets/imgs/index/tree-chart.png" usemap="#hotmap">
                 </div>
             </div>
+            <map name="hotmap" id="hotmap">
+                <area shape="rect" coords="140,220,250,260" href ="/#/genealogic" alt="系谱档案">
+            </map>
 
             <div class="icon-text">
                 <span class="block-title">溯源查询</span>

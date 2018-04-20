@@ -67,6 +67,10 @@
                     <input placeholder="搜索-Search...">
                     <button type="submit"><i class="el-icon-search"></i></button>
                 </div>
+                <div class="login-entry">
+                    <router-link to="/login">登录</router-link>
+                    <router-link to="/register">注册</router-link>
+                </div>
             </div>
         </nav>
     </div>
@@ -228,4 +232,14 @@ export default {
         z-index 9
         width 100%
         padding 0 5%
+
+    .login-entry
+        float right
+        line-height 66px
+        margin-right 20px
+        a
+            margin-right 10px
+            color #fff
+            &:hover
+                text-decoration underline
 </style>

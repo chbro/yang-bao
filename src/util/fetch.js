@@ -3,9 +3,9 @@
 import { jumpToLogin } from './jskit'
 import Vue from 'vue'
 
-// const baseUrl = 'http://180.76.180.95:9010'
+// const baseUrl = 'http://180.76.180.95:9010' //服务器
 // const baseUrl = 'http://192.168.1.110:8080' // 农文华
-const baseUrl = 'http://192.168.1.108:9010' // 老猪 
+const baseUrl = 'http://192.168.1.108:9010' // 老猪
 const tokenStr = 'sheep-token'
 const authStr = 'Authorization'
 let app = new Vue()
@@ -33,6 +33,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             // credentials: 'include',
             method: type,
             headers: {
+                'Cache-Control': 'no-cache',
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
@@ -64,10 +65,10 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
                 return
             }
             // 请求成功时刷新token
-            let newToken = response.headers.get(authStr)
-            if (newToken) {
-                window.localStorage.setItem(tokenStr, newToken)
-            }
+            // let newToken = response.headers.get(authStr)
+            // if (newToken) {
+            //     window.localStorage.setItem(tokenStr, newToken)
+            // }
 
             const responseJson = await response.json();
 

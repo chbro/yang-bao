@@ -202,7 +202,7 @@ export default {
 
 <style lang="stylus">
 @import '~@/assets/css/color'
-@import '~@/assets/css/common'
+@import '~@/assets/css/genea-common'
 
 .xipu-container
     .query-form

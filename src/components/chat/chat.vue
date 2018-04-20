@@ -5,7 +5,7 @@
                 <el-container>
                     <el-main>
                         <div class="dialog_box">
-                            <div class="dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+                            <div class="dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i"><span v-text="item.user ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
                         </div>
                         <div class="input_box">
                             <div class="chat-option">
@@ -20,35 +20,12 @@
                                 @hide="showEmoji = false"
                             ></vue-emoji>
                             <div class="chat-input">
-                                <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
+                                <div @keypress.enter="send($event)" contenteditable ref='edit' class="chat_area"></div>
                             </div>
-                            <el-button type="text" @click="dialogFormVisible = true" class="close">关闭</el-button>
-
-                                <el-dialog title="评价" :visible.sync="dialogFormVisible">
-                                    <el-form :model="form">
-                                        <el-form-item label="评价" :label-width="formLabelWidth">
-                                            <el-radio-group v-model="satisfy">
-                                                <el-radio :label="5">非常满意</el-radio>
-                                                <el-radio :label="4">满意</el-radio>
-                                                <el-radio :label="3">一般</el-radio>
-                                                <el-radio :label="2">不满意</el-radio>
-                                                <el-radio :label="1">很差</el-radio>
-                                            </el-radio-group>
-                                        </el-form-item>
-                                        <el-form-item label="描述" :label-width="formLabelWidth">
-                                            <el-input
-                                                type="textarea"
-                                                :rows="3"
-                                                placeholder="请输入内容"
-                                                v-model="form.desciption">
-                                            </el-input>
-                                        </el-form-item>
-                                    </el-form>
-                                    <div slot="footer" class="dialog-footer">
-                                        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                                    </div>
-                                </el-dialog>
-                           <el-button @click="send()" class="send">发送</el-button>
+                            <div class="opr-btns">
+                                <el-button size="small" @click="dialogFormVisible = true">关闭</el-button>
+                                <el-button size="small" @click="send()" class="send">发送</el-button>
+                            </div>
                         </div>
                     </el-main>
                     <el-aside width="25%">
@@ -66,13 +43,13 @@
                 <div class="message">
                     <el-form>
                         <el-form-item>
-                            <el-input v-model="name" auto-complete="off" placeholder="Full Name"></el-input>
+                            <el-input v-model="form.name" auto-complete="off" placeholder="Full Name"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input v-model="email" auto-complete="off" placeholder="Email Address"></el-input>
+                            <el-input v-model="form.email" auto-complete="off" placeholder="Email Address"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input type="textarea" :rows="4" v-model="message" placeholder="Your Message"></el-input>
+                            <el-input type="textarea" :rows="4" v-model="form.message" placeholder="Your Message"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="submit_message">提交</el-button>
@@ -81,6 +58,31 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
+
+        <el-dialog title="评价" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="评价" :label-width="formLabelWidth">
+                    <el-radio-group v-model="satisfy">
+                        <el-radio :label="5">非常满意</el-radio>
+                        <el-radio :label="4">满意</el-radio>
+                        <el-radio :label="3">一般</el-radio>
+                        <el-radio :label="2">不满意</el-radio>
+                        <el-radio :label="1">很差</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="描述" :label-width="formLabelWidth">
+                    <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="请输入内容"
+                        v-model="form.desciption">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -88,8 +90,8 @@
 import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
-import { baseUrl } from '@/util/fetch'
-import { matchExpert } from '@/util/getdata'
+// import { baseUrl } from '@/util/fetch'
+import { getExpert } from '@/util/getdata'
 
 export default {
     components: {
@@ -104,11 +106,16 @@ export default {
             position: 'top left'
         })
 
-        let wsUri = 'ws://192.168.1.110:8080/websocket/1'
+        // first http:
+        // let urlRidOfHost = baseUrl.substr(baseUrl.indexOf(':'))
+        // // last :port
+        // let host = urlRidOfHost.substr(0, urlRidOfHost.indexOf(':'))
+        // let wsUri = `ws://${host}:8080/websocket/${this.agentid}`
+        let wsUri = `ws://192.168.1.112:8080/websocket/${this.agentid}`
         this.websocket = new WebSocket(wsUri)
         this.websocket.onclose = evt => {
             this.$notify.error({
-                duration: 0,
+                duration: 0, // will not close automatically
                 title: '错误',
                 message: '连接已关闭'
             })
@@ -116,26 +123,31 @@ export default {
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
-            if (data.order === 'order') {
+            if (data.order === 'link') {
                 this.$message.error('发送失败')
-                return
+                this.items.push({html: '<i class="el-icon-document"></i>' + data.message, class: 'user'})
+            } else {
+                this.items.push({html: data.message, user: 1})
             }
-            this.items.push({html: data.message, user: 1})
         }
         this.websocket.onerror = evt => {
-            this.$notify.error({
-                duration: 0,
-                title: '错误',
-                message: '连接错误'
-            })
+            // this.$notify.error({
+            //     duration: 0,
+            //     title: '连接错误',
+            //     message: '连接发生了一个错误'
+            // })
         }
 
-        matchExpert(this.agentid).then(res => {
+        getExpert(this.agentid).then(res => {
             if (isReqSuccessful(res)) {
                 this.expertid = res.data.expert_id
             }
         }, res => {
-            this.$message.error(res.meta.errorMsg || '邀请专家加入聊天失败')
+            this.$notify.error({
+                duration: 0,
+                title: '错误',
+                message: res.meta.errorMsg || '当前没有专家在线'
+            })
         })
 
         window.onbeforeunload = function () {
@@ -149,42 +161,33 @@ export default {
 
     data () {
         return {
-            satisfy: 5,
-            dialogFormVisible: false,
+            satisfy: 5, // 评价满意度
+            dialogFormVisible: false, // 评价弹框是否可见
             form: {
                 desciption: '',
                 region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
                 resource: '',
-                desc: ''
+                desc: '',
+                email: '',
+                name: '',
+                message: ''
             },
             formLabelWidth: '120px',
 
             activeIndex: '1',
-            activeIndex2: '1',
-            showEmoji: false,
-            items: [
-                {html: '你好', user: 1},
-                {html: '你好啊，请问有什么问题？'}
+            showEmoji: false, // 表情选择框是否可见
+            items: [ // 聊天内容数组
+                {html: '你好啊，请问有什么问题？'},
+                {html: '你好', user: 1}
             ],
-            websocket: null,
-            email: '',
-            name: '',
-            message: '',
-
+            websocket: null, // 本地ws连接
             agentid: 3,
-            expertid: null
+            expertid: 11 // 聊天专家id
         }
     },
 
     methods: {
-        handleSelect (key, keyPath) {
-            console.log(key, keyPath)
-        },
-
+        // select a img dom and append it to a contenteditable div
         handleEmojiSelect (img) {
             let edit = this.$refs.edit
             img.src = img.src.replace('/images', '/static/images')
@@ -192,6 +195,7 @@ export default {
             keepLastIndex(edit)
         },
 
+        // send chat message
         send (e) {
             // 按下button时e == undefiend
             e && e.preventDefault()
@@ -208,6 +212,7 @@ export default {
             edit.innerHTML = ''
         },
 
+        // send chat file with formdata
         sendFile () {
             let file = this.$refs.file.files[0]
 
@@ -223,19 +228,22 @@ export default {
             form.append('talk_id', 11)
             form.append('mode', 0)
 
-            window.fetch(baseUrl + '/talk/upload', {
+            // post文件使用原生fetch,未写入总接口
+            window.fetch('http://192.168.1.112:8080/talk/upload', {
                 method: 'POST',
                 body: form
             }).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('文件发送成功')
-                    this.data.push({html: '<i class="el-icon-document"></i>' + file.name, class: 'user'})
                     console.log(res)
-                } else {
-                    this.$message.error('文件发送失败')
                 }
             }, _ => {
-                this.$message.error('文件发送失败')
+                this.$notify.error({
+                    duration: 0,
+                    title: '错误',
+                    message: '文件发送失败'
+                })
+                file.value = null
             })
         }
     }
@@ -274,40 +282,34 @@ export default {
             border 1px solid #e4e7ed
             overflow-y auto
             .dialog-item
+                overflow hidden
                 font-size 1em
+                margin 10px 0
                 margin-left 15px
                 line-height 25px
-                &.user
-                    text-align right
-                    padding-right 15px
-                    background-color #3385ff
-                    color #fff
-                    border-radius 10px
-                    margin-right 1%
-                    padding 0 10px
-                    display inline-block
+                span, .msg
+                    float left
+                    padding 5px
+                .msg
+                    float left
                     max-width 80%
-                &.chat_user
+                    padding-left 15px
+                    padding-right 15px
+                    border-radius 10px
                     color #000
+                    background-color rgba(240,240,240,0.5)
+                    i
+                        font-size 20px
+                &.user
+                    margin-left 0
                     margin-right 15px
-                    text-align right
-                    p
-                        margin 1%
-                        .chat_user_name
-                            color #777777
-                &.chat_professor
-                    color #777777
-                    p
-                        margin 0
-                    .chat_professor_message
-                        margin-left 10px
-                        background-color rgba(240,240,240,0.5)
-                        border-radius 10px
-                        padding 0 10px
-                        display inline-block
-                        max-width 65%
-                    //.chat_professor_name
+                    span, .msg
+                        float right
+                    .msg
+                        color #fff
+                        background-color #3385ff
         .input_box
+            position relative
             height 40%
             .chat-option
                 height 27%
@@ -317,28 +319,19 @@ export default {
                     margin-right 5px
                     cursor pointer
                     font-size 20px
-            .rui-emoji
-                top 80px
-                left 20px
         .chat-input
             border 1px solid #e4e7ed
             height 100px
             .chat_area
-                height 95px
-                width 83%
-                overflow-x hidden
+                width 86%
+                height 60px
                 overflow-y auto
-                border none
-                margin-left 1%
-                word-wrap break-word//换行
+                margin 5px
                 outline 0
-        .close
-            position relative
-            top -5px
-            right 80px
-            //background-color orange
-            width 70px
-            border 1px solid #e4e7ed
+        .opr-btns
+            position absolute
+            right 20px
+            bottom 0
 
     .el-aside
         background-color #f5f7fa
@@ -352,13 +345,6 @@ export default {
             width 100%
             margin-top 24.5px
             background-size cover
-    .el-button
-        margin-left 410px
-        margin-top -45px
-        display block
-    .rui-emoji
-        top 68px !important
-        left 22px !important
     .message
         width 80%
         margin 50px auto 0

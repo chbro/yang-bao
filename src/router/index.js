@@ -6,8 +6,8 @@ import Index from '@/components/index'
 import Login from '@/components/login/login'
 import Register from '@/components/login/register'
 import FindPass from '@/components/login/findpass'
-import Xipu from '@/components/xipu/xipu'
-import XipuDetail from '@/components/xipu/xipu_detail'
+import Genea from '@/components/genea/genealogic'
+import GeneaDetail from '@/components/genea/genea_detail'
 import Broadcast from '@/components/broadcast'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
@@ -62,8 +62,8 @@ export default new Router({
         {path: '/login', name: 'login', component: Login},
         {path: '/register', name: 'register', component: Register},
         {path: '/findpass', name: 'findpass', component: FindPass},
-        {path: '/xipu', name: 'xipu', component: Xipu},
-        {path: '/xipu_detail/:id', name: 'xipu_detail', component: XipuDetail},
+        {path: '/genealogic', name: 'genealogic', component: Genea},
+        {path: '/geneadetail/:id', name: 'geneadetail', component: GeneaDetail},
         {path: '/broadcast', name: 'broadcast', component: Broadcast},
         {path: '/chat', name: 'chat', component: Chat},
         {path: '/prochat', name: 'prochat', component: ProChat},

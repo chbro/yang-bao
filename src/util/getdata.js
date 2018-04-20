@@ -28,10 +28,6 @@ export const getGeneaDetail = id => fetch('/gf/findshowbyid?id=' + id)
 export const postGeneaRec = data => fetch('/gf/saveshow', data, 'POST')
 
 /**
- * 卫生疫控
- */
-
-/**
  * 权限CURD
  */
 export const getPermission = _ => fetch('/user/')
@@ -42,9 +38,9 @@ export const getPermission = _ => fetch('/user/')
 export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/geturl?userid=${id}&usertype=${type}`)
 
 /**
- * 专家匹配
+ * 专家匹配, 邀请专家
  */
-export const matchExpert = agentid => fetch('/getExpert/' + agentid)
+export const getExpert = agentid => fetch('/getExpert/' + agentid)
 
 /**
  * 文件下载
