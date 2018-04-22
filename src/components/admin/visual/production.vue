@@ -14,7 +14,7 @@
         </div>
         <div class="production-view">
             <el-card class="production-content">
-                <el-button type="text" @click="productionShow = true">
+                <el-button type="text" @click="productionShow0 = true">
                     <div class="production-image"></div>
                 </el-button>
                 <p>症状描述：</p>
