@@ -8,7 +8,7 @@ import Register from '@/components/login/register'
 import FindPass from '@/components/login/findpass'
 import Genea from '@/components/genea/genealogic'
 import GeneaDetail from '@/components/genea/genea_detail'
-import Broadcast from '@/components/broadcast'
+import Course from '@/components/course'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
 const SearchRes = () => import('@/components/search_res')
@@ -41,7 +41,7 @@ const PreventionPrac = () => import('@/components/admin/prevention/prevention_pr
 const DiagnoseVisual = () => import('@/components/admin/visual/diagnose')
 const ProductionVisual = () => import('@/components/admin/visual/production')
 // 有机养殖环境追溯
-const TraceCharts = () => import('@/components/admin/trace/charts')
+const TraceCharts = () => import('@/components/admin/trace/index')
 // 动物福利
 const Welfare = () => import('@/components/admin/welfare/index')
 // 有机监管
@@ -49,6 +49,10 @@ const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
 const Capture = () => import('@/components/admin/supervise/capture')
 const RecoveryIndex = () => import('@/components/admin/supervise/recovery_index')
+// 羊场管理
+const Farm = () => import('@/components/admin/farm/index')
+// 代理管理
+const Agent = () => import('@/components/admin/agent/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -62,9 +66,9 @@ export default new Router({
         {path: '/login', name: 'login', component: Login},
         {path: '/register', name: 'register', component: Register},
         {path: '/findpass', name: 'findpass', component: FindPass},
-        {path: '/genealogic', name: 'genealogic', component: Genea},
+        {path: '/genea', name: 'genea', component: Genea},
         {path: '/geneadetail/:id', name: 'geneadetail', component: GeneaDetail},
-        {path: '/broadcast', name: 'broadcast', component: Broadcast},
+        {path: '/course', name: 'course', component: Course},
         {path: '/chat', name: 'chat', component: Chat},
         {path: '/prochat', name: 'prochat', component: ProChat},
         {path: '/search', name: 'search', component: SearchRes},
@@ -99,12 +103,15 @@ export default new Router({
             {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
             {path: 'visual/production', name: 'production', component: ProductionVisual},
 
-            {path: 'trace/charts', name: 'charts', component: TraceCharts},
+            {path: 'trace', name: 'trace', component: TraceCharts},
 
             {path: 'supervise/nation', name: 'nation', component: Nation},
             {path: 'supervise/capture', name: 'capture', component: Capture},
             {path: 'supervise/audit', name: 'audit', component: Audit},
-            {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex}
+            {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex},
+
+            {path: 'farm', name: 'farm', component: Farm},
+            {path: 'agent', name: 'agent', component: Agent}
         ]},
         {path: '*', component: NotFound}
     ]

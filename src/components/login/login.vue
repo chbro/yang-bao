@@ -40,7 +40,7 @@
 <script>
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
-import { validateName } from '@/util/jskit'
+import { validateName, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
 
 export default {
@@ -101,10 +101,8 @@ export default {
                         userPwd: md5(this.ruleForm.pass)
                     }
                     Login(data).then(res => {
-                        if (res.meta.code === 0) {
+                        if (isReqSuccessful(res)) {
                             this.$router.push('/admin')
-                        } else {
-                            this.$message.error(res.meta.errorMsg || '登录失败')
                         }
                     }, _ => {
                         this.$message.error('登录失败')

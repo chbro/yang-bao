@@ -48,7 +48,7 @@
 
 <script>
 import { FindPass, GetQuestions } from '@/util/getdata'
-import { validateName } from '@/util/jskit'
+import { validateName, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
 
 export default {
@@ -114,12 +114,12 @@ export default {
             }
             if (this.form.bywhich === '1') {
                 GetQuestions(name).then(res => {
-                    if (res.meta.code === 0) {
+                    if (isReqSuccessful(res)) {
                         this.questions = res.data
                         this.canModify = true
-                    } else {
-                        this.$message.error(res.meta.errorMsg || '获取问题失败')
                     }
+                }, _ => {
+                    this.$message.error('获取问题失败')
                 })
             }
         },
@@ -145,13 +145,11 @@ export default {
 
                     this.disableBtn = true
                     FindPass(data).then(res => {
-                        if (res.meta.code === 0) {
+                        if (isReqSuccessful(res)) {
                             this.$message.success('密码重置成功')
                             setTimeout(() => {
                                 this.$router.push('/login')
                             }, 2000)
-                        } else {
-                            this.$message.error(res.meta.errorMsg || '验证失败')
                         }
                         this.disableBtn = false
                     }, _ => {

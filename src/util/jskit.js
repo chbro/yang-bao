@@ -140,3 +140,8 @@ export const isReqSuccessful = (res) => {
         app.$message.error(res.meta.errorMsg || '请求失败')
     }
 }
+
+export const resetFile = filedom => {
+    // filedom.outerHTML = filedom.outerHTML
+    filedom.value = ''
+}

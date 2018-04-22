@@ -68,6 +68,7 @@
 
 <script>
 import { postMessage } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     data () {
@@ -121,10 +122,8 @@ export default {
                 message: this.form.message
             }
             postMessage(data).then(res => {
-                if (res.meta.code === 0) {
+                if (isReqSuccessful(res)) {
                     this.$router.push('/message')
-                } else {
-                    this.$message.error(res.meta.errorMsg || '留言失败')
                 }
             }, _ => {
                 this.$message.error('留言失败')

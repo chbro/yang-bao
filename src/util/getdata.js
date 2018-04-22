@@ -61,3 +61,13 @@ export const getTalkRecords = _ => fetch('/getTalkRecord')
  * 获取聊天记录详情
  */
 export const getTalkRecordDetail = id => fetch('/getTalkRecord/' + id)
+
+/**
+ * 退出聊天评价专家
+ */
+export const evalulateExpert = data => fetch('/evaluation', data, 'POST')
+
+/**
+ * 配种产子实施档案
+ */
+export const addBreeding = data => fetch('/breeding/add', data, 'POST')

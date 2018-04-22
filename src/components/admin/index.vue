@@ -20,7 +20,8 @@
                     <div class="bg-blue pad">
                         <div class="admin-search">
                             <div class="options">
-                                <el-button @click="changeActive(item, i)" class="admin-hl hl-btn" :class="{'active': item.active}" type="primary" v-for="(item, i) in options" :key="i">{{ item.label }}</el-button>
+                                <el-button class="admin-hl hl-btn"  type="primary">{{ module.label }}</el-button>
+                                <el-button class="admin-hl hl-btn"  type="primary" @click="showAll(module.to + '_file')">{{ module.label }}档案</el-button>
                             </div>
                             <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -28,7 +29,7 @@
                         </div>
 
                         <div class="main-content">
-                            <router-view :edit.sync="showEditTable"></router-view>
+                            <router-view></router-view>
                         </div>
                     </div>
                 </el-main>
@@ -49,41 +50,59 @@ export default {
     },
 
     mounted () {
-        this.showEditTable = this.$route.query.hasOwnProperty('q')
-        console.log(this.showEditTable)
+        // rid '/admin/'
         let path = this.$route.path.substr(7)
         let [parent, child] = path.split('/')
 
+        let arr = [{text: '溯源管理'}]
+        let mod
+        let submod
+        this.treedata.forEach(v => {
+            let m = v.children.find(v => v.to === parent || v.name === parent)
+            if (m) {
+                mod = m
+                if (mod.children) {
+                    submod = mod.children.find(v => v.to === child || v.name === child)
+                }
+            }
+        })
+        console.log(mod, submod)
         if (parent && child) {
+            // open left tree
             this.expanded_key = [child]
 
-            let arr = [{text: '溯源管理'}]
-            let mod = this.treedata[0].children.find(v => v.to === parent || v.name === parent)
-            let submod = mod.children.find(v => v.to === child || v.name === child)
             arr.push({text: mod.label}, {text: submod.label})
-            this.bread = arr
-            this.options.push(
-                {label: submod.label, to: submod.name, active: 1},
-                {label: '已提交档案', edit: 1}
-            )
+            this.module = submod
         } else if (parent) {
-            this.bread = [{text: '溯源管理'}, {text: this.treedata[0].children.find(v => v.to === parent || v.name === parent).label}]
+            this.expanded_key = [child]
+
+            // some module has no child
+            arr.push({text: mod.label})
+            this.module = mod
+        } else {
+            // default index of admin
+            arr.push({text: '用户权限'})
+            this.module = {label: '用户权限', to: 'auth'}
         }
+        this.bread = arr
     },
 
     data () {
         return {
+            module: {label: '', to: ''},
             side_width: '15%',
             expanded_key: null,
             showEditTable: false,
             treedata: [
                 {label: '会员管理平台', children: [
-                    {label: '专家课堂', to: 'consult'},
+                    {label: '专家课堂', to: 'course'},
                     {label: '系谱档案', to: 'genealogic'},
+                    {label: '羊场管理', to: 'farm'},
+                    {label: '代理管理', to: 'agent'},
                     {label: '卫生·疫控', name: 'health', children: [
-                        {label: '专家咨询', to: 'consult'},
-                        {label: '卫生与动物福利管理方案', to: 'welfare'},
-                        {label: '卫生与动物福利操作档案', to: 'welfare'},
+                        {label: '专家咨询', to: 'chat'},
+                        {label: '卫生与动物福利管理方案', to: 'welfareplan'},
+                        {label: '卫生与动物福利操作档案', to: 'welfareprac'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -92,14 +111,14 @@ export default {
                         {label: '驱虫实施档案', to: 'antiscolicprac'}
                     ]},
                     {label: '营养·生产', name: 'nutrition', children: [
-                        {label: '专家咨询', to: 'consult'},
+                        {label: '专家咨询', to: 'chat'},
                         {label: '阶段营养方案', to: 'stageplan'},
                         {label: '阶段营养实施档案', to: 'stageprac'},
                         {label: '配种产子管理方案', to: 'breedplan'},
                         {label: '配种产子实施档案', to: 'breedprac'}
                     ]},
                     {label: '疫病防治', name: 'prevention', children: [
-                        {label: '专家咨询', to: 'consult'},
+                        {label: '专家咨询', to: 'chat'},
                         {label: '疫病防治方案', to: 'preventionplan'},
                         {label: '疫病防治实施档案', to: 'preventionprac'}
                     ]},
@@ -108,7 +127,7 @@ export default {
                         {label: '诊断可视', to: 'diagnose'},
                         {label: '生产环节可视', to: 'production'}
                     ]},
-                    {label: '有机养殖环境追溯', to: 'charts'},
+                    {label: '有机养殖环境追溯', to: 'trace'},
                     {label: '有机·监管', name: 'supervise', children: [
                         {label: '国家认证', to: 'nation'},
                         {label: '企业监控认证', children: [
@@ -161,6 +180,12 @@ export default {
 
         clickTree (node, data) {
             if (data.isLeaf) {
+                // if chat open another page
+                if (node.to === 'chat') {
+                    this.$router.push({name: 'chat', parmas: {from: this.module.to}})
+                    return
+                }
+
                 let arr = [{text: '溯源管理'}]
                 let parent = data.parent
                 if (Object.prototype.toString.call(parent.data) === '[object Object]') {
@@ -169,16 +194,13 @@ export default {
                 arr.push({text: node.label})
                 this.bread = arr
 
-                this.options = data.parent.data.children
-                this.options && this.options.forEach(v => {
-                    if (v.label === node.label) {
-                        v.active = true
-                    } else if (v.active) {
-                        delete v.active
-                    }
-                })
+                this.module = {label: node.label, to: node.to}
                 node.to && this.$router.push({name: node.to})
             }
+        },
+
+        showAll (name) {
+            this.$router.push({name})
         }
     }
 }

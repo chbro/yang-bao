@@ -4,7 +4,7 @@
             <el-tab-pane label="咨询">
                 <el-container>
                     <el-main>
-                        <div class="dialog_box">
+                        <div class="dialog_box" ref="dialog">
                             <div class="dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i"><span v-text="item.user ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
                         </div>
                         <div class="input_box">
@@ -62,7 +62,7 @@
         <el-dialog title="评价" :visible.sync="dialogFormVisible">
             <el-form :model="form">
                 <el-form-item label="评价" :label-width="formLabelWidth">
-                    <el-radio-group v-model="satisfy">
+                    <el-radio-group v-model="evaluation">
                         <el-radio :label="5">非常满意</el-radio>
                         <el-radio :label="4">满意</el-radio>
                         <el-radio :label="3">一般</el-radio>
@@ -75,12 +75,13 @@
                         type="textarea"
                         :rows="3"
                         placeholder="请输入内容"
-                        v-model="form.desciption">
+                        v-model="desciption">
                     </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button type="primary" @click="evaluate()">确定</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">取消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -89,9 +90,9 @@
 <script>
 import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
-import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
+import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 // import { baseUrl } from '@/util/fetch'
-import { getExpert } from '@/util/getdata'
+import { getExpert, evalulateExpert } from '@/util/getdata'
 
 export default {
     components: {
@@ -108,10 +109,10 @@ export default {
 
         // first http:
         // let urlRidOfHost = baseUrl.substr(baseUrl.indexOf(':'))
-        // // last :port
+        // last :port
         // let host = urlRidOfHost.substr(0, urlRidOfHost.indexOf(':'))
         // let wsUri = `ws://${host}:8080/websocket/${this.agentid}`
-        let wsUri = `ws://192.168.1.112:8080/websocket/${this.agentid}`
+        let wsUri = `ws://192.168.1.112:8080/websocket/${this.user.agentid}`
         this.websocket = new WebSocket(wsUri)
         this.websocket.onclose = evt => {
             this.$notify.error({
@@ -123,12 +124,13 @@ export default {
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
+            let html = ''
             if (data.order === 'link') {
-                this.$message.error('发送失败')
-                this.items.push({html: '<i class="el-icon-document"></i>' + data.message, class: 'user'})
+                html = `<i class="el-icon-document"></i><a href="${data.message}">`
             } else {
-                this.items.push({html: data.message, user: 1})
+                html = data.message
             }
+            this.pushChatMessage(html)
         }
         this.websocket.onerror = evt => {
             // this.$notify.error({
@@ -138,7 +140,7 @@ export default {
             // })
         }
 
-        getExpert(this.agentid).then(res => {
+        getExpert(this.user.agentid).then(res => {
             if (isReqSuccessful(res)) {
                 this.expertid = res.data.expert_id
             }
@@ -161,10 +163,10 @@ export default {
 
     data () {
         return {
-            satisfy: 5, // 评价满意度
+            evaluation: 5, // 评价满意度
             dialogFormVisible: false, // 评价弹框是否可见
+            desciption: '',
             form: {
-                desciption: '',
                 region: '',
                 resource: '',
                 desc: '',
@@ -181,12 +183,32 @@ export default {
                 {html: '你好', user: 1}
             ],
             websocket: null, // 本地ws连接
-            agentid: 3,
-            expertid: 11 // 聊天专家id
+            user: {
+                id: 3,
+                role_id: 3,
+                agentid: 3
+            },
+            expertid: 10 // 聊天专家id
         }
     },
 
     methods: {
+        evaluate () {
+            let data = {
+                expert_name: 'zz',
+                expert_id: this.expertid,
+                evaluation: this.evaluation,
+                desciption: this.desciption
+            }
+            evalulateExpert(data).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('评价成功')
+                }
+            })
+            this.dialogFormVisible = false
+            this.desciption = this.evaluation = null
+        },
+
         // select a img dom and append it to a contenteditable div
         handleEmojiSelect (img) {
             let edit = this.$refs.edit
@@ -199,13 +221,18 @@ export default {
         send (e) {
             // 按下button时e == undefiend
             e && e.preventDefault()
+
             let edit = this.$refs.edit
+            if (edit.innerHTML === '') {
+                this.$message.warning('请输入内容')
+                return
+            }
             let data = {
                 message: edit.innerHTML,
-                role_id: 1,
-                user_id: 3,
+                role_id: this.user.role_id,
+                user_id: this.user.agentid,
                 name: 'zym',
-                talk_id: 11,
+                talk_id: this.expertid,
                 mode: 0
             }
             this.websocket.send(JSON.stringify(data))
@@ -214,28 +241,33 @@ export default {
 
         // send chat file with formdata
         sendFile () {
-            let file = this.$refs.file.files[0]
+            let filedom = this.$refs.file
+            let file = filedom.files[0]
 
             if (file === undefined) {
                 this.$message.warning('未选择文件')
-                file.value = undefined
+                return
+            }
+            if (file.size > 50 * 1024 * 1024) {
+                this.$message.warning('文件大小不能超过50M')
+                resetFile(filedom)
                 return
             }
             let form = new FormData()
             form.append('file', file)
-            form.append('user_id', 3)
-            form.append('user_name', 'zym')
-            form.append('talk_id', 11)
+            form.append('user_id', this.user.id)
+            form.append('user_name', this.user.name)
+            form.append('talk_id', this.expertid)
             form.append('mode', 0)
 
             // post文件使用原生fetch,未写入总接口
             window.fetch('http://192.168.1.112:8080/talk/upload', {
                 method: 'POST',
                 body: form
-            }).then(res => {
+            }).then(async res => {
+                res = await res.json()
                 if (isReqSuccessful(res)) {
                     this.$message.success('文件发送成功')
-                    console.log(res)
                 }
             }, _ => {
                 this.$notify.error({
@@ -243,7 +275,16 @@ export default {
                     title: '错误',
                     message: '文件发送失败'
                 })
-                file.value = null
+            })
+            console.log(filedom)
+            filedom = resetFile()
+        },
+
+        pushChatMessage (html) {
+            this.items.push({html, user: 1})
+            this.$nextTick(_ => {
+                let dialog = this.$refs.dialog
+                dialog.scrollTop = dialog.scrollHeight
             })
         }
     }

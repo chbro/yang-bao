@@ -3,20 +3,9 @@
         <el-container>
             <el-header>
                 <img src="~@/assets/imgs/header-logo.png" alt="header-logo">
-                <el-menu :default-active="activeIndex2" class="chat-menu" mode="horizontal" @select="handleSelect" text-color="#fff" active-text-color="#ffd04b">
-                    <el-menu-item index="3">退出</el-menu-item>
-                    <el-menu-item index="2">商店</el-menu-item>
-                    <el-menu-item index="1">
-                        <el-select class="select" v-model="value" placeholder="在线">
-                            <el-option
-                            class="option"
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-menu-item>
+                <el-menu :default-active="activeIndex" class="chat-menu" mode="horizontal" text-color="#fff" active-text-color="#ffd04b">
+                    <el-menu-item index="1">商店</el-menu-item>
+                    <el-menu-item index="2">退出</el-menu-item>
                 </el-menu>
             </el-header>
             <el-container>
@@ -52,25 +41,15 @@
                     </el-tree>
                 </el-aside>
                 <el-main>
-                    <div class="my_dialog_box">
-                        <div class="my_dialog-item" :class="item.class" v-for="(item, i) in items" :key="i" v-html="item.html"></div>
+                    <div class="pro-dialog_box" ref="dialog">
+                        <div class="pro-dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i"><span v-text="item.user ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
                     </div>
                     <div class="my_input_box">
                         <div class="my_chat_option">
-                            <el-tooltip content="表情" placement="top">
-                                <i class="iconfont icon-smile my_emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
-                            </el-tooltip>
+                            <i class="iconfont icon-smile emoji" ref='btn' @click='showEmoji = !showEmoji'></i>
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                <el-tooltip content="上传图片" placement="top">
-                                    <i class="iconfont icon-xitongtupianziyuan my_picture_picture" @click="selectFile()"></i>
-                                </el-tooltip>
-                            <input hidden ref="file" type="file" @change="sendFile()" class="file">
-                                <el-tooltip content="上传文件" placement="top">
-                                    <i class="iconfont icon-3801wenjian my_file_picture" @click="selectFile()"></i>
-                                </el-tooltip>
-                            <el-tooltip content="邀请专家" placement="top">
-                                <i class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
-                            </el-tooltip>
+                            <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
+                            <i title="邀请专家" class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
                         </div>
                         <vue-emoji style="top:68px;"
                             v-show='showEmoji'
@@ -91,7 +70,7 @@
 
 <script>
 import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
-import { baseUrl } from '@/util/fetch'
+// import { baseUrl } from '@/util/fetch'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { getExpert } from '@/util/getdata'
@@ -105,13 +84,11 @@ export default {
         return {
             showEmoji: false,
             user: {
-                id: 11,
+                id: 10,
                 agentid: 3
             },
             items: [],
-            value: '',
             activeIndex: '1',
-            activeIndex2: '1',
             options: [{
                 value: '选项1',
                 label: '在线'
@@ -140,28 +117,6 @@ export default {
                 {
                     id: 4,
                     label: '对话中',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                },
-                {
-                    id: 4,
-                    label: '邀请中',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                },
-                {
-                    id: 4,
-                    label: '在线客人',
                     children: [{
                         id: 9,
                         label: '三级 1-1-1'
@@ -262,21 +217,35 @@ export default {
             position: 'top left'
         })
 
-        let wsUri = 'ws://192.168.1.112:8080/websocket/11'
+        let wsUri = 'ws://192.168.1.112:8080/websocket/' + this.user.id
         this.websocket = new WebSocket(wsUri)
         this.websocket.onopen = evt => {
-            // console.log(evt, 1111)
+            // console.log(evt)
         }
         this.websocket.onclose = evt => {
-            console.log('连接已关闭')
+            this.$notify.error({
+                duration: 0,
+                title: '错误',
+                message: '连接已关闭'
+            })
         }
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
-            this.items.push({html: data.message, class: 'user'})
+            let html = ''
+            if (data.order === 'link') {
+                html = `<i class="el-icon-document"></i><a href="${data.message}"></a>`
+            } else {
+                html = data.message
+            }
+            this.items.push({html})
+            this.$nextTick(_ => {
+                let dialog = this.$refs.dialog
+                dialog.scrollTop = dialog.scrollHeight
+            })
         }
         this.websocket.onerror = evt => {
-            console.log('连接错误')
+
         }
 
         window.onbeforeunload = function () {
@@ -289,10 +258,6 @@ export default {
     },
 
     methods: {
-        handleSelect (key, keyPath) {
-            console.log(key, keyPath)
-        },
-
         filterNode (value, data) {
             if (!value) return true
             return data.label.indexOf(value) !== -1
@@ -307,6 +272,7 @@ export default {
             let edit = this.$refs.edit
             img.src = img.src.replace('/images', '/static/images')
             edit.appendChild(img)
+            // 保持上次的光标位置
             keepLastIndex(edit)
         },
 
@@ -339,18 +305,23 @@ export default {
             form.append('talk_id', 3)
             form.append('mode', 0)
 
-            window.fetch(baseUrl + '/talk/upload', {
+            window.fetch('http://192.168.1.112:8080/talk/upload', {
                 method: 'POST',
                 body: form
             }).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('文件发送成功')
-                    this.data.push({html: '<i class="el-icon-document"></i>' + file.name, class: 'user'})
+                    this.data.push({html: '<i class="el-icon-document"></i>' + file.name})
                     console.log(res)
-                } else {
-                    this.$message.success('文件发送失败')
                 }
+            }, _ => {
+                this.$notify.error({
+                    duration: 0,
+                    title: '错误',
+                    message: '文件发送失败'
+                })
             })
+            file.value = null
         },
 
         invite () {
@@ -390,7 +361,6 @@ export default {
             float right
             height 100%
             line-height 80px
-            //width 85px
             &:hover
                 background-color color-main
             &:active
@@ -401,17 +371,17 @@ export default {
                     input
                         background-color color-main
                         border none
-                        color #ffffff
+                        color #fff
     .el-menu--horizontal
         background-color color-main
         width 100%
         height 100%
     .el-aside1
         height 850px
-        background-color #ffffff
+        background-color #fff
     .aside2
         height 850px
-        background-color #ffffff
+        background-color #fff
         border-left 2px solid color-main
         border-right 2px solid color-main
         p
@@ -419,11 +389,10 @@ export default {
             color color-main
     .el-main
         height 850px
-        //background-color orange
-        .my_dialog_box
+        .pro-dialog_box
             height 65%
             border 1px solid #e4e7ed
-            .my_dialog-item
+            .pro-dialog-item
                 font-size 1.2em
                 margin-left 1%
                 width auto
@@ -437,13 +406,9 @@ export default {
                     text-align right
                     margin-right 1%
                     color #777777
-                    //background url("../../assets/imgs/dialog.png")
-                    // background-repeat no-repeat
-                    // background-position 99.5% 0
                     .user_message
-                        //background-color rgba(40,170,255,0.7)
                         background-color #3385ff
-                        color #ffffff
+                        color #fff
                         border-radius 10px
                         margin-right 1%
                         overflow hidden
@@ -451,7 +416,7 @@ export default {
                         display inline-block
                         max-width 80%
                 &.professor
-                    color #777777
+                    color #777
                     .professor_message
                         margin-left 10px
                         background-color rgba(240,240,240,0.5)
@@ -483,13 +448,9 @@ export default {
             border 1px solid #e4e7ed
             height 150px
             .chat_area
-                height 145px
-                width 83%
-                overflow-x hidden
+                width 86%
+                height 140px
                 overflow-y auto
-                border none
-                margin-left 0.5%
-                margin-top 0.5%
-                word-wrap break-word//换行
+                margin 5px
                 outline 0
 </style>

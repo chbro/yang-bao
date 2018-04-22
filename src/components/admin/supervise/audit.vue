@@ -2,7 +2,11 @@
     <div class="admin-form">
         <p class="card-title">操作流程审核</p>
 
-        <quill-editor v-model="html"></quill-editor>
+        <textarea
+            name="myeditor"
+            id="myeditor"
+            v-model="html">
+        </textarea>
         <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
@@ -13,20 +17,30 @@
 
 <script>
 import Submitter from '@/components/admin/submitter'
+import '@/../static/ckeditor/ckeditor.js'
 import { checkSubmit } from '@/util/jskit'
-import { quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
 export default {
     components: {
-        Submitter, quillEditor
+        Submitter
+    },
+
+    mounted () {
+        console.log(window.CKEDITOR)
+        window.CKEDITOR.replace('myeditor')
+    },
+
+    destroy () {
+        let ins = window.CKEDITOR.instances.myeditor
+        if (ins) {
+            ins.destroy(true)
+        }
     },
 
     data () {
         return {
             html: '',
+            config: {},
             submitter: {}
         }
     },
@@ -42,7 +56,3 @@ export default {
     }
 }
 </script>
-
-<style lang="stylus">
-
-</style>

@@ -102,7 +102,7 @@
 </template>
 <script>
 import { Register } from '@/util/getdata'
-import { checkPassStrength, validateName, validateEmail, validatePhone } from '@/util/jskit'
+import { checkPassStrength, validateName, validateEmail, validatePhone, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
 
 export default {
@@ -199,13 +199,12 @@ export default {
 
                     this.disableReg = true
                     Register(data).then(res => {
-                        if (res.meta.code === 0) {
+                        if (isReqSuccessful(res)) {
                             this.$message.success('注册成功')
                             setTimeout(() => {
                                 this.$router.push('/login')
                             }, 1000)
                         } else {
-                            this.$message.error(res.meta.errorMsg || '注册失败')
                             this.disableReg = false
                         }
                     }, _ => {

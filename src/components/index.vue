@@ -10,7 +10,7 @@
                 </div>
             </div>
             <map name="hotmap" id="hotmap">
-                <area shape="rect" coords="140,220,250,260" href ="/#/genealogic" alt="系谱档案">
+                <area shape="rect" coords="140,220,250,260" href ="/#/genea" alt="系谱档案">
             </map>
 
             <div class="icon-text">
@@ -25,7 +25,7 @@
             <div class="icon-group po-r">
                 <span class="block-title">溯源系统功能</span>
                 <div class="left-icons">
-                    <router-link tag="div" to="/xipu" v-for="(item, i) in icons" :key="i">
+                    <router-link tag="div" to="/genea" v-for="(item, i) in icons" :key="i">
                         <i :class="'iconfont icon-' + item.class"></i>
                         <span v-text="item.text"></span>
                     </router-link>

@@ -54,14 +54,14 @@
         <nav class="header-menu container" ref="indexNav">
             <div class="navigation">
                 <ul class="nav-tabs">
-                    <li><a href="index.html">首页</a></li>
-                    <li><a href="about.html">集团</a></li>
-                    <li><a href="service.html">产品</a></li>
-                    <li><a href="service-details.html">有机</a></li>
-                    <li><a href="contact.html">效益</a></li>
-                    <li><a href="contact.html">加盟</a></li>
-                    <li><a href="contact.html">新闻</a></li>
-                    <li><a href="contact.html">联系我们</a></li>
+                    <li><router-link to="/">首页</router-link></li>
+                    <li><router-link to="about.html">集团</router-link></li>
+                    <li><router-link to="service.html">产品</router-link></li>
+                    <li><router-link to="service-details.html">有机</router-link></li>
+                    <li><router-link to="contact.html">效益</router-link></li>
+                    <li><router-link to="contact.html">加盟</router-link></li>
+                    <li><router-link to="contact.html">新闻</router-link></li>
+                    <li><router-link to="contact.html">联系我们</router-link></li>
                 </ul>
                 <div class="nav-search">
                     <input placeholder="搜索-Search...">

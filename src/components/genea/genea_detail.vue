@@ -99,15 +99,13 @@
 
 <script>
 import { getGeneaDetail } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     mounted () {
         getGeneaDetail(this.$route.params.id).then(res => {
-            console.log(res)
-            if (res.meta.code === 0) {
+            if (isReqSuccessful(res)) {
                 this.details = res.data.object
-            } else {
-                this.$message.error(res.meta.errorMsg || '获取详情失败')
             }
         }, _ => {
             this.$message.error('获取详情失败')

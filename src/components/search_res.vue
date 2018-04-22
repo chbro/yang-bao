@@ -23,7 +23,7 @@
                         <span v-text="item.factory"></span>
                     </div>
                 </div>
-                <baidu-map class="bm-area" :ak="ak"></baidu-map>
+                <baidu-map class="bm-area" :center="center" :zoom="zoom" @ready="initBaiduMap()" :ak="ak"></baidu-map>
             </div>
         </div>
 
@@ -135,7 +135,8 @@ export default {
     data () {
         return {
             ak: 'GSEcVhNVMzjFympEWRH9EOkmZw7mbKRp',
-            center: '贵州省铜仁市沿河县',
+            center: null,
+            zoom: 1,
             item: {
                 name: '商品羊',
                 erpai: '000000001',
@@ -182,6 +183,15 @@ export default {
                 {text: '营养检测报告'}
             ],
             tab: 'first'
+        }
+    },
+
+    methods: {
+        initBaiduMap () {
+            this.center = {
+                lat: 28.5639700000,
+                lng: 108.5030100000
+            }
         }
     }
 }
@@ -244,6 +254,7 @@ p
     display flex
     >img
         width 30%
+        height 100px
     >div
         width calc(50% - 10px)
         line-height 30px

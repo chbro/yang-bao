@@ -45,7 +45,7 @@
                 <el-button class="query-btn" size="small" @click="launchQuery()">查询</el-button>
             </div>
 
-            <div class="query-result" v-if="tableData.length">
+            <div class="query-result" v-if="tableData.length" v-loading="loading">
                 <el-table
                     :data="tableData"
                     style="width: 100%">
@@ -73,6 +73,7 @@
 <script>
 import Search from '@/components/search'
 import { queryGenea } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
@@ -81,6 +82,7 @@ export default {
 
     data () {
         return {
+            loading: false,
             bread: [
                 {label: '首页', to: ''},
                 {label: '云羊宝', to: 'index'},
@@ -174,17 +176,21 @@ export default {
                 this.$message.warning('请输入查询条件')
                 return
             }
-
+            if (this.tableData.length) {
+                this.loading = true
+            }
             query.page = currentPage || this.page
             query.size = pageSize || this.size
             query.page--
             queryGenea(query).then(res => {
-                if (res.meta.code === 0) {
+                if (isReqSuccessful(res)) {
                     this.total = res.data.size
                     this.tableData = res.data.List
-                } else {
-                    this.$message.error(res.meta.errorMsg || '查询失败')
                 }
+                this.loading = false
+            }, _ => {
+                this.$message.error('查询失败')
+                this.loading = false
             })
             console.log(query)
         },
@@ -239,7 +245,7 @@ export default {
             padding-left 45px
             .label-span
                 width 85px
-                margin-right 10px
+                margin-right 0
             .el-date-editor
                 border-radius 0
         .query-btn

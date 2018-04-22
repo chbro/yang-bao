@@ -3,10 +3,6 @@
         <p class="card-title">配种产子实施档案</p>
 
         <basic-info :items="items" :models="models"></basic-info>
-        <div class="card">
-            <p class="card-title">备注:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
-        </div>
         <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
@@ -18,7 +14,8 @@
 <script>
 import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
-import { checkForm, checkSubmit } from '@/util/jskit'
+import { checkForm, checkSubmit, isReqSuccessful } from '@/util/jskit'
+import { addBreeding } from '@/util/getdata'
 
 export default {
     components: {
@@ -35,31 +32,31 @@ export default {
     data () {
         return {
             items: [
-                {label: '栏/栋', model: 'house_id'},
-                {label: '母羊免疫耳牌', model: 'immunetag'},
-                {label: '母羊商标耳牌', model: 'tradetag', mr: true},
-                {label: '种公羊免疫耳牌', model: 'male_immunetag'},
-                {label: '种公羊商标耳牌', model: 'male_tradetag'},
-                {label: '配种时间', model: 'breed_time', mr: true, type: 'time'},
-                {label: '妊娠时间', model: 'pregnance_time', type: 'time'},
-                {label: '产前免疫（三联四防）接种时间', model: 'antenatal_immunetime', doubleWidth: true, mr: true, type: 'time'},
-                {label: '产羔时间', model: 'lambing_time', type: 'time'},
-                {label: '产羔', model: 'lambing_num', type: 'number'}
+                {label: '栏/栋', model: 'building'},
+                {label: '母羊免疫耳牌', model: 'mEtI'},
+                {label: '母羊商标耳牌', model: 'mEtB', mr: true},
+                {label: '种公羊免疫耳牌', model: 'fEtI'},
+                {label: '种公羊商标耳牌', model: 'fEtB'},
+                {label: '配种时间', model: 's_breedingT', mr: true, type: 'time'},
+                {label: '妊娠时间', model: 's_gestationT', type: 'time'},
+                {label: '产前免疫（三联四防）接种时间', model: 's_prenatalIT', doubleWidth: true, mr: true, type: 'time'},
+                {label: '产羔时间', model: 's_cubT', type: 'time'},
+                {label: '产羔', model: 'quantity', type: 'number'}
             ],
             models: {
-                house_id: null,
-                immunetag: null,
-                tradetag: null,
-                male_immunetag: null,
-                male_tradetag: null,
-                breed_time: null,
-                pregnance_time: null,
-                antenatal_immunetime: null,
-                lambing_time: null,
-                lambing_num: null,
-                note: null
+                building: null,
+                mEtI: null,
+                mEtB: null,
+                fEtI: null,
+                fEtB: null,
+                s_breedingT: null,
+                s_gestationT: null,
+                s_prenatalIT: null,
+                s_cubT: null,
+                quantity: null
             },
-            submitter: {}
+            submitter: {},
+            factoryNum: 123
         }
     },
 
@@ -71,6 +68,15 @@ export default {
             if (!checkSubmit(this.submitter)) {
                 return
             }
+            this.models.operator = this.submitter.operator
+            this.models.factoryNum = this.factoryNum
+            addBreeding(this.models).then(res => {
+                if (isReqSuccessful(res)) {
+                    console.log('插入成功')
+                }
+            }, _ => {
+                console.log('插入失败')
+            })
             console.log(this.models, this.submitter)
         }
     }
