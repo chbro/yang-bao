@@ -63,13 +63,12 @@
                     <li><router-link to="contact.html">新闻</router-link></li>
                     <li><router-link to="contact.html">联系我们</router-link></li>
                 </ul>
+                <div class="login-entry">
+                    <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>
+                </div>
                 <div class="nav-search">
                     <input placeholder="搜索-Search...">
                     <button type="submit"><i class="el-icon-search"></i></button>
-                </div>
-                <div class="login-entry">
-                    <router-link to="/login">登录</router-link>
-                    <router-link to="/register">注册</router-link>
                 </div>
             </div>
         </nav>
@@ -236,9 +235,8 @@ export default {
     .login-entry
         float right
         line-height 66px
-        margin-right 20px
+        color #fff
         a
-            margin-right 10px
             color #fff
             &:hover
                 text-decoration underline

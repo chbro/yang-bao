@@ -2,16 +2,16 @@
     <div id="pro_wrapper">
         <el-container>
             <el-header>
-                <img src="~@/assets/imgs/header-logo.png" alt="header-logo">
+                <router-link to="/"><img src="~@/assets/imgs/header-logo.png" alt="header-logo"></router-link>
                 <el-menu :default-active="activeIndex" class="chat-menu" mode="horizontal" text-color="#fff" active-text-color="#ffd04b">
-                    <el-menu-item index="1">商店</el-menu-item>
+                    <el-menu-item index="1">生产物资平台</el-menu-item>
                     <el-menu-item index="2">退出</el-menu-item>
                 </el-menu>
             </el-header>
             <el-container>
-                <el-aside class="aside1">
+                <el-aside class="aside1" width="180px">
                     <el-input
-                        placeholder="输入关键字进行过滤"
+                        placeholder="过滤关键字"
                         v-model="filterText">
                     </el-input>
 
@@ -224,7 +224,7 @@ export default {
         }
         this.websocket.onclose = evt => {
             this.$notify.error({
-                duration: 0,
+                duration: 5000,
                 title: '错误',
                 message: '连接已关闭'
             })
@@ -316,7 +316,7 @@ export default {
                 }
             }, _ => {
                 this.$notify.error({
-                    duration: 0,
+                    duration: 5000,
                     title: '错误',
                     message: '文件发送失败'
                 })
@@ -388,9 +388,8 @@ export default {
             text-align center
             color color-main
     .el-main
-        height 850px
         .pro-dialog_box
-            height 65%
+            height 250px
             border 1px solid #e4e7ed
             .pro-dialog-item
                 font-size 1.2em

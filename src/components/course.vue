@@ -12,10 +12,10 @@ import '@/assets/TcPlayer-2.2.1.js'
 export default {
     mounted () {
         // console.log(window.TcPlayer)
-        getVideoUrl().then(res => {
+        getVideoUrl(1, 1).then(res => {
         /* eslint-disable no-unused-vars, no-undef */
             if (isReqSuccessful(res)) {
-                let url = res.data.liveBroadcastResp.data.getVideoUrl
+                let url = res.data.liveBroadcastResp.data.pushUrl
 
                 var player = new TcPlayer('app-video', {
                     'm3u8': url,
@@ -31,7 +31,7 @@ export default {
                 })
             }
         }, _ => {
-            this.$message.error(res.meta.errorMsg || '获取直播信息失败')
+            this.$message.error('获取直播信息失败')
         })
     }
 }

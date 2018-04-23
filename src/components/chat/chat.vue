@@ -60,7 +60,7 @@
         </el-tabs>
 
         <el-dialog title="评价" :visible.sync="dialogFormVisible">
-            <el-form :model="form">
+            <el-form :model="form" class="chat-formdialog">
                 <el-form-item label="评价" :label-width="formLabelWidth">
                     <el-radio-group v-model="evaluation">
                         <el-radio :label="5">非常满意</el-radio>
@@ -75,13 +75,13 @@
                         type="textarea"
                         :rows="3"
                         placeholder="请输入内容"
-                        v-model="desciption">
+                        v-model="description">
                     </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="evaluate()">确定</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">取消</el-button>
+                <el-button size="small" type="primary" @click="evaluate()">确定</el-button>
+                <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -106,6 +106,7 @@ export default {
             btn: this.$refs.btn,
             position: 'top left'
         })
+        // console.log(window.decodeURIComponent(this.$route.query.from))
 
         // first http:
         // let urlRidOfHost = baseUrl.substr(baseUrl.indexOf(':'))
@@ -116,7 +117,7 @@ export default {
         this.websocket = new WebSocket(wsUri)
         this.websocket.onclose = evt => {
             this.$notify.error({
-                duration: 0, // will not close automatically
+                duration: 5000, // will not close automatically
                 title: '错误',
                 message: '连接已关闭'
             })
@@ -134,7 +135,7 @@ export default {
         }
         this.websocket.onerror = evt => {
             // this.$notify.error({
-            //     duration: 0,
+            //     duration: 5000,
             //     title: '连接错误',
             //     message: '连接发生了一个错误'
             // })
@@ -146,7 +147,7 @@ export default {
             }
         }, res => {
             this.$notify.error({
-                duration: 0,
+                duration: 5000,
                 title: '错误',
                 message: res.meta.errorMsg || '当前没有专家在线'
             })
@@ -165,7 +166,7 @@ export default {
         return {
             evaluation: 5, // 评价满意度
             dialogFormVisible: false, // 评价弹框是否可见
-            desciption: '',
+            description: '',
             form: {
                 region: '',
                 resource: '',
@@ -174,7 +175,7 @@ export default {
                 name: '',
                 message: ''
             },
-            formLabelWidth: '120px',
+            formLabelWidth: '80px',
 
             activeIndex: '1',
             showEmoji: false, // 表情选择框是否可见
@@ -198,7 +199,7 @@ export default {
                 expert_name: 'zz',
                 expert_id: this.expertid,
                 evaluation: this.evaluation,
-                desciption: this.desciption
+                description: this.description
             }
             evalulateExpert(data).then(res => {
                 if (isReqSuccessful(res)) {
@@ -206,7 +207,7 @@ export default {
                 }
             })
             this.dialogFormVisible = false
-            this.desciption = this.evaluation = null
+            this.description = this.evaluation = null
         },
 
         // select a img dom and append it to a contenteditable div
@@ -235,7 +236,12 @@ export default {
                 talk_id: this.expertid,
                 mode: 0
             }
-            this.websocket.send(JSON.stringify(data))
+            try {
+                this.websocket.send(JSON.stringify(data))
+            } catch (e) {
+                this.$message.error('消息发送失败')
+                return
+            }
             edit.innerHTML = ''
         },
 
@@ -271,7 +277,7 @@ export default {
                 }
             }, _ => {
                 this.$notify.error({
-                    duration: 0,
+                    duration: 5000,
                     title: '错误',
                     message: '文件发送失败'
                 })
@@ -293,6 +299,10 @@ export default {
 
 <style lang="stylus">
 @import '~@/assets/css/color'
+
+.chat-formdialog
+    el-form-item__content
+        margin-left 80px
 
 .chat-wrapper
     width 60%

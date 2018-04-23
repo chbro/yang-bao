@@ -12,7 +12,7 @@
                     <div class="admin-hl pos">
                         <b><i class="el-icon-arrow-down"></i>位置：</b>
                         <el-breadcrumb separator="-">
-                             <el-breadcrumb-item v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
+                             <el-breadcrumb-item :to="{name: item.to}" v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
                         </el-breadcrumb>
                         <span class="fs"><i class="el-icon-menu"></i>全屏</span>
                     </div>
@@ -20,8 +20,8 @@
                     <div class="bg-blue pad">
                         <div class="admin-search">
                             <div class="options">
-                                <el-button class="admin-hl hl-btn"  type="primary">{{ module.label }}</el-button>
-                                <el-button class="admin-hl hl-btn"  type="primary" @click="showAll(module.to + '_file')">{{ module.label }}档案</el-button>
+                                <el-button class="admin-hl hl-btn" @click="changeActive(module)" type="primary">{{ module.label }}</el-button>
+                                <el-button v-if="isProdModule()" class="admin-hl hl-btn"  type="primary" @click="changeActive(module, 1)">{{ module.label }}列表</el-button>
                             </div>
                             <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -66,15 +66,15 @@ export default {
                 }
             }
         })
-        console.log(mod, submod)
-        if (parent && child) {
+        // console.log(mod, submod)
+        if (mod && submod) {
             // open left tree
             this.expanded_key = [child]
 
             arr.push({text: mod.label}, {text: submod.label})
             this.module = submod
-        } else if (parent) {
-            this.expanded_key = [child]
+        } else if (mod) {
+            this.expanded_key = [parent]
 
             // some module has no child
             arr.push({text: mod.label})
@@ -90,19 +90,30 @@ export default {
     data () {
         return {
             module: {label: '', to: ''},
-            side_width: '15%',
+            side_width: '17%',
             expanded_key: null,
             showEditTable: false,
             treedata: [
-                {label: '会员管理平台', children: [
-                    {label: '专家课堂', to: 'course'},
-                    {label: '系谱档案', to: 'genealogic'},
+                {label: '会员中心', children: [
+                    {label: '模块1', to: 'auth2'},
+                    {label: '模块2', to: 'auth3'}
+                ]},
+                {label: '系统管理员平台', children: [
+                    {label: '权限管理', name: 'auth', children: [
+                        {label: '权限管理', to: 'auth'},
+                        {label: '角色管理', to: 'authrole'}
+                    ]},
                     {label: '羊场管理', to: 'farm'},
                     {label: '代理管理', to: 'agent'},
+                    {label: '审核', to: 'review'}
+                ]},
+                {label: '管理平台', children: [
+                    {label: '专家课堂', to: 'course'},
+                    {label: '系谱档案', to: 'genealogic'},
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
-                        {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                        {label: '卫生与动物福利操作档案', to: 'welfareprac'},
+                        {label: '卫生与动物福利管理方案', to: 'welfare'},
+                        {label: '卫生与动物福利操作档案', to: 'welfare1'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -122,7 +133,7 @@ export default {
                         {label: '疫病防治方案', to: 'preventionplan'},
                         {label: '疫病防治实施档案', to: 'preventionprac'}
                     ]},
-                    {label: '生产物资平台', to: 'https://baidu.com', out: true},
+                    {label: '生产物资平台', to: 'app-delivery'},
                     {label: '可视系统', name: 'visual', children: [
                         {label: '诊断可视', to: 'diagnose'},
                         {label: '生产环节可视', to: 'production'}
@@ -136,33 +147,29 @@ export default {
                             {label: '回收化验指标', to: 'recovery_index'}
                         ]}
                     ]}
-                ]},
-                {label: '系统管理员平台', children: [
-                    {label: '权限管理', name: 'auth', children: [
-                        {label: '权限管理', to: 'auth'},
-                        {label: '用户管理', to: 'authuser'},
-                        {label: '角色管理', to: 'authrole'}
-                    ]},
-                    {label: '审核', to: 'review'}
                 ]}
             ],
             options: [],
             search_key: null,
             showTree: true,
             bread: [
-                {text: '溯源管理'}
+                {text: '溯源管理', to: 'auth'}
             ]
         }
     },
 
     methods: {
-        changeActive (item, index) {
-            delete this.options.find(v => v.active).active
-            this.options[index].active = true
-            if (item.edit) {
-                this.showEditTable = true
-            } else if (item.name) {
-                this.$router.push({name: item.name})
+        isProdModule () {
+            let name = this.$route.name
+            return ['welfare', 'genealogic'].includes(name) || name.endsWith('prac')
+        },
+
+        changeActive (item, isTo) {
+            // console.log(item, item.to)
+            if (isTo) {
+                this.$router.push({name: item.to + 'list'})
+            } else {
+                this.$router.push({name: item.to})
             }
         },
 
@@ -172,7 +179,7 @@ export default {
                 this.$refs.hidespan.classList.remove('el-icon-arrow-left')
                 this.$refs.hidespan.classList.add('el-icon-arrow-right')
             } else {
-                this.side_width = '15%'
+                this.side_width = '17%'
                 this.$refs.hidespan.classList.remove('el-icon-arrow-right')
                 this.$refs.hidespan.classList.add('el-icon-arrow-left')
             }
@@ -182,7 +189,12 @@ export default {
             if (data.isLeaf) {
                 // if chat open another page
                 if (node.to === 'chat') {
-                    this.$router.push({name: 'chat', parmas: {from: this.module.to}})
+                    window.open(window.location.origin + '/#/chat?from=' + window.encodeURIComponent(data.parent.label))
+                    return
+                }
+                // if delivery jump to another system
+                if (node.to === 'app-delivery') {
+                    console.log('delivery')
                     return
                 }
 
@@ -191,7 +203,7 @@ export default {
                 if (Object.prototype.toString.call(parent.data) === '[object Object]') {
                     arr.push({text: parent.data.label})
                 }
-                arr.push({text: node.label})
+                arr.push({text: node.label, to: node.to})
                 this.bread = arr
 
                 this.module = {label: node.label, to: node.to}
@@ -296,6 +308,7 @@ export default {
                 position absolute
                 right 310px
         .search
+            float right
             width 300px
             .el-input-group__append
                 background-color color-main
@@ -323,10 +336,11 @@ export default {
         .el-breadcrumb__inner
             color color-main
 .admin-search
-    padding-top 5px
-    margin 5px 20px
+    padding-top 15px
+    margin 0 20px 0 20px
+    overflow hidden
     .options
-        margin-bottom 5px
+        float left
         .el-button
             border-bottom-left-radius 0
             border-bottom-right-radius 0

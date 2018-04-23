@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="blog-home">
+        <section class="blog-home" v-cloak>
             <search></search>
             <div class="container po-r">
                 <span class="block-title">追溯系统</span>

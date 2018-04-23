@@ -41,7 +41,7 @@ export default {
         }
         return {
             items: [
-                {label: '免疫耳牌号', model: 'immunetag', type: 'file'},
+                {label: '免疫耳牌号文件', model: 'immunetag', type: 'file'},
                 {label: '消毒时间', model: 'time', type: 'time'},
                 {label: '消毒场所', model: 'place'},
                 {label: '消毒药名称', model: 'medicine', type: 'select', fetchSuggestions: getMedicines},

@@ -35,7 +35,7 @@ export const getPermission = _ => fetch('/user/')
 /**
  * 获取直播或者推流地址
  */
-export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/geturl?userid=${id}&usertype=${type}`)
+export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
 
 /**
  * 专家匹配, 邀请专家
@@ -71,3 +71,10 @@ export const evalulateExpert = data => fetch('/evaluation', data, 'POST')
  * 配种产子实施档案
  */
 export const addBreeding = data => fetch('/breeding/add', data, 'POST')
+
+/**
+ * 消毒实施档案CURD
+ */
+export const getDisinfectList = data => fetch('/df/pfind', data, 'POST')
+
+export const deleteDisinfect = id => fetch(`/df/delete?id=${id}`, null, 'DELETE')

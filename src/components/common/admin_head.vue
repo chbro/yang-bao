@@ -66,7 +66,7 @@ export default {
     color #fff
     background url('~@/assets/imgs/by.png')
 .logo
-    width 15%
+    width 17%
     min-width 100px
     text-align center
     float left
