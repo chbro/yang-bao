@@ -2,12 +2,12 @@
     <div class="border-main">
         <div class="form-summary">
             <template v-for="(item, i) in items">
-                <el-input :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text'" size="small" v-model="models[item.model]">
+                <el-input :minlength="item.trade ? 15 : 1" :maxlength="item.trade ? 15 : 100" :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text'" size="small" v-model="models[item.model]">
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 
                 <el-input :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
-                    <template slot="prepend">免疫耳牌号<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
+                    <template slot="prepend">免疫耳牌号文件<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
                 </el-input>
 
                 <div :key="i" v-else-if="item.type === 'time'" class="time el-input-group" :class="{'double-width': item.doubleWidth, mr: item.mr}">
@@ -40,13 +40,26 @@
                     <span v-text="item.label + ':'"></span>
                     <el-radio v-model="models[item.model]" v-for="(r, i) in item.radios" :key="i" :label="i">{{item.radios[i]}}</el-radio>
                 </div>
+
+                <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address'" class="time el-input-group address">
+                    <span class="time-span" v-text="item.label + ':'"></span>
+                    <area-select type="text" :level="2" v-model="area" :data="pcaa" @change="getFactories"></area-select>
+                    <!-- <area-cascader type="text" :level="1" v-model="area" :data="pcaa" @change="getFactories"></area-cascader> -->
+                </div>
             </template>
         </div>
     </div>
 </template>
 
 <script>
+import { AreaCascader } from 'vue-area-linkage'
+import pcaa from 'area-data/pcaa'
+import 'vue-area-linkage/dist/index.css'
 export default {
+    components: {
+        AreaCascader
+    },
+
     props: {
         items: {
             type: Array,
@@ -76,7 +89,9 @@ export default {
 
     data () {
         return {
-            holder: '请选择文件'
+            holder: '请选择文件',
+            pcaa,
+            area: null
         }
     },
 

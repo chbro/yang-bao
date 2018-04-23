@@ -1,11 +1,12 @@
 <template>
     <div>
-        <admin-table :tableData="tableData" name="系谱档案" :postfix="false" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
+        <admin-table :getData="getGeneaRec" name="系谱档案" :postfix="false" :id="1" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
     </div>
 </template>
 
 <script>
 import AdminTable from '@/components/admin/table'
+import { getGeneaRec } from '@/util/getdata'
 
 export default {
     components: {
@@ -14,10 +15,7 @@ export default {
 
     data () {
         return {
-            tableData: [
-                {id: 1, date: '2018-4-22', name: 'xxx填写的系谱档案'},
-                {id: 2, date: '2018-4-22', name: 'xxx填写的第二个系谱档案'}
-            ]
+            getGeneaRec
         }
     }
 }

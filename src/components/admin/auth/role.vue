@@ -6,18 +6,9 @@
             :data="tableData"
             style="width: 100%">
             <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="地址">
+                prop="roleName"
+                label="角色名"
+                width="240">
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -61,9 +52,7 @@ export default {
     data () {
         return {
             tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: 'xxxx'
+                roleName: 'aaa'
             }],
             addUser: false,
             items: [
@@ -73,10 +62,10 @@ export default {
                 {text: '免疫实施档案', supervise: 1},
                 {text: '阶段营养档案', supervise: 1},
                 {text: '卫生动物福利档案', supervise: 1},
+                {text: '专家评价', totalScore: 1},
                 {text: '方案'},
                 {text: '代理'},
                 {text: '客户'},
-                {text: '专家评价', totalScore: 1},
                 {text: '直播'},
                 {text: '社区活动'},
                 {text: '信息发布'},

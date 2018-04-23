@@ -27,6 +27,13 @@ export const getGeneaDetail = id => fetch('/gf/findshowbyid?id=' + id)
 
 export const postGeneaRec = data => fetch('/gf/saveshow', data, 'POST')
 
+export const getGeneaRec = data => {
+    let { id, page, size } = data
+    page = page || 0
+    size = size || 10
+    return fetch(`/gf/find/${id}?page=${page}&size=${size}`)
+}
+
 /**
  * 权限CURD
  */

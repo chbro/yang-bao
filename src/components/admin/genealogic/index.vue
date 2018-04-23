@@ -27,39 +27,33 @@ export default {
     },
 
     data () {
+        let tapeNames = [
+            {value: '大黑羊', key: '1'},
+            {value: 'bbb', key: 2}
+        ]
+        let getTapename = (q, cb) => {
+            cb(tapeNames)
+        }
         return {
             items: [
                 {label: '免疫耳牌', model: 'immuneEartag'},
                 {label: '原耳牌', model: 'nativeEartag'},
-                {label: '商标耳牌', model: 'tradeMarkEartag', mr: true},
+                {label: '商标耳牌', model: 'tradeMarkEartag', mr: true, trade: true},
+                {label: '品种名', model: 'type', type: 'select', fetchSuggestions: getTapename},
                 {label: '种羊基地', model: 'breedingSheepBase'},
                 {label: '初登时间', model: 'birthTime', type: 'time'},
-                {label: '初登体重', model: 'birthWeight', mr: true},
-                {label: '颜色', model: 'color'},
+                {label: '初登体重', model: 'birthWeight'},
+                {label: '颜色', model: 'color', mr: true},
                 {label: '父号', model: 'eartagOfFather'},
-                {label: '母号', model: 'eartagOfMother', mr: true},
-                {label: '父父号', model: 'eartagOfFathersFather'},
+                {label: '母号', model: 'eartagOfMother'},
+                {label: '父父号', model: 'eartagOfFathersFather', mr: true},
                 {label: '父母号', model: 'eartagOfFathersMother'},
-                {label: '母父号', model: 'eartagOfMothersFather', mr: true},
-                {label: '母母号', model: 'eartagOfMothersMother'},
+                {label: '母父号', model: 'eartagOfMothersFather'},
+                {label: '母母号', model: 'eartagOfMothersMother', mr: true},
                 {label: '性别', model: 'sex', type: 'radio', radios: ['公羊', '母羊']}
             ],
             models: {
-                immuneEartag: null,
-                nativeEartag: null,
-                tradeMarkEartag: null,
-                breedingSheepBase: null,
-                birthTime: null,
-                birthWeight: null,
-                color: null,
-                eartagOfFather: null,
-                eartagOfMother: null,
-                eartagOfFathersFather: null,
-                eartagOfFathersMother: null,
-                eartagOfMothersFather: null,
-                eartagOfMothersMother: null,
-                sex: 0,
-                remark: null
+                factoryNum: 1
             },
             submitter: {}
         }
@@ -77,6 +71,10 @@ export default {
             postGeneaRec(this.models).then(res => {
                 if (isReqSuccessful(res)) {
                     console.log(this.models, this.submitter)
+                    this.$message.success('插入成功')
+                    this.$router.push({
+                        name: 'genealogiclist'
+                    })
                 }
             })
         }

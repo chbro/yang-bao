@@ -65,16 +65,19 @@ export default {
         postfix: {
             type: Boolean,
             default: true
+        },
+        id: {
+            type: Number
         }
     },
 
     mounted () {
-        this.fetchData()
+        this.fetchData(this.id)
     },
 
     data () {
         return {
-            page: 1,
+            page: 0,
             total: 10,
             tableData: []
         }
@@ -89,12 +92,14 @@ export default {
             console.log(this.tableData[index])
         },
 
-        fetchData (page = this.page, isPass = 0, size = 10) {
-            this.getData({
+        fetchData (id, page = this.page, isPass = 0, size = 10) {
+            let param = {
+                id,
                 isPass,
                 page,
                 size
-            }).then(res => {
+            }
+            this.getData(param).then(res => {
                 if (isReqSuccessful(res)) {
                     this.tableData = res.data.List
                     this.total = res.data.size
@@ -105,7 +110,7 @@ export default {
         },
 
         handleCurrentChange (page) {
-            this.fetchData(page)
+            this.fetchData(this.id, page)
         },
 
         setTop (index) {
