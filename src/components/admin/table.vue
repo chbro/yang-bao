@@ -90,22 +90,18 @@ export default {
         },
 
         fetchData (page = this.page, isPass = 0, size = 10) {
-            if (this.getData) {
-                this.getData({
-                    isPass,
-                    page,
-                    size
-                }).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.tableData = res.data.List
-                        this.total = res.data.size
-                    }
-                }, _ => {
-                    this.$message.error('获取数据失败')
-                })
-            } else {
-                throw new Error('未定义获取数据方式')
-            }
+            this.getData({
+                isPass,
+                page,
+                size
+            }).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.tableData = res.data.List
+                    this.total = res.data.size
+                }
+            }, _ => {
+                this.$message.error('获取数据失败')
+            })
         },
 
         handleCurrentChange (page) {
