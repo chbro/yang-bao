@@ -95,8 +95,8 @@ export default {
             showEditTable: false,
             treedata: [
                 {label: '会员中心', children: [
-                    {label: '模块1', to: 'auth2'},
-                    {label: '模块2', to: 'auth3'}
+                    {label: '模块1', to: 'test'},
+                    {label: '模块2', to: 'test2'}
                 ]},
                 {label: '系统管理员平台', children: [
                     {label: '权限管理', name: 'auth', children: [
@@ -161,7 +161,7 @@ export default {
     methods: {
         isProdModule () {
             let name = this.$route.name
-            return ['welfare', 'genealogic'].includes(name) || name.endsWith('prac')
+            return ['welfare', 'genealogic'].includes(name) || name.endsWith('prac') || name.endsWith('list')
         },
 
         changeActive (item, isTo) {
@@ -187,6 +187,9 @@ export default {
 
         clickTree (node, data) {
             if (data.isLeaf) {
+                if (node.to.startsWith('test')) {
+                    return
+                }
                 // if chat open another page
                 if (node.to === 'chat') {
                     window.open(window.location.origin + '/#/chat?from=' + window.encodeURIComponent(data.parent.label))

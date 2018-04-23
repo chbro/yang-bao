@@ -5,7 +5,7 @@
                 <el-container>
                     <el-main>
                         <div class="dialog_box" ref="dialog">
-                            <div class="dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i"><span v-text="item.user ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
+                            <div class="dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
                         </div>
                         <div class="input_box">
                             <div class="chat-option">
@@ -127,7 +127,11 @@ export default {
             let data = JSON.parse(evt.data)
             let html = ''
             if (data.order === 'link') {
-                html = `<i class="el-icon-document"></i><a href="${data.message}">`
+                let msg = data.message
+                let idx = msg.lastIndexOf(':')
+                let name = msg.substr(idx + 1)
+                let addr = msg.substr(0, idx)
+                html = `<a href="${addr}"><i class="el-icon-document"></i>${name}</a>`
             } else {
                 html = data.message
             }
@@ -181,7 +185,7 @@ export default {
             showEmoji: false, // 表情选择框是否可见
             items: [ // 聊天内容数组
                 {html: '你好啊，请问有什么问题？'},
-                {html: '你好', user: 1}
+                {html: '你好', self: 1}
             ],
             websocket: null, // 本地ws连接
             user: {
@@ -264,6 +268,7 @@ export default {
             form.append('user_id', this.user.id)
             form.append('user_name', this.user.name)
             form.append('talk_id', this.expertid)
+            form.append('role_id', this.user.role_id)
             form.append('mode', 0)
 
             // post文件使用原生fetch,未写入总接口
@@ -282,12 +287,11 @@ export default {
                     message: '文件发送失败'
                 })
             })
-            console.log(filedom)
-            filedom = resetFile()
+            resetFile(filedom)
         },
 
         pushChatMessage (html) {
-            this.items.push({html, user: 1})
+            this.items.push({html, self: 1})
             this.$nextTick(_ => {
                 let dialog = this.$refs.dialog
                 dialog.scrollTop = dialog.scrollHeight
@@ -351,7 +355,9 @@ export default {
                     background-color rgba(240,240,240,0.5)
                     i
                         font-size 20px
-                &.user
+                    a
+                        color #fff
+                &.self
                     margin-left 0
                     margin-right 15px
                     span, .msg

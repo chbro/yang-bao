@@ -42,7 +42,7 @@
                 </el-aside>
                 <el-main>
                     <div class="pro-dialog_box" ref="dialog">
-                        <div class="pro-dialog-item" :class="{user: item.user}" v-for="(item, i) in items" :key="i"><span v-text="item.user ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
+                        <div class="pro-dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? '专家' : '用户'"></span><span class="msg" v-html="item.html"></span></div>
                     </div>
                     <div class="my_input_box">
                         <div class="my_chat_option">
@@ -87,7 +87,10 @@ export default {
                 id: 10,
                 agentid: 3
             },
-            items: [],
+            items: [
+                {html: '我是客户？'},
+                {html: '请说出你的问题', self: 1}
+            ],
             activeIndex: '1',
             options: [{
                 value: '选项1',
@@ -392,37 +395,34 @@ export default {
             height 250px
             border 1px solid #e4e7ed
             .pro-dialog-item
-                font-size 1.2em
-                margin-left 1%
-                width auto
-                padding 1%
-                max-width 98%
-                word-break: break-all;
-                word-wrap: break-word;
-                p
-                    display inline
-                &.user
-                    text-align right
-                    margin-right 1%
-                    color #777777
-                    .user_message
-                        background-color #3385ff
+                overflow hidden
+                font-size 16px
+                margin 10px 0
+                margin-left 15px
+                line-height 25px
+                span, .msg
+                    float left
+                    padding 5px
+                .msg
+                    float left
+                    max-width 80%
+                    padding-left 15px
+                    padding-right 15px
+                    border-radius 10px
+                    color #000
+                    background-color rgba(240,240,240,0.5)
+                    i
+                        font-size 20px
+                    a
                         color #fff
-                        border-radius 10px
-                        margin-right 1%
-                        overflow hidden
-                        padding 0 10px
-                        display inline-block
-                        max-width 80%
-                &.professor
-                    color #777
-                    .professor_message
-                        margin-left 10px
-                        background-color rgba(240,240,240,0.5)
-                        border-radius 10px
-                        padding 0 10px
-                        display inline-block
-                        max-width 80%
+                &.self
+                    margin-left 0
+                    margin-right 15px
+                    span, .msg
+                        float right
+                    .msg
+                        color #fff
+                        background-color #3385ff
         .my_input_box
             height 35%
             .my_chat_option

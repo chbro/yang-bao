@@ -79,6 +79,10 @@ export const checkSubmit = info => {
 }
 
 export const checkForm = form => {
+    if (form.tradeMarkEatTag && !/\d{15}/.test(form.tradeMarkEatTag)) {
+        app.$message.warning('商标耳牌必须是15位数字')
+        return false
+    }
     if (Object.keys(form).some(v => form[v] === null || form[v] === '')) {
         app.$message.warning('请完善表单信息')
         return false
@@ -141,7 +145,12 @@ export const isReqSuccessful = (res) => {
     }
 }
 
-export const resetFile = filedom => {
-    // filedom.outerHTML = filedom.outerHTML
-    filedom.value = ''
+export const resetFile = dom => {
+    if (({}).toString.call(dom) !== '[object HTMLInputElement]') {
+        throw new Error('清空文件值时必须传入DOM节点')
+    }
+
+    dom.value = ''
+    dom.type = 'text'
+    dom.type = 'file'
 }
