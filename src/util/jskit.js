@@ -70,8 +70,8 @@ export const keepLastIndex = obj => {
 }
 
 export const checkSubmit = info => {
-    let { operator, reviewer, executor } = info
-    if (!(operator && reviewer && executor)) {
+    let name = info.operator_name
+    if (!name) {
         app.$message.warning('请完善提交人信息')
         return false
     }
@@ -79,12 +79,19 @@ export const checkSubmit = info => {
 }
 
 export const checkForm = form => {
-    if (form.tradeMarkEatTag && !/\d{15}/.test(form.tradeMarkEatTag)) {
+    let trade = form.tradeMarkEartag
+    if (trade && !/^\d{15}$/.test(trade)) {
         app.$message.warning('商标耳牌必须是15位数字')
         return false
     }
     if (Object.keys(form).some(v => form[v] === null || form[v] === '')) {
         app.$message.warning('请完善表单信息')
+        return false
+    }
+
+    let weight = form.birthWeight
+    if (weight && !/^\d+\.?\d{0,}$/.test(weight)) {
+        app.$message.warning('初登体重只能输入数字')
         return false
     }
     return true
@@ -153,4 +160,16 @@ export const resetFile = dom => {
     dom.value = ''
     dom.type = 'text'
     dom.type = 'file'
+}
+
+let jump = (msg, name) => {
+    app.$message.success(msg)
+    // why app.$router is undefined
+    window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
+}
+export const postJump = routename => {
+    jump('录入成功', routename)
+}
+export const patchJump = routename => {
+    jump('修改成功', routename)
 }

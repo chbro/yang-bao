@@ -19,19 +19,27 @@ export const postMessage = data => fetch('/messages', data, 'POST')
 export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${page}`)
 
 /**
- * 系谱档案
+ * 后端管理系谱档案CURD
+ */
+export const postGeneaRec = data => fetch('/gf/save', data, 'POST')
+
+export const updateGeneaRec = (id, data) => fetch(`/gf/update/${id}`, data, 'PATCH')
+
+export const getGeneaRec = id => fetch(`/gf/show/${id}`)
+
+export const deleteGeneaRec = id => fetch('/gf/delete/' + id, null, 'DELETE')
+
+// 获取羊的种类
+export const getSheepTypes = id => fetch('/gf/types')
+
+/**
+ * 系谱档案多条件性能
  */
 export const queryGenea = data => fetch('/gf/findshow', data, 'POST')
 
-export const getGeneaDetail = id => fetch('/gf/findshowbyid?id=' + id)
-
-export const postGeneaRec = data => fetch('/gf/saveshow', data, 'POST')
-
-export const getGeneaRec = data => {
-    let { id, page, size } = data
-    page = page || 0
-    size = size || 10
-    return fetch(`/gf/find/${id}?page=${page}&size=${size}`)
+export const getGeneas = data => {
+    let { factoryNum, page, size } = data
+    return fetch(`/gf/find/${factoryNum}?page=${page}&size=${size}`)
 }
 
 /**
@@ -80,8 +88,8 @@ export const evalulateExpert = data => fetch('/evaluation', data, 'POST')
 export const addBreeding = data => fetch('/breeding/add', data, 'POST')
 
 /**
- * 消毒实施档案CURD
+ * 消毒实施档案RD
  */
-export const getDisinfectList = data => fetch('/df/pfind', data, 'POST')
+export const getDisinfect = data => fetch('/df/findshow', data, 'POST')
 
-export const deleteDisinfect = id => fetch(`/df/delete?id=${id}`, null, 'DELETE')
+export const deleteDisinfect = id => fetch(`/df/delete/${id}`, null, 'DELETE')

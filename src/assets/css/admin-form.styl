@@ -1,11 +1,28 @@
 @import './color'
 
+.admin-list-pass
+    margin-bottom 20px
+    >*
+        margin-right 10px
+    .el-select
+        width w=120px
+        .el-input
+            width w
+    .el-input
+        width 200px
+        vertical-align middle
+        .el-input-group__prepend
+            width 80px
 .el-autocomplete-suggestion
     li
         color color-main
         border-bottom 1px solid color-main
 
 .admin-form
+    .ellipse
+        text-overflow ellipsis
+        white-space nowrap
+        overflow hidden
     .select-file.is-disabled .el-input__inner
         background-color #fff
         color #aaa
@@ -14,6 +31,13 @@
 
     .el-input-group
         width auto
+        .area-cascader-wrap
+            display inline-block
+            .area-select
+                box-sizing border-box
+                width 199px
+                height 32px
+                border-radius 0
     .select
         >span
             vertical-align bottom !important
@@ -43,12 +67,13 @@
                 margin-right 0
         &.radio
             >span
+                box-sizing border-box
                 display inline-block
+                vertical-align bottom
+                width 180px
+                padding-right 20px
+                padding-left 20px
                 font-size 14px
-                margin-left 20px
-                margin-right 50px
-                &:first-letter
-                    margin-right 30px
         .el-autocomplete
             width calc(100% - 140px)
 

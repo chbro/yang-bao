@@ -55,8 +55,12 @@ const Capture = () => import('@/components/admin/supervise/capture')
 const RecoveryIndex = () => import('@/components/admin/supervise/recovery_index')
 // 羊场管理
 const Farm = () => import('@/components/admin/farm/index')
+const FarmList = () => import('@/components/admin/farm/list')
 // 代理管理
 const Agent = () => import('@/components/admin/agent/index')
+const AgentList = () => import('@/components/admin/agent/list')
+// 发布系统
+const Release = () => import('@/components/admin/release/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -107,7 +111,10 @@ export default new Router({
             {path: 'supervise/audit', name: 'audit', component: Audit},
             {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex},
             {path: 'farm', name: 'farm', component: Farm},
-            {path: 'agent', name: 'agent', component: Agent}
+            {path: 'farmlist', name: 'farmlist', component: FarmList},
+            {path: 'agent', name: 'agent', component: Agent},
+            {path: 'agentlist', name: 'agentlist', component: AgentList},
+            {path: 'release', name: 'release', component: Release}
         ]},
         {path: '*', component: NotFound}
     ]

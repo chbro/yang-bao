@@ -2,6 +2,7 @@
     <div class="admin-form">
         <p class="card-title">羊场管理</p>
         <basic-info :items="items" :models="models"></basic-info>
+        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
@@ -11,13 +12,11 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { AreaCascader } from 'vue-area-linkage'
-import pcaa from 'area-data/pcaa'
-import 'vue-area-linkage/dist/index.css'
+import Submitter from '@/components/admin/submitter'
 
 export default {
     components: {
-        BasicInfo, AreaCascader
+        BasicInfo, Submitter
     },
 
     data () {
@@ -29,8 +28,7 @@ export default {
             cb(principals)
         }
         return {
-            area: [],
-            pcaa,
+            area: null,
             items: [ {
                 label: '羊场编号',
                 model: 'number'
@@ -48,7 +46,8 @@ export default {
                 fetchSuggestions: getPrincipal
             }, {
                 label: '备注',
-                model: 'comment'
+                model: 'comment',
+                mr: 1
             }, {
                 label: '消毒场所',
                 model: 'workplace'
@@ -58,23 +57,12 @@ export default {
             }, {
                 label: '加入时间',
                 model: 'time',
-                type: 'time'
+                type: 'time',
+                mr: 1
             }],
-            models: {
-                number: null,
-                name: null,
-                address: null,
-                principal: null,
-                comment: null,
-                workplace: null,
-                preAgent: null,
-                time: null
-            }
+            models: {},
+            submitter: {}
         }
     }
 }
 </script>
-
-<style lang="stylus">
-
-</style>

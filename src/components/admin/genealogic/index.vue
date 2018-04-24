@@ -5,9 +5,9 @@
         <basic-info :items="items" :models="models"></basic-info>
         <div class="card">
             <p class="card-title">备注:</p>
-            <el-input type="textarea" v-model="models.remark"></el-input>
+            <el-input type="textarea" v-model="remark"></el-input>
         </div>
-        <submitter :submitter.sync="submitter"></submitter>
+        <!-- <submitter :submitter.sync="submitter"></submitter> -->
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
@@ -16,30 +16,59 @@
 </template>
 
 <script>
+// import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
-import Submitter from '@/components/admin/submitter'
-import { checkForm, checkSubmit, isReqSuccessful } from '@/util/jskit'
-import { postGeneaRec } from '@/util/getdata'
+import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
+import { getGeneaRec, postGeneaRec, getSheepTypes, updateGeneaRec } from '@/util/getdata'
 
 export default {
     components: {
-        BasicInfo, Submitter
+        BasicInfo
+    },
+
+    mounted () {
+        getSheepTypes().then(res => {
+            if (isReqSuccessful(res)) {
+                let type = res.data.type
+                type.forEach(v => {
+                    v.value = v.typename
+                    delete v.typename
+                })
+                this.types = type
+            }
+        }, _ => {
+            this.$message.error('获取山羊品种失败')
+        })
+
+        this.edit = this.$route.query.edit
+        if (this.edit) {
+            getGeneaRec(this.edit).then(res => {
+                if (isReqSuccessful(res)) {
+                    let data = res.data.data
+                    // this.submitter.operator_name = data.operatorName
+                    Object.keys(this.models).forEach(v => {
+                        this.models[v] = data[v]
+                    })
+                    this.remark = data.remark
+                }
+            }, _ => {
+                this.$message.error('获取山羊信息失败')
+            })
+        }
     },
 
     data () {
-        let tapeNames = [
-            {value: '大黑羊', key: '1'},
-            {value: 'bbb', key: 2}
-        ]
-        let getTapename = (q, cb) => {
-            cb(tapeNames)
+        let getType = (q, cb) => {
+            cb(this.types)
         }
+
         return {
+            edit: false,
             items: [
                 {label: '免疫耳牌', model: 'immuneEartag'},
                 {label: '原耳牌', model: 'nativeEartag'},
                 {label: '商标耳牌', model: 'tradeMarkEartag', mr: true, trade: true},
-                {label: '品种名', model: 'type', type: 'select', fetchSuggestions: getTapename},
+                {label: '品种名', model: 'typeName', type: 'select', fetchSuggestions: getType},
                 {label: '种羊基地', model: 'breedingSheepBase'},
                 {label: '初登时间', model: 'birthTime', type: 'time'},
                 {label: '初登体重', model: 'birthWeight'},
@@ -52,9 +81,27 @@ export default {
                 {label: '母母号', model: 'eartagOfMothersMother', mr: true},
                 {label: '性别', model: 'sex', type: 'radio', radios: ['公羊', '母羊']}
             ],
+            // 用于检查字段值是否填写，所以均初始化为null
             models: {
-                factoryNum: 1
+                factoryNum: 1,
+                immuneEartag: null,
+                nativeEartag: null,
+                tradeMarkEartag: null,
+                typeName: null,
+                breedingSheepBase: null,
+                birthTime: null,
+                birthWeight: null,
+                color: null,
+                eartagOfFather: null,
+                eartagOfMother: null,
+                eartagOfFathersFather: null,
+                eartagOfFathersMother: null,
+                eartagOfMothersFather: null,
+                eartagOfMothersMother: null,
+                sex: 0
             },
+            remark: '',
+            types: [],
             submitter: {}
         }
     },
@@ -64,19 +111,27 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
-            if (!checkSubmit(this.submitter)) {
-                return
-            }
 
-            postGeneaRec(this.models).then(res => {
-                if (isReqSuccessful(res)) {
-                    console.log(this.models, this.submitter)
-                    this.$message.success('插入成功')
-                    this.$router.push({
-                        name: 'genealogiclist'
-                    })
-                }
-            })
+            this.models.operatorName = '嫖'
+            this.models.operatorId = 1
+
+            if (this.edit) {
+                updateGeneaRec(this.edit, this.models).then(res => {
+                    if (isReqSuccessful(res)) {
+                        patchJump('genealogiclist')
+                    }
+                }, _ => {
+                    this.$message.error('修改失败')
+                })
+            } else {
+                postGeneaRec(this.models).then(res => {
+                    if (isReqSuccessful(res)) {
+                        postJump('genealogiclist')
+                    }
+                }, _ => {
+                    this.$message.error('录入失败')
+                })
+            }
         }
     }
 }

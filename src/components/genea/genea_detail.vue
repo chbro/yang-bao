@@ -98,12 +98,12 @@
 </template>
 
 <script>
-import { getGeneaDetail } from '@/util/getdata'
+import { getGeneaRec } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     mounted () {
-        getGeneaDetail(this.$route.params.id).then(res => {
+        getGeneaRec(this.$route.params.id).then(res => {
             if (isReqSuccessful(res)) {
                 this.details = res.data.object
             }

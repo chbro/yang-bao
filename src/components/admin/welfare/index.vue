@@ -38,28 +38,30 @@ export default {
     },
 
     data () {
+        let radios = ['是', '否']
+
         return {
             items: [
-                {label: '羊舍空气与温度', model: 'immuneEartag'},
-                {label: '羊只运动与采光', model: 'nativeEartag'},
-                {label: '自检/主管上级检查时间', model: 'nativeEartag', type: 'time', mr: true},
-                {label: '车辆进出消毒', model: 'nativeEartag'}
+                {type: 'radio', radios, label: '羊舍空气与温度', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '羊只运动与采光', model: 'nativeEartag'},
+                {radios, label: '自检/主管上级检查时间', model: 'nativeEartag', type: 'time', mr: true},
+                {type: 'radio', radios, label: '车辆进出消毒', model: 'nativeEartag'}
             ],
 
             place: [
-                {label: '圈舍内外', model: 'immuneEartag'},
-                {label: '饲料库房及加工车间', model: 'immuneEartag'},
-                {label: '杀虫灭鼠', model: 'immuneEartag', mr: true}
+                {type: 'radio', radios, label: '圈舍内外', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '饲料库房及加工车间', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '杀虫灭鼠', model: 'immuneEartag', mr: true}
             ],
             person: [
-                {label: '消毒制度是否执行', model: 'immuneEartag'},
-                {label: '是否赤手操作', model: 'immuneEartag'},
-                {label: '疫苗及针头的消毒处理', model: 'immuneEartag', mr: true}
+                {type: 'radio', radios, label: '消毒制度是否执行', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '是否赤手操作', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '疫苗及针头的消毒处理', model: 'immuneEartag', mr: true}
             ],
             experiment: [
-                {label: '是否做到人员安全防护', model: 'immuneEartag'},
-                {label: '实验室垃圾与排水是否无害化处理', model: 'immuneEartag'},
-                {label: '是否遵守操作规范', model: 'immuneEartag', mr: true}
+                {type: 'radio', radios, label: '是否做到人员安全防护', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '实验室垃圾与排水是否无害化处理', model: 'immuneEartag'},
+                {type: 'radio', radios, label: '是否遵守操作规范', model: 'immuneEartag', mr: true}
             ],
 
             models: {
