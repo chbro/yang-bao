@@ -28,6 +28,14 @@ export default {
         BasicInfo
     },
 
+    watch: {
+        '$route' (newV, oldV) {
+            if (oldV.query.edit && !newV.query.edit) {
+                this.edit = false
+            }
+        }
+    },
+
     mounted () {
         this.edit = this.$route.query.edit
         if (this.edit) {
@@ -35,12 +43,15 @@ export default {
                 if (isReqSuccessful(res)) {
                     let data = res.data.List[0]
                     Object.keys(this.models).forEach(v => {
-                        this.models[v] = data[v]
+                        if (v !== null) {
+                            this.models[v] = data[v]
+                        }
                     })
                     this.remark = data.remark
                     this.disinfectWay = data.disinfectWay
+                    this.prevfile = data.disinfectEartag
                 }
-            }, _ => {
+            }).catch(_ => {
                 this.$message.error('获取卫生消毒实施档案失败')
             })
         }
@@ -58,6 +69,7 @@ export default {
             ],
             models: {
                 factoryNum: 1,
+                factoryName: '老嫖猪场',
                 disinfectEartagFile: null,
                 disinfectName: null,
                 dose: null,
@@ -82,25 +94,41 @@ export default {
             Object.keys(this.models).forEach(v => {
                 form.append(v, this.models[v])
             })
+            if (!this.models.disinfectEartagFile) {
+                form.delete('disinfectEartagFile')
+            }
+
             form.append('disinfectWay', this.disinfectWay)
+            form.append('remark', this.remark)
+            if (this.prevfile) {
+                form.append('disinfectEartag', this.prevfile)
+            }
             if (this.edit) {
-                window.fetch(baseUrl + '/df/pupdate', {
-                    method: 'PATCH',
+                form.append('id', this.edit)
+                window.fetch(baseUrl + '/df/update', {
+                    method: 'POST',
                     body: form
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
-                        patchJump('disinfectpraclist')
+                        patchJump('health/disinfect')
                     }
                 })
             } else {
+                // when jump from edit to add,
+                // disinfectEartagFile is undefined and cannot be found by checkForm
+                if (!this.models.disinfectEartagFile) {
+                    this.$message.warning('请选择耳牌文件')
+                    return
+                }
+
                 window.fetch(baseUrl + '/df/save', {
                     method: 'POST',
                     body: form
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
-                        postJump('disinfectpraclist')
+                        postJump('health/disinfect')
                     }
                 })
             }

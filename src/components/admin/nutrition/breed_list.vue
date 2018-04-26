@@ -1,13 +1,12 @@
 <template>
     <div>
         <admin-table
-            :getData="getDisinfect"
-            :deleteData="deleteDisinfect"
-            name="消毒档案"
+            :getData="getImmune"
+            :deleteData="deleteImmune"
+            name="免疫实施档案"
             :postfix="false"
-            :isDisinfect="true"
             :id="1"
-            modpath="health/disinfect"
+            modpath="health/immuneprac"
             :headers="headers">
         </admin-table>
     </div>
@@ -15,7 +14,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getDisinfect, deleteDisinfect } from '@/util/getdata'
+import { getImmune, deleteImmune } from '@/util/getdata'
 
 export default {
     components: {
@@ -24,8 +23,8 @@ export default {
 
     data () {
         return {
-            getDisinfect,
-            deleteDisinfect,
+            getImmune,
+            deleteImmune,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},

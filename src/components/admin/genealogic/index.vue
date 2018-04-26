@@ -7,16 +7,13 @@
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="remark"></el-input>
         </div>
-        <!-- <submitter :submitter.sync="submitter"></submitter> -->
         <div class="admin-send">
-            <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
 </template>
 
 <script>
-// import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
 import { getGeneaRec, postGeneaRec, getSheepTypes, updateGeneaRec } from '@/util/getdata'
@@ -36,7 +33,7 @@ export default {
                 })
                 this.types = type
             }
-        }, _ => {
+        }).catch(_ => {
             this.$message.error('获取山羊品种失败')
         })
 
@@ -45,13 +42,12 @@ export default {
             getGeneaRec(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data.data
-                    // this.submitter.operator_name = data.operatorName
                     Object.keys(this.models).forEach(v => {
                         this.models[v] = data[v]
                     })
                     this.remark = data.remark
                 }
-            }, _ => {
+            }).catch(_ => {
                 this.$message.error('获取山羊信息失败')
             })
         }
@@ -84,6 +80,7 @@ export default {
             // 用于检查字段值是否填写，所以均初始化为null
             models: {
                 factoryNum: 1,
+                factoryName: '老嫖猪场',
                 immuneEartag: null,
                 nativeEartag: null,
                 tradeMarkEartag: null,
@@ -101,8 +98,7 @@ export default {
                 sex: 0
             },
             remark: '',
-            types: [],
-            submitter: {}
+            types: []
         }
     },
 
@@ -118,17 +114,17 @@ export default {
             if (this.edit) {
                 updateGeneaRec(this.edit, this.models).then(res => {
                     if (isReqSuccessful(res)) {
-                        patchJump('genealogiclist')
+                        patchJump('genealogic')
                     }
-                }, _ => {
+                }).catch(_ => {
                     this.$message.error('修改失败')
                 })
             } else {
                 postGeneaRec(this.models).then(res => {
                     if (isReqSuccessful(res)) {
-                        postJump('genealogiclist')
+                        postJump('genealogic')
                     }
-                }, _ => {
+                }).catch(_ => {
                     this.$message.error('录入失败')
                 })
             }

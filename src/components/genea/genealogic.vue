@@ -97,9 +97,9 @@ export default {
                 ],
                 'color': [
                     {label: '请选择'},
-                    {label: '棕色', value: 0},
-                    {label: '暗红', value: 1},
-                    {label: '杂色', value: 2}
+                    {label: '棕色', value: '棕色'},
+                    {label: '暗红', value: '暗红'},
+                    {label: '杂色', value: '杂色'}
                 ]
             },
             query_labels: [

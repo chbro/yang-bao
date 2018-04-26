@@ -1,6 +1,6 @@
 <template>
     <div class="admin-form">
-        <p class="card-title">驱虫实施档案</p>
+        <p class="card-title" v-text="title"></p>
 
         <basic-info :items="items" :models="models"></basic-info>
         <div class="card">
@@ -20,24 +20,50 @@ import { baseUrl } from '@/util/fetch'
 import { getAntiscolic } from '@/util/getdata'
 
 export default {
+    props: {
+        title: {
+            type: String
+        },
+        getData: {
+            type: Function
+        },
+        postData: {
+            type: Function
+        },
+        items: {
+            type: Array
+        },
+        models: {
+            type: Array
+        }
+    },
+
     components: {
         BasicInfo
+    },
+
+    watch: {
+        '$route' (newV, oldV) {
+            // from edit to post
+            if (oldV.query.edit && !newV.query.edit) {
+                this.edit = false
+            }
+        }
     },
 
     mounted () {
         this.edit = this.$route.query.edit
         if (this.edit) {
-            getAntiscolic({id: this.edit}).then(res => {
+            getData({id: this.edit}).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data.List[0]
                     Object.keys(this.models).forEach(v => {
                         this.models[v] = data[v]
                     })
                     this.remark = data.remark
-                    this.prevfile = data.immuneEartag
                 }
             }).catch(_ => {
-                this.$message.error('获取驱虫档案失败')
+                this.$message.error(`获取${title}失败`)
             })
         }
     },

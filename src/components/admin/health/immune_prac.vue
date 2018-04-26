@@ -4,12 +4,10 @@
 
         <basic-info :items="items" :models="models"></basic-info>
         <div class="card">
-            <p class="card-title">消毒方法:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
+            <p class="card-title">备注:</p>
+            <el-input type="textarea" v-model="remark"></el-input>
         </div>
-        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
-            <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
@@ -17,98 +15,116 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import Submitter from '@/components/admin/submitter'
-import { checkForm, checkSubmit } from '@/util/jskit'
+import { checkForm, isReqSuccessful, postJump, patchJump, getImmuneTypes, getDoses, getInfectWays, getPeriods } from '@/util/jskit'
+import { baseUrl } from '@/util/fetch'
+import { getImmune } from '@/util/getdata'
 
 export default {
     components: {
-        BasicInfo, Submitter
+        BasicInfo
+    },
+
+    watch: {
+        '$route' (newV, oldV) {
+            if (oldV.query.edit && !newV.query.edit) {
+                this.edit = false
+            }
+        }
+    },
+
+    mounted () {
+        this.edit = this.$route.query.edit
+        if (this.edit) {
+            getImmune({id: this.edit}).then(res => {
+                if (isReqSuccessful(res)) {
+                    let data = res.data.List[0]
+                    Object.keys(this.models).forEach(v => {
+                        this.models[v] = data[v]
+                    })
+                    this.remark = data.remark
+                    this.prevfile = data.immuneEartag
+                }
+            }).catch(_ => {
+                this.$message.error('获取免疫实施档案失败')
+            })
+        }
     },
 
     data () {
-        let immunes = [
-            {value: '小反兽疫和疫苗', key: 0},
-            {value: '亚洲1-0型口蹄疫二价', key: 1},
-            {value: '灭活苗', key: 2},
-            {value: '羊梭菌三联四防灭活苗', key: 3},
-            {value: '山羊传染性胸膜肺炎灭活苗', key: 4},
-            {value: '山羊痘弱毒疫苗', key: 5},
-            {value: '口疮弱毒细胞冻干苗', key: 6},
-            {value: '羔羊痢疾氢氢化铝菌苗', key: 7}
-        ]
-        let getImmuneTypes = (q, cb) => {
-            cb(immunes)
-        }
-
-        let infectWays = [
-            {value: '颈部皮下注射', key: 0},
-            {value: '肌肉注射', key: 1},
-            {value: '皮下或肌肉注射', key: 2},
-            {value: '皮下注射', key: 3},
-            {value: '大腿内侧或尾根皮肉注射', key: 4},
-            {value: '口腔粘膜注射', key: 5},
-            {value: '在后腿内侧皮下注射', key: 6}
-        ]
-        let getInfectWays = (q, cb) => {
-            cb(infectWays)
-        }
-
-        let doses = [
-            {value: '1ML', key: 0},
-            {value: '4月龄-2岁1ML', key: 1},
-            {value: '2岁以上2ML', key: 2},
-            {value: '6月龄以下3ML', key: 3},
-            {value: '6月龄以上5ML', key: 4},
-            {value: '0.5ML', key: 5},
-            {value: '0.2ML', key: 6},
-            {value: '20-30天2ML', key: 7},
-            {value: '10-20天3ML', key: 8}
-        ]
-        let getDoses = (q, cb) => {
-            cb(doses)
-        }
-
-        let periods = [
-            {value: '5个月', key: 0},
-            {value: '6个月', key: 1},
-            {value: '12个月', key: 2},
-            {value: '18个月', key: 3}
-        ]
-        let getPeriods = (q, cb) => {
-            cb(periods)
-        }
         return {
             items: [
-                {label: '免疫耳牌号', model: 'immunetag', type: 'file', block: true},
-                {label: '接种羊群', model: 'sheep'},
-                {label: '疫苗种类', model: 'medicine', type: 'select', fetchSuggestions: getImmuneTypes},
-                {label: '接种方法', model: 'way', type: 'select', fetchSuggestions: getInfectWays, mr: true},
+                {model: 'immuneEartagFile', type: 'file', block: true},
+                {label: '接种时间', model: 'immuneTime', type: 'time'},
+                {label: '接种羊群', model: 'crowdNum'},
+                {label: '疫苗种类', model: 'immuneKind', type: 'select', fetchSuggestions: getImmuneTypes, mr: true},
+                {label: '接种方法', model: 'immuneWay', type: 'select', fetchSuggestions: getInfectWays},
                 {label: '接种剂量', model: 'dose', type: 'select', fetchSuggestions: getDoses},
-                {label: '免疫期', model: 'period', type: 'select', fetchSuggestions: getPeriods}
+                {label: '免疫期', model: 'immuneDuring', type: 'select', fetchSuggestions: getPeriods, mr: 1}
             ],
             models: {
-                immunetag: null,
-                sheep: null,
-                medicine: null,
-                way: null,
+                factoryNum: 1,
+                factoryName: '老嫖猪场',
+                immuneEartagFile: null,
+                immuneTime: null,
+                crowdNum: null,
+                immuneKind: null,
+                immuneWay: null,
                 dose: null,
-                period: null,
-                note: null
+                immuneDuring: null
             },
-            submitter: {}
+            remark: null
         }
     },
 
     methods: {
         submit () {
-            console.log(this.models, this.submitter)
             if (!checkForm(this.models)) {
                 return
             }
-            if (!checkSubmit(this.submitter)) {
-                return
+            this.models.operatorName = '嫖'
+            this.models.operatorId = 1
+
+            let form = new FormData()
+            Object.keys(this.models).forEach(v => {
+                form.append(v, this.models[v])
+            })
+            if (!this.models.immuneEartagFile) {
+                form.delete('immuneEartagFile')
             }
-            console.log(this.models, this.submitter)
+
+            if (this.remark !== null) {
+                form.append('remark', this.remark)
+            }
+            if (this.prevfile) {
+                form.append('immuneEartag', this.prevfile)
+            }
+            if (this.edit) {
+                form.append('id', this.edit)
+                window.fetch(baseUrl + '/ip/update', {
+                    method: 'POST',
+                    body: form
+                }).then(async res => {
+                    let body = await res.json()
+                    if (isReqSuccessful(body)) {
+                        patchJump('health/immune')
+                    }
+                })
+            } else {
+                if (!this.models.immuneEartagFile) {
+                    this.$message.warning('请选择耳牌文件')
+                    return
+                }
+
+                window.fetch(baseUrl + '/ip/save', {
+                    method: 'POST',
+                    body: form
+                }).then(async res => {
+                    let body = await res.json()
+                    if (isReqSuccessful(body)) {
+                        postJump('health/immune')
+                    }
+                })
+            }
         }
     }
 }

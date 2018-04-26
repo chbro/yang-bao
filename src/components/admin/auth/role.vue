@@ -83,7 +83,7 @@ export default {
             checkAll: false,
             rules: [],
             value: '',
-            isIndeterminate: true, 
+            isIndeterminate: true,
             method: {
                 // handleCheckAllChange(val) {
                 //     // this.rules = val ? rules : [];
@@ -101,6 +101,6 @@ export default {
 <style lang="stylus">
 .rules
     margin 10px
-.el-input input
-    width 30%
+    .el-input input
+        width 30%
 </style>

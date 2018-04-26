@@ -2,7 +2,11 @@
     <div class="admin-form">
         <p class="card-title">羊场管理</p>
         <basic-info :items="items" :models="models"></basic-info>
-        <submitter :submitter.sync="submitter"></submitter>
+
+        <div class="card">
+            <p class="card-title">备注:</p>
+            <el-input type="textarea" v-model="remark"></el-input>
+        </div>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
@@ -12,11 +16,10 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import Submitter from '@/components/admin/submitter'
 
 export default {
     components: {
-        BasicInfo, Submitter
+        BasicInfo
     },
 
     data () {
@@ -45,12 +48,9 @@ export default {
                 type: 'select',
                 fetchSuggestions: getPrincipal
             }, {
-                label: '备注',
-                model: 'comment',
-                mr: 1
-            }, {
                 label: '消毒场所',
-                model: 'workplace'
+                model: 'workplace',
+                mr: 1
             }, {
                 label: '上级代理',
                 model: 'preAgent'
@@ -61,7 +61,7 @@ export default {
                 mr: 1
             }],
             models: {},
-            submitter: {}
+            remark: null
         }
     }
 }

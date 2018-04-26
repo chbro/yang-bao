@@ -16,9 +16,7 @@
             <el-input type="textarea" v-model="models.note"></el-input>
         </div>
 
-        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
-            <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
         </div>
 
@@ -27,11 +25,10 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import Submitter from '@/components/admin/submitter'
 
 export default {
     components: {
-        Submitter, BasicInfo
+        BasicInfo
     },
 
     data () {

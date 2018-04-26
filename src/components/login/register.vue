@@ -32,17 +32,8 @@
                     <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
                     <p class="note"><span>*</span>请再次输入密码</p>
                 </el-form-item>
-                <el-form-item label="MSN" prop="msn">
-                    <el-input type="test" v-model="ruleForm.msn" auto-complete="off"></el-input>
-                </el-form-item>
                 <el-form-item label="QQ" prop="qq">
                     <el-input type="test" v-model="ruleForm.qq" auto-complete="off"></el-input>
-                </el-form-item>
-<!--                 <el-form-item label="办公电话" prop="officephone">
-                    <el-input type="test" v-model="ruleForm.officephone" auto-complete="off"></el-input>
-                </el-form-item> -->
-                <el-form-item label="家庭电话" prop="familyPhone">
-                    <el-input type="test" v-model="ruleForm.familyphone" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="手机" prop="userTelephone">
                     <el-input type="test" v-model="ruleForm.userTelephone" auto-complete="off"></el-input>
@@ -137,9 +128,7 @@ export default {
                 userEmail: '',
                 userPwd: '',
                 checkPass: '',
-                msn: '',
                 qq: '',
-                familyPhone: '',
                 userTelephone: '',
                 question_1: '',
                 question_2: '',

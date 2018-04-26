@@ -20,7 +20,7 @@
             <div class="tab-right">
                 <span>用户：{{user.name}}</span>
                 <span class="dept">部门：{{user.department}}</span>
-                <span><i class="el-icon-refresh"></i>刷新</span>
+                <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
                 <span><i class="iconfont icon-user yellow"></i>通讯录</span>
                 <span><i class="el-icon-message"></i>（{{ user.msg_cnt }}）</span>
             </div>
@@ -54,6 +54,12 @@ export default {
         month = formatDate(month)
         day = formatDate(day)
         this.datestr = `${year}-${month}-${day} 星期${weekday}`
+    },
+
+    methods: {
+        refresh () {
+            window.location.reload()
+        }
     }
 }
 </script>
@@ -86,6 +92,8 @@ export default {
 .admin-tabs,
 .tab-right
     display inline-block
+    span
+        cursor pointer
 .admin-tabs
     vertical-align middle
     margin 10px 10px 0 0

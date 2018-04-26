@@ -31,7 +31,7 @@
             </el-radio-group>
         </div>
 
-        <div class="comment-content" v-for="item in items" >
+        <div class="comment-content" v-for="(item, i) in items" :key="i">
             <div class="comment-message" >
                 <p>用户名: {{ item.username}}</p>
                 <p>联系方式:  {{ item.contact}}</p>
@@ -95,7 +95,7 @@ export default {
     methods: {
         onSubmit () {
             Comment({ attitude: this.attitude }).then(res => {
-            if (isReqSuccessful(res)) {
+                if (isReqSuccessful(res)) {
                     this.items = res.data.searchByAttitude
                     this.$router.push({name: 'comment'})
                 }

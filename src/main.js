@@ -7,12 +7,31 @@ import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
 import 'vue-area-linkage/dist/index.css'
+import { tokenStr } from './util/fetch'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueAreaLinkage)
 
 /* eslint-disable no-new */
+
+// login interceptors
+// cooperate with another interceptor in util/fetch.js
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(v => v.meta.requireAuth)) {
+        if (localStorage.getItem(tokenStr)) {
+            next()
+        } else {
+            next({
+                path: '/login',
+                query: {redirect: to.fullPath}
+            })
+        }
+    } else {
+        next()
+    }
+})
+
 new Vue({
     el: '#app',
     router,

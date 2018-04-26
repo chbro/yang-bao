@@ -14,7 +14,7 @@ export const GetQuestions = data => fetch('/question?name=' + data)
 /**
  * 添加，展示留言
  */
-export const postMessage = data => fetch('/messages', data, 'POST')
+export const Comment = data => fetch('/messageBoard/insert', data, 'POST')
 
 export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${page}`)
 
@@ -33,7 +33,7 @@ export const deleteGeneaRec = id => fetch('/gf/delete/' + id, null, 'DELETE')
 export const getSheepTypes = id => fetch('/gf/types')
 
 /**
- * 系谱档案多条件性能
+ * 系谱档案多条件查询
  */
 export const queryGenea = data => fetch('/gf/findshow', data, 'POST')
 
@@ -92,4 +92,36 @@ export const addBreeding = data => fetch('/breeding/add', data, 'POST')
  */
 export const getDisinfect = data => fetch('/df/findshow', data, 'POST')
 
-export const deleteDisinfect = id => fetch(`/df/delete/${id}`, null, 'DELETE')
+export const deleteDisinfect = (id, data) => fetch(`/df/delete/${id}`, data, 'DELETE')
+
+/**
+ * 免疫RD
+ */
+export const getImmune = data => fetch('/ip/findshow', data, 'POST')
+
+export const deleteImmune = (id, data) => fetch(`/ip/delete/${id}`, data, 'DELETE')
+
+/**
+ * 驱虫RD
+ */
+export const getAntiscolic = data => fetch('/rp/findshow', data, 'POST')
+
+export const deleteAntiscolic = (id, data) => fetch(`/rp/delete/${id}`, data, 'DELETE')
+
+/**
+ * 发布系统CURD
+ */
+export const postRelease = data => fetch('/notice', data, 'POST')
+
+export const updateRelease = data => fetch('/notice', data, 'PATCH')
+
+export const getRelease = data => {
+    // data带有分页参数
+    let id = data.id
+    delete data.id
+    return fetch('/notice/' + id, data)
+}
+
+export const getAllRelease = data => fetch('/notice', data)
+
+export const deleteRelease = (id, data) => fetch('/notice/' + id, data, 'DELETE')

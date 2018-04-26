@@ -15,11 +15,16 @@ const SearchRes = () => import('@/components/search_res')
 
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
+// 个人信息
+const UserInfo = () => import('@/components/admin/user')
 // 审核
 const Review = () => import('@/components/admin/review/index')
+// 留言管理
+const Comment = () => import('@/components/admin/comment/index')
 // 用户权限
 const Auth = () => import('@/components/admin/auth/auth')
 const AuthRole = () => import('@/components/admin/auth/role')
+const Account = () => import('@/components/admin/account/index')
 // 专家课堂
 const Consult = () => import('@/components/admin/consult')
 // 系谱档案
@@ -31,13 +36,17 @@ const DisinfectPrac = () => import('@/components/admin/health/disinfect_prac')
 const DisinfectList = () => import('@/components/admin/health/disinfect_list')
 const ImmunePlan = () => import('@/components/admin/health/immune_plan')
 const ImmunePrac = () => import('@/components/admin/health/immune_prac')
+const ImmuneList = () => import('@/components/admin/health/immune_list')
 const AntiscolicPlan = () => import('@/components/admin/health/antiscolic_plan')
 const AntiscolicPrac = () => import('@/components/admin/health/antiscolic_prac')
+const AntiscolicList = () => import('@/components/admin/health/antiscolic_list')
 // 营养生产
 const StagePlan = () => import('@/components/admin/nutrition/stage_plan')
 const StagePrac = () => import('@/components/admin/nutrition/stage_prac')
+const StageList = () => import('@/components/admin/nutrition/stage_list')
 const BreedPlan = () => import('@/components/admin/nutrition/breed_plan')
 const BreedPrac = () => import('@/components/admin/nutrition/breed_prac')
+const BreedList = () => import('@/components/admin/nutrition/breed_list')
 // 疫病防治
 const PreventionPlan = () => import('@/components/admin/prevention/prevention_plan')
 const PreventionPrac = () => import('@/components/admin/prevention/prevention_prac')
@@ -61,6 +70,7 @@ const Agent = () => import('@/components/admin/agent/index')
 const AgentList = () => import('@/components/admin/agent/list')
 // 发布系统
 const Release = () => import('@/components/admin/release/index')
+const ReleaseList = () => import('@/components/admin/release/list')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -82,25 +92,36 @@ export default new Router({
         {path: '/search', name: 'search', component: SearchRes},
 
         // 管理员模块
-        {path: '/admin', component: Admin, children: [
+        {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'auth', component: Auth},
+            {path: 'userinfo', name: 'userinfo', component: UserInfo},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'consult', name: 'consult', component: Consult},
             {path: 'genealogic', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
-            {path: 'health/disinfectplan', name: 'disinfectplan', component: DisinfectPlan},
-            {path: 'health/disinfectprac', name: 'disinfectprac', component: DisinfectPrac},
-            {path: 'health/disinfectprac/list', name: 'disinfectpraclist', component: DisinfectList},
-            {path: 'health/immuneplan', name: 'immuneplan', component: ImmunePlan},
-            {path: 'health/immuneprac', name: 'immuneprac', component: ImmunePrac},
-            {path: 'health/antiscolicplan', name: 'antiscolicplan', component: AntiscolicPlan},
-            {path: 'health/antiscolicprac', name: 'antiscolicprac', component: AntiscolicPrac},
-            {path: 'nutrition/breedplan', name: 'breedplan', component: BreedPlan},
-            {path: 'nutrition/breedprac', name: 'breedprac', component: BreedPrac},
-            {path: 'nutrition/stageplan', name: 'stageplan', component: StagePlan},
-            {path: 'nutrition/stageprac', name: 'stageprac', component: StagePrac},
+            // 卫生疫控
+            {path: 'health/disinfect/plan', name: 'disinfectplan', component: DisinfectPlan},
+            {path: 'health/disinfect/prac', name: 'disinfectprac', component: DisinfectPrac},
+            {path: 'health/disinfect/list', name: 'disinfectlist', component: DisinfectList},
+            {path: 'health/immune/plan', name: 'immuneplan', component: ImmunePlan},
+            {path: 'health/immune/prac', name: 'immuneprac', component: ImmunePrac},
+            {path: 'health/immune/list', name: 'immunelist', component: ImmuneList},
+            {path: 'health/antiscolic/plan', name: 'antiscolicplan', component: AntiscolicPlan},
+            {path: 'health/antiscolic/prac', name: 'antiscolicprac', component: AntiscolicPrac},
+            {path: 'health/antiscolic/list', name: 'antiscoliclist', component: AntiscolicList},
+            // 营养生产
+            {path: 'nutrition/breed/plan', name: 'breedplan', component: BreedPlan},
+            {path: 'nutrition/breed/prac', name: 'breedprac', component: BreedPrac},
+            {path: 'nutrition/breed/list', name: 'breedlist', component: BreedList},
+            {path: 'nutrition/stage/plan', name: 'stageplan', component: StagePlan},
+            {path: 'nutrition/stage/prac', name: 'stageprac', component: StagePrac},
+            {path: 'nutrition/stage/list', name: 'stagelist', component: StageList},
+            // auth, comment, account
+            {path: 'comment', name: 'comment', component: Comment},
+            {path: 'account', name: 'account', component: Account},
+
             {path: 'prevention/preventionplan', name: 'preventionplan', component: PreventionPlan},
             {path: 'prevention/preventionprac', name: 'preventionprac', component: PreventionPrac},
             {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
@@ -111,10 +132,11 @@ export default new Router({
             {path: 'supervise/audit', name: 'audit', component: Audit},
             {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex},
             {path: 'farm', name: 'farm', component: Farm},
-            {path: 'farmlist', name: 'farmlist', component: FarmList},
+            {path: 'farm/list', name: 'farmlist', component: FarmList},
             {path: 'agent', name: 'agent', component: Agent},
             {path: 'agentlist', name: 'agentlist', component: AgentList},
-            {path: 'release', name: 'release', component: Release}
+            {path: 'release', name: 'release', component: Release},
+            {path: 'release/list', name: 'releaselist', component: ReleaseList}
         ]},
         {path: '*', component: NotFound}
     ]

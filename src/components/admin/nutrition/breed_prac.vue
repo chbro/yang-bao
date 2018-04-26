@@ -3,23 +3,20 @@
         <p class="card-title">配种产子实施档案</p>
 
         <basic-info :items="items" :models="models"></basic-info>
-        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
-            <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
 </template>
 
 <script>
-import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, checkSubmit, isReqSuccessful } from '@/util/jskit'
 import { addBreeding } from '@/util/getdata'
 
 export default {
     components: {
-        BasicInfo, Submitter
+        BasicInfo
     },
 
     mounted () {
@@ -44,6 +41,8 @@ export default {
                 {label: '产羔', model: 'quantity', type: 'number'}
             ],
             models: {
+                factoryNum: 123,
+                factoryName: '老嫖猪场',
                 building: null,
                 mEtI: null,
                 mEtB: null,
@@ -54,9 +53,7 @@ export default {
                 s_prenatalIT: null,
                 s_cubT: null,
                 quantity: null
-            },
-            submitter: {},
-            factoryNum: 123
+            }
         }
     },
 

@@ -74,7 +74,7 @@
                     <el-input
                         type="textarea"
                         :rows="3"
-                        placeholder="请输入内容"
+                        placeholder="评价内容字数不超过200"
                         v-model="description">
                     </el-input>
                 </el-form-item>
@@ -199,6 +199,10 @@ export default {
 
     methods: {
         evaluate () {
+            if (this.description.length >= 200) {
+                this.$message.warning('评价字数不能超过200')
+                return
+            }
             let data = {
                 expert_name: 'zz',
                 expert_id: this.expertid,

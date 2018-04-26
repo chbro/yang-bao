@@ -12,7 +12,7 @@
                     <div class="admin-hl pos">
                         <b><i class="el-icon-arrow-down"></i>位置：</b>
                         <el-breadcrumb separator="-">
-                             <el-breadcrumb-item :to="{name: item.to}" v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{name: item.to}" v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
                         </el-breadcrumb>
                         <span class="fs"><i class="el-icon-menu"></i>全屏</span>
                     </div>
@@ -52,7 +52,7 @@ export default {
     mounted () {
         // rid '/admin/'
         let path = this.$route.path.substr(7)
-        let [parent, child] = path.split('/')
+        let [parent, child, postfix] = path.split('/')
 
         let arr = [{text: '溯源管理'}]
         let mod
@@ -62,11 +62,10 @@ export default {
             if (m) {
                 mod = m
                 if (mod.children) {
-                    submod = mod.children.find(v => v.to === child || v.name === child)
+                    submod = mod.children.find(v => v.to === child + postfix || v.name === child + postfix)
                 }
             }
         })
-        // console.log(mod, submod)
         if (mod && submod) {
             // open left tree
             this.expanded_key = [child]
@@ -95,14 +94,13 @@ export default {
             showEditTable: false,
             treedata: [
                 {label: '会员中心', children: [
-                    {label: '模块1', to: 'test'},
-                    {label: '模块2', to: 'test2'}
+                    {label: '个人信息修改', to: 'userinfo'},
+                    {label: '密码修改', to: 'test2'},
+                    {label: '客户评价', to: 'test3'}
                 ]},
                 {label: '系统管理员平台', children: [
-                    {label: '权限管理', name: 'auth', children: [
-                        {label: '权限管理', to: 'auth'},
-                        {label: '角色管理', to: 'authrole'}
-                    ]},
+                    {label: '用户管理', to: 'account'},
+                    {label: '权限规则列表', to: 'authrole'},
                     {label: '羊场管理', to: 'farm'},
                     {label: '代理管理', to: 'agent'},
                     {label: '审核', to: 'review'},
@@ -113,8 +111,8 @@ export default {
                     {label: '系谱档案', to: 'genealogic'},
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
-                        {label: '卫生与动物福利管理方案', to: 'welfare'},
-                        {label: '卫生与动物福利操作档案', to: 'welfare1'},
+                        {label: '卫生与动物福利管理方案', to: 'welfare1'},
+                        {label: '卫生与动物福利操作档案', to: 'welfare'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -162,13 +160,19 @@ export default {
     methods: {
         isProdModule () {
             let name = this.$route.name
-            return ['welfare', 'genealogic', 'farm', 'agent'].includes(name) || name.endsWith('prac') || name.endsWith('list')
+            return ['welfare', 'genealogic', 'farm', 'agent', 'release', 'diagnose'].includes(name) || name.endsWith('prac') || name.endsWith('list')
         },
 
         changeActive (item, isTo) {
-            // console.log(item, item.to)
+            console.log(item, item.to)
             if (isTo) {
-                this.$router.push({name: item.to + 'list'})
+                // itemprac -> itemlist
+                let idx = item.to.indexOf('prac')
+                if (idx === '-1') {
+                    this.$router.push({name: item.to + 'list'})
+                } else {
+                    this.$router.push({name: item.to.substr(0, item.to.indexOf('prac')) + 'list'})
+                }
             } else {
                 this.$router.push({name: item.to})
             }
@@ -213,10 +217,6 @@ export default {
                 this.module = {label: node.label, to: node.to}
                 node.to && this.$router.push({name: node.to})
             }
-        },
-
-        showAll (name) {
-            this.$router.push({name})
         }
     }
 }

@@ -13,7 +13,7 @@
             <el-button type="primary" @click="onSubmit">搜索</el-button>
         </div>
         <div class="production-view">
-            <div class="production-content" v-for="item in items">
+            <div class="production-content" v-for="(item, i) in items" :key="i">
                 <el-card>
                     <el-button type="text" @click="productionShow = true">
                         <div class="production-image"></div>

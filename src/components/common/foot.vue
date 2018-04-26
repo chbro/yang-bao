@@ -56,7 +56,7 @@
                             <input v-model="form.username" placeholder="Full Name" minlength="2" maxlength="20">
                             <input v-model="form.contact" placeholder="Email Address" minlength="5" maxlength="30">
                             <textarea minlength="1" maxlength="500" v-model="form.message" placeholder="Your Message"></textarea>
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select v-model="tagValue" placeholder="请选择">
                                 <el-option
                                   v-for="tag in tags"
                                   :key="tag.value"
@@ -64,7 +64,7 @@
                                   :value="tag.value">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select v-model="attitudeValue" placeholder="请选择">
                                 <el-option
                                   v-for="attitude in attitudes"
                                   :key="attitude.value"
@@ -72,7 +72,7 @@
                                   :value="attitude.value">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select v-model="intentionValue" placeholder="请选择">
                                 <el-option
                                   v-for="intention in intentions"
                                   :key="intention.value"
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { postMessage } from '@/util/getdata'
+import { Comment } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
@@ -130,6 +130,9 @@ export default {
                 {value: 'bbb'},
                 {value: 'ccc'}
             ],
+            tagValue: null,
+            attitudeValue: null,
+            intentionValue: null,
 
             news: [
                 {id: 1, imgsrc: '../../assets/imgs/blog/s1.jpg', content: '国务院扶贫办到贵州省努比亚牧业调研', date: '31 Dec, 2017'},
@@ -158,7 +161,7 @@ export default {
                 return
             }
 
-            postMessage(this.form).then(res => {
+            Comment(this.form).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$router.push({name: 'comment'})
                 }

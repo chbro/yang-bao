@@ -139,6 +139,58 @@ export const getDryFeed = (q, cb) => {
     cb(dryFeed)
 }
 
+export const getImmuneTypes = (q, cb) => {
+    let immunes = [
+        {value: '小反兽疫和疫苗'},
+        {value: '亚洲1-0型口蹄疫二价'},
+        {value: '灭活苗'},
+        {value: '羊梭菌三联四防灭活苗'},
+        {value: '山羊传染性胸膜肺炎灭活苗'},
+        {value: '山羊痘弱毒疫苗'},
+        {value: '口疮弱毒细胞冻干苗'},
+        {value: '羔羊痢疾氢氢化铝菌苗'}
+    ]
+    cb(immunes)
+}
+
+export const getInfectWays = (q, cb) => {
+    let infectWays = [
+        {value: '颈部皮下注射'},
+        {value: '肌肉注射'},
+        {value: '皮下或肌肉注射'},
+        {value: '皮下注射'},
+        {value: '大腿内侧或尾根皮肉注射'},
+        {value: '口腔粘膜注射'},
+        {value: '在后腿内侧皮下注射'}
+    ]
+    cb(infectWays)
+}
+
+export const getDoses = (q, cb) => {
+    let doses = [
+        {value: '1ML'},
+        {value: '4月龄-2岁1ML'},
+        {value: '2岁以上2ML'},
+        {value: '6月龄以下3ML'},
+        {value: '6月龄以上5ML'},
+        {value: '0.5ML'},
+        {value: '0.2ML'},
+        {value: '20-30天2ML'},
+        {value: '10-20天3ML'}
+    ]
+    cb(doses)
+}
+
+export const getPeriods = (q, cb) => {
+    let periods = [
+        {value: '5个月'},
+        {value: '6个月'},
+        {value: '12个月'},
+        {value: '18个月'}
+    ]
+    cb(periods)
+}
+
 export const isReqSuccessful = (res) => {
     if (!res.meta) {
         app.$message.error('请求失败')
@@ -164,7 +216,7 @@ export const resetFile = dom => {
 
 let jump = (msg, name) => {
     app.$message.success(msg)
-    // why app.$router is undefined
+    // here app.$router is undefined
     window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
 }
 export const postJump = routename => {
