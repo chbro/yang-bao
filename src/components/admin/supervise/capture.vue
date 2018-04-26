@@ -11,7 +11,7 @@
                 <el-input v-for="(item, i) in captures" :key="i" class="select-file double-width" size="small" disabled @click.native="$refs.erpai[i].click()" :value="item.model">
                     <template slot="prepend">上传生产可视截图:<input type="file" @change="selectFile(item, i)" hidden ref="erpai"></template>
                 </el-input>
-                <el-button type="primary" @click="addCapture()">增设截图</el-button>
+                <el-button size="small" type="primary" @click="addCapture()">增设截图</el-button>
             </div>
         </div>
         <div class="card">

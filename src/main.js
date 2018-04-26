@@ -5,9 +5,12 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
+import VueAreaLinkage from 'vue-area-linkage'
+import 'vue-area-linkage/dist/index.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(VueAreaLinkage)
 
 /* eslint-disable no-new */
 new Vue({

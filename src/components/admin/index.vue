@@ -105,7 +105,8 @@ export default {
                     ]},
                     {label: '羊场管理', to: 'farm'},
                     {label: '代理管理', to: 'agent'},
-                    {label: '审核', to: 'review'}
+                    {label: '审核', to: 'review'},
+                    {label: '发布系统', to: 'release'}
                 ]},
                 {label: '管理平台', children: [
                     {label: '专家课堂', to: 'course'},
@@ -161,7 +162,7 @@ export default {
     methods: {
         isProdModule () {
             let name = this.$route.name
-            return ['welfare', 'genealogic'].includes(name) || name.endsWith('prac') || name.endsWith('list')
+            return ['welfare', 'genealogic', 'farm', 'agent'].includes(name) || name.endsWith('prac') || name.endsWith('list')
         },
 
         changeActive (item, isTo) {

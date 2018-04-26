@@ -1,6 +1,6 @@
 <template>
     <div>
-        <admin-table :getData="getGeneaRec" name="审核项" :postfix="false" :id="1" modpath="farm"></admin-table>
+        <admin-table :getData="getGeneaRec" name="羊场" :postfix="false" :id="1" modpath="farm"></admin-table>
     </div>
 </template>
 
