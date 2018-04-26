@@ -1,12 +1,11 @@
 <template>
     <div>
         <el-button @click="addUser = true">添加角色</el-button>
-        <el-button>添加用户</el-button>
         <el-table
             :data="tableData"
             style="width: 100%">
             <el-table-column
-                prop="roleName"
+                prop="rolename"
                 label="角色名"
                 width="240">
             </el-table-column>
@@ -14,7 +13,7 @@
                 <template slot-scope="scope">
                     <el-button
                       size="mini"
-                      @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                      @click="addUser = true">编辑</el-button>
                     <el-button
                       size="mini"
                       type="danger"
@@ -27,9 +26,12 @@
             :model="rules"
             width="50%"
             center>
+            <el-input v-model="rolename" placeholder="请输入角色名"></el-input>
             <div class="rules" v-for="(item, i) in items" :key="i">
-                <span v-text="item.text"></span>
-                <el-checkbox-group v-model="rules">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
+                    <span v-text="item.text"></span>
+                </el-checkbox>
+                <el-checkbox-group v-model="rules" @change="handleRules">
                     <el-checkbox :label="i + '-' + 0">增加</el-checkbox>
                     <el-checkbox :label="i + '-' + 1">删除</el-checkbox>
                     <el-checkbox :label="i + '-' + 2">查询</el-checkbox>
@@ -52,7 +54,7 @@ export default {
     data () {
         return {
             tableData: [{
-                roleName: 'aaa'
+                rolename: 'aaa'
             }],
             addUser: false,
             items: [
@@ -78,12 +80,18 @@ export default {
                 {text: '管理员'},
                 {text: '拓展模块信息查询'}
             ],
+            checkAll: false,
             rules: [],
             value: '',
+            isIndeterminate: true, 
             method: {
-                handleChange (value) {
-                    console.log(value)
-                }
+                // handleCheckAllChange(val) {
+                //     // this.rules = val ? rules : [];
+                //     this.isIndeterminate = false;
+                // },
+                // handleChange (value) {
+                //     console.log(value)
+                // }
             }
         }
     }
@@ -93,4 +101,6 @@ export default {
 <style lang="stylus">
 .rules
     margin 10px
+.el-input input
+    width 30%
 </style>

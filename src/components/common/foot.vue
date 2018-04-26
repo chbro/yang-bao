@@ -53,9 +53,33 @@
                     <div class="contact-widget">
                         <h3 class="footer-title">留言专栏</h3>
                         <div class="contact-form">
-                            <input v-model="form.fullname" placeholder="Full Name" minlength="2" maxlength="20">
-                            <input v-model="form.email" placeholder="Email Address" minlength="5" maxlength="30">
+                            <input v-model="form.username" placeholder="Full Name" minlength="2" maxlength="20">
+                            <input v-model="form.contact" placeholder="Email Address" minlength="5" maxlength="30">
                             <textarea minlength="1" maxlength="500" v-model="form.message" placeholder="Your Message"></textarea>
+                            <el-select v-model="value" placeholder="请选择">
+                                <el-option
+                                  v-for="tag in tags"
+                                  :key="tag.value"
+                                  :label="tag.label"
+                                  :value="tag.value">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="value" placeholder="请选择">
+                                <el-option
+                                  v-for="attitude in attitudes"
+                                  :key="attitude.value"
+                                  :label="attitude.label"
+                                  :value="attitude.value">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="value" placeholder="请选择">
+                                <el-option
+                                  v-for="intention in intentions"
+                                  :key="intention.value"
+                                  :label="intention.label"
+                                  :value="intention.value">
+                                </el-option>
+                            </el-select>
                             <button @click="addNote()">Send</button>
                         </div>
                     </div>
@@ -84,10 +108,28 @@ export default {
             ],
 
             form: {
-                fullname: '',
-                email: '',
-                message: ''
+                username: '',
+                contact: '',
+                message: '',
+                tag: '',
+                attitude: '',
+                intention: ''
             },
+            tags: [
+                {value: 'aaa'},
+                {value: 'bbb'},
+                {value: 'ccc'}
+            ],
+            attitudes: [
+                {value: 'aaa'},
+                {value: 'bbb'},
+                {value: 'ccc'}
+            ],
+            intentions: [
+                {value: 'aaa'},
+                {value: 'bbb'},
+                {value: 'ccc'}
+            ],
 
             news: [
                 {id: 1, imgsrc: '../../assets/imgs/blog/s1.jpg', content: '国务院扶贫办到贵州省努比亚牧业调研', date: '31 Dec, 2017'},
@@ -99,7 +141,7 @@ export default {
 
     methods: {
         addNote () {
-            let nameLen = this.form.name.length
+            let nameLen = this.form.username.length
             let msgLen = this.form.message.length
             if (nameLen < 4 || nameLen > 20) {
                 this.$message.warning('名字长度在4-20之间')
@@ -111,19 +153,14 @@ export default {
             }
 
             let mailReg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
-            if (!mailReg.test(this.form.email)) {
+            if (!mailReg.test(this.form.contact)) {
                 this.$message.warning('请输入正确的邮箱')
                 return
             }
 
-            let data = {
-                name: this.form.fullname,
-                email: this.form.email,
-                message: this.form.message
-            }
-            postMessage(data).then(res => {
+            postMessage(this.form).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.$router.push('/message')
+                    this.$router.push({name: 'comment'})
                 }
             }, _ => {
                 this.$message.error('留言失败')
@@ -231,7 +268,7 @@ export default {
                     color color-foot
 
     .contact-widget
-        input, textarea
+        input, textarea, select
             box-sizing border-box
             background: rgba(0, 0, 0, 0.65);
             border: 1px solid #222;
@@ -263,6 +300,13 @@ export default {
             &:hover
                 color color-green
                 background-color #fff
+        option
+            width auto
+            height 45px
+            line-height 45px
+            font-size 20px
+            background: rgba(0, 0, 0, 0.65)
+            padding 0 20px
 
 .footer-bottom
     margin 0
