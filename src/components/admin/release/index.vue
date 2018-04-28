@@ -1,13 +1,11 @@
 <template>
     <div class="admin-form">
-        <div class="release-module el-input-group__prepend">选择发布位置</div><el-select size="small" class="release-to" v-model="type" placeholder="请选择">
-            <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-        </el-select>
+        <div class="release-module el-input-group__prepend">选择发布位置</div><el-cascader
+            size="small"
+            :options="options"
+            v-model="type"
+            @change="handleChange">
+        </el-cascader>
         <el-input class="release-title block" size="small" v-model="title" placeholder="请输入标题">
             <template slot="prepend">标题:</template>
         </el-input>
@@ -38,8 +36,6 @@ export default {
                     this.content = data.content
                     this.type = data.type
                 }
-            }).catch(_ => {
-                this.$message.error('获取发布档案失败')
             })
         }
     },
@@ -53,14 +49,18 @@ export default {
 
     data () {
         return {
+            /* eslint-disable object-property-newline */
             options: [
-                {label: '专家课堂', value: '0'},
+                {label: '专家课堂', children: [
+                    {label: '模块1', value: '0'},
+                    {label: '模块2', value: '1'}
+                ]},
                 {label: '发布位置2', value: '2'},
                 {label: '发布位置3', value: '3'},
                 {label: '发布位置4', value: '4'},
                 {label: '发布位置5', value: '5'}
             ],
-            type: null,
+            type: [],
             config: {},
             operatorId: 1,
             operatorName: '老嫖',
@@ -72,6 +72,10 @@ export default {
     },
 
     methods: {
+        handleChange (v) {
+            console.log(v)
+        },
+
         submit () {
             let html = window.CKEDITOR.instances.myeditor.getData()
             console.log(html)
@@ -111,7 +115,7 @@ export default {
 <style lang="stylus">
 .release-to,
 .release-title
-    margin-bottom 15px
+    margin 15px 0
 .release-module
     display inline-block
     line-height 32px

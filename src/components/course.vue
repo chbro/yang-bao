@@ -1,6 +1,23 @@
 <template>
-    <div>
+    <div class="app-video">
         <div id="app-video"></div>
+        <div class="video-list">
+            <el-card v-for="(item, i) in videos" :key="i" :body-style="{ padding: '0px' }">
+                <img src="~@/assets/imgs/weixin.png" class="image">
+                <div style="padding: 14px;">
+                    <span>视频名称: 11</span>
+                    <div class="bottom clearfix">
+                        <time class="time">2018-4-28 19:02:02</time>
+                        <el-button type="text" class="button">操作按钮</el-button>
+                    </div>
+                </div>
+            </el-card>
+        </div>
+        <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            :current-page.sync="page">
+        </el-pagination>
     </div>
 </template>
 
@@ -33,13 +50,42 @@ export default {
         }, _ => {
             this.$message.error('获取直播信息失败')
         })
+    },
+
+    data () {
+        return {
+            page: 1,
+            total: 1,
+            videos: [
+                {src: ''},
+                {src: ''},
+                {src: ''},
+                {src: ''},
+                {src: ''}
+            ]
+        }
     }
 }
 </script>
 
 <style lang="stylus">
-#app-video
-    margin 20px 0
-    .vcp-player
-        margin 0 auto
+.app-video
+    #app-video
+        margin 20px 0
+        min-height 320px
+        .vcp-player
+            margin 0 auto
+
+    .video-list
+        display flex
+        width 80%
+        margin 10px auto
+        flex-wrap wrap
+        >div
+            box-sizing border-box
+            width 20%
+            padding 0 10px
+    .el-pagination
+        text-align right
+        margin-right 10%
 </style>

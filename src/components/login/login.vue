@@ -97,8 +97,8 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     let data = {
-                        pkUserid: this.ruleForm.username,
-                        userPwd: md5(this.ruleForm.pass)
+                        username: this.ruleForm.username,
+                        password: md5(this.ruleForm.pass)
                     }
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {

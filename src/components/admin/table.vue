@@ -39,10 +39,10 @@
             tooltip-effect="light"
             class="admin-table"
             :data="tableData">
+            <!-- :filter-method="filterMethod" -->
             <el-table-column
                 show-overflow-tooltip
                 v-for="(th, i) in headers"
-                :filter-method="filterMethod"
                 :key="i"
                 :prop="th.prop"
                 :label="th.label"
@@ -56,10 +56,6 @@
                         <span @click="showDetail(scope.$index)">查看</span>
                         <span @click="edit(scope.$index)">编辑</span>
                         <span @click="deleteItem(scope.$index)">删除</span>
-<!--                         <template v-if="!isGenea">
-                            <span @click="reviewItem(scope.$index)">专家审核</span>
-                            <span @click="reviewItem(scope.$index)">监督执行</span>
-                        </template> -->
                     </div>
                 </template>
             </el-table-column>
@@ -79,9 +75,6 @@ import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     props: {
-        name: {
-            type: String
-        },
         modpath: {
             type: String
         },
@@ -94,9 +87,6 @@ export default {
         postfix: {
             type: Boolean,
             default: true
-        },
-        id: {
-            type: Number
         },
         headers: {
             type: Array
@@ -120,11 +110,11 @@ export default {
 
     mounted () {
         this.fetchData()
-        console.log(this.$route.path)
     },
 
     data () {
         return {
+            id: 1,
             load: true,
             page: 1,
             total: 10,
@@ -149,24 +139,17 @@ export default {
             console.log(this.tableData[index])
         },
 
-        reviewItem (index) {
-            console.log(this.tableData[index])
-        },
-
         fetchData () {
-            let { id, isPass, page } = this
             let param = {
-                factoryNum: id,
-                isPass,
-                page: page - 1,
+                page: this.page - 1,
                 size: 10
             }
             this.load = true
-            if (this.isRelease) {
-                delete param.factoryNum
-                delete param.isPass
-            }
-            this.getData(param).then(res => {
+            // if (this.isRelease) {
+            //     delete param.factoryNum
+            //     delete param.isPass
+            // }
+            this.getData(this.id, param).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data
                     let map = {
@@ -174,6 +157,7 @@ export default {
                         1: '已通过',
                         2: '未审核'
                     }
+                    // 发布系统不用审核
                     if (!this.isRelease) {
                         data.List.forEach(v => {
                             v.ispassCheck = map[v.ispassCheck]
@@ -203,7 +187,7 @@ export default {
             let id = this.tableData[index].id
             let path
             if (this.isRelease) {
-                path = `/admin/${this.modpath}??edit=${id}`
+                path = `/admin/${this.modpath}?edit=${id}`
             } else {
                 path = `/admin/${this.modpath}/prac?edit=${id}`
             }

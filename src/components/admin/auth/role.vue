@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="auth-role">
         <el-button @click="addUser = true">添加角色</el-button>
         <el-table
             :data="tableData"
@@ -7,6 +7,16 @@
             <el-table-column
                 prop="rolename"
                 label="角色名"
+                width="240">
+            </el-table-column>
+            <el-table-column
+                prop="rolename"
+                label="角色编号"
+                width="240">
+            </el-table-column>
+            <el-table-column
+                prop="rolename"
+                label="角色说明"
                 width="240">
             </el-table-column>
             <el-table-column label="操作">
@@ -26,12 +36,17 @@
             :model="rules"
             width="50%"
             center>
-            <el-input v-model="rolename" placeholder="请输入角色名"></el-input>
+            <el-input v-model="rolename" size="small">
+                <template slot="prepend">角色名:</template>
+            </el-input>
+            <el-input v-model="rolenote" size="small">
+                <template slot="prepend">角色说明:</template>
+            </el-input>
             <div class="rules" v-for="(item, i) in items" :key="i">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
+                <el-checkbox v-model="checkAll[i]" @change="handleCheckAllChange(item, i)">
                     <span v-text="item.text"></span>
                 </el-checkbox>
-                <el-checkbox-group v-model="rules" @change="handleRules">
+                <el-checkbox-group v-model="rules">
                     <el-checkbox :label="i + '-' + 0">增加</el-checkbox>
                     <el-checkbox :label="i + '-' + 1">删除</el-checkbox>
                     <el-checkbox :label="i + '-' + 2">查询</el-checkbox>
@@ -43,9 +58,31 @@
                     <el-checkbox :label="i + '-' + 6" v-if="item.totalScore">查看总评分</el-checkbox>
                 </el-checkbox-group>
             </div>
-            <span>rules:{{ rules }}</span>
             <el-button type="primary" @click="submit()">提交</el-button>
         </el-dialog>
+
+        <h3>员工角色</h3>
+        <div class="employee">
+            员工
+            <el-select size="small" v-model="user" placeholder="请选择">
+                <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+            角色
+            <el-select size="small" v-model="userrole" placeholder="请选择">
+                <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+        <el-button size="small" type="primary" @click="submit()">提交/更新</el-button>
     </div>
 </template>
 
@@ -53,10 +90,17 @@
 export default {
     data () {
         return {
-            tableData: [{
-                rolename: 'aaa'
-            }],
+            user: null,
+            userrole: null,
+            options: [],
+
+            rolename: '',
+            rolenote: '',
+            tableData: [
+                {rolename: 'aaa'}
+            ],
             addUser: false,
+            checkAll: [],
             items: [
                 {text: '免疫实施档案', supervise: 1},
                 {text: '疾病防治档案', supervise: 1},
@@ -80,27 +124,49 @@ export default {
                 {text: '管理员'},
                 {text: '拓展模块信息查询'}
             ],
-            checkAll: false,
             rules: [],
             value: '',
-            isIndeterminate: true,
-            method: {
-                // handleCheckAllChange(val) {
-                //     // this.rules = val ? rules : [];
-                //     this.isIndeterminate = false;
-                // },
-                // handleChange (value) {
-                //     console.log(value)
-                // }
+            isIndeterminate: true
+        }
+    },
+
+    methods: {
+        handleCheckAllChange (item, idx) {
+            let len = 4
+            if (item.supervise) {
+                len += 2
             }
+            if (item.totalScore) {
+                len++
+            }
+            while (--len >= 0) {
+                let str = `${idx}-${len}`
+                if (!this.rules.includes(str)) {
+                    if (this.checkAll[idx]) {
+                        this.rules.push(str)
+                    }
+                } else if (!this.checkAll[idx]) {
+                    this.rules.splice(this.rules.indexOf(str), 1)
+                }
+            }
+            console.log(this.rules)
         }
     }
 }
 </script>
 
 <style lang="stylus">
-.rules
-    margin 10px
-    .el-input input
-        width 30%
+.auth-role
+    .rules
+        margin 10px
+        .el-input input
+            width 30%
+
+    .employee
+        .el-select
+            margin-right 30px
+            margin-bottom 20px
+        &+.el-button
+            background-color c=#f78989
+            border-color c
 </style>

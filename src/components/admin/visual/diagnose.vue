@@ -50,26 +50,27 @@ export default {
         }
         return {
             items: [ {
-                label: '请选择上传文件',
-                model: 'upfile',
-                type: 'file',
-                block: true
-            }, {
-                label: '畜生性别',
-                model: 'sex',
-                type: 'select',
-                fetchSuggestions: getSex
-            }, {
                 label: '商标耳牌',
                 model: 'signal'
             }, {
                 label: '检疫耳牌',
                 model: 'check'
             }, {
+                label: '性别',
+                model: 'sex',
+                type: 'select',
+                fetchSuggestions: getSex,
+                mr: 1
+            }, {
                 label: '就诊专家',
                 model: 'expert',
                 type: 'select',
                 fetchSuggestions: getExpert
+            }, {
+                label: '上传图片或视频:',
+                model: 'upfile',
+                type: 'file',
+                fetchSuggestions: getSex
             }],
             models: {
                 upfile: null,
@@ -77,8 +78,7 @@ export default {
                 signal: null,
                 check: null,
                 expert: null
-            },
-            submitter: {}
+            }
         }
     }
 }

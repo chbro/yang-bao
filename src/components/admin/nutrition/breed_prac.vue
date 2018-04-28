@@ -11,7 +11,7 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { checkForm, checkSubmit, isReqSuccessful } from '@/util/jskit'
+import { checkForm, isReqSuccessful } from '@/util/jskit'
 import { addBreeding } from '@/util/getdata'
 
 export default {
@@ -60,9 +60,6 @@ export default {
     methods: {
         submit () {
             if (!checkForm(this.models)) {
-                return
-            }
-            if (!checkSubmit(this.submitter)) {
                 return
             }
             this.models.operator = this.submitter.operator

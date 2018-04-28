@@ -1,7 +1,7 @@
 <template>
     <div class="admin-head">
         <div class="logo">
-            <img src="~@/assets/imgs/index/logo-header.png">
+            <router-link to="/"><img src="~@/assets/imgs/index/logo-header.png"></router-link>
         </div>
 
         <div class="con">
@@ -70,7 +70,6 @@ export default {
 .admin-head
     overflow hidden
     color #fff
-    background url('~@/assets/imgs/by.png')
 .logo
     width 17%
     min-width 100px

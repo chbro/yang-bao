@@ -8,16 +8,16 @@
         <div class="box reg-box">
             <p>会员注册</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
-                <el-form-item label="用户名" prop="pkUserid">
-                    <el-input :minlength="4" :maxlength="20" type="test" v-model="ruleForm.pkUserid" auto-complete="off"></el-input>
+                <el-form-item label="用户名" prop="username">
+                    <el-input :minlength="4" :maxlength="20" type="test" v-model="ruleForm.username" auto-complete="off"></el-input>
                     <p class="note"><span>*</span>账户名是您以后登录所用的账号，可以由字母a-z或数字组成</p>
                 </el-form-item>
                 <el-form-item label="email" prop="userEmail">
                     <el-input type="test" v-model="ruleForm.userEmail" auto-complete="off"></el-input>
                     <p class="note"><span>*</span>您将使用此邮箱登录，请输入正确的常用邮箱</p>
                 </el-form-item>
-                <el-form-item label="密码" prop="userPwd">
-                    <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.userPwd" auto-complete="off"></el-input>
+                <el-form-item label="密码" prop="password">
+                    <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.password" auto-complete="off"></el-input>
                     <p class="note"><span>*</span>6-20位字符</p>
                 </el-form-item>
                 <el-form-item label="密码强度" class="pass-level">
@@ -115,7 +115,7 @@ export default {
                 callback(new Error('请再次输入密码'))
             } else if (!passReg.test(value)) {
                 callback(new Error('密码必须是6-20位字符数字和下划线'))
-            } else if (value !== this.ruleForm.userPwd) {
+            } else if (value !== this.ruleForm.password) {
                 callback(new Error('两次输入密码不一致!'))
             } else {
                 callback()
@@ -124,9 +124,9 @@ export default {
 
         return {
             ruleForm: {
-                pkUserid: '',
+                username: '',
                 userEmail: '',
-                userPwd: '',
+                password: '',
                 checkPass: '',
                 qq: '',
                 userTelephone: '',
@@ -138,13 +138,13 @@ export default {
                 answer_3: ''
             },
             rules: {
-                userPwd: [
+                password: [
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 checkPass: [
                     { validator: validatePass2, trigger: 'blur' }
                 ],
-                pkUserid: [
+                username: [
                     { validator: validateName, trigger: 'blur' }
                 ],
                 userEmail: [
@@ -167,7 +167,7 @@ export default {
     },
 
     watch: {
-        'ruleForm.userPwd' (newV) {
+        'ruleForm.password' (newV) {
             this.strength = checkPassStrength(newV)
         }
     },
@@ -184,7 +184,7 @@ export default {
                             data[v] = form[v]
                         }
                     }
-                    data.userPwd = md5(form.userPwd)
+                    data.password = md5(form.password)
 
                     this.disableReg = true
                     Register(data).then(res => {
@@ -196,7 +196,7 @@ export default {
                         } else {
                             this.disableReg = false
                         }
-                    }, _ => {
+                    }).catch(_ => {
                         this.$message.error('注册失败')
                         this.disableReg = false
                     })

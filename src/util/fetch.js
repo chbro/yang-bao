@@ -2,12 +2,13 @@
 
 import { jumpToLogin } from './jskit'
 import Vue from 'vue'
+import md5 from 'md5'
 
 // const baseUrl = 'http://218.199.68.33:9010' // 钟睿
-// const baseUrl = 'http://192.168.1.108:9010' // 老猪
+const baseUrl = 'http://192.168.1.108:9010' // 老猪
 // const baseUrl = 'http://192.168.1.112:8080' // 农文华
-const baseUrl = 'http://192.168.1.103:9010' // 文嫖
-const tokenStr = 'sheep-token'
+// const baseUrl = 'http://192.168.1.103:9010' // 文嫖
+const tokenStr = md5('sheep-token')
 const authStr = 'Authorization'
 let app = new Vue()
 
@@ -48,7 +49,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             requestConfig.headers[authStr] = token
         }
 
-        if (['POST', 'DELETE', 'PATCH'].includes(type)) {
+        if (['POST', 'DELETE', 'PATCH', 'PUT'].includes(type)) {
             Object.defineProperty(requestConfig, 'body', {
                 value: JSON.stringify(data)
             })
@@ -65,11 +66,11 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
                 app.$message.error('请求失败')
                 return
             }
-            // 请求成功时刷新token
-            // let newToken = response.headers.get(authStr)
-            // if (newToken) {
-            //     window.localStorage.setItem(tokenStr, newToken)
-            // }
+            // 登录成功时存入token
+            let token = response.headers.get(authStr)
+            if (token) {
+                window.localStorage.setItem(tokenStr, token)
+            }
 
             const responseJson = await response.json();
 

@@ -4,10 +4,11 @@
  */
 
 import Vue from 'vue'
+import { tokenStr } from './fetch'
 
 let app = new Vue()
 export const jumpToLogin = () => {
-    localStorage.removeItem('sheep-token')
+    localStorage.removeItem(tokenStr)
     window.location.replace(window.location.host + '/#/login')
 }
 
@@ -84,7 +85,7 @@ export const checkForm = form => {
         app.$message.warning('商标耳牌必须是15位数字')
         return false
     }
-    if (Object.keys(form).some(v => form[v] === null || form[v] === '')) {
+    if (Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
         app.$message.warning('请完善表单信息')
         return false
     }
@@ -192,7 +193,7 @@ export const getPeriods = (q, cb) => {
 }
 
 export const isReqSuccessful = (res) => {
-    if (!res.meta) {
+    if (!(res && res.meta)) {
         app.$message.error('请求失败')
         return false
     }

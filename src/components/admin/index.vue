@@ -95,16 +95,22 @@ export default {
             treedata: [
                 {label: '会员中心', children: [
                     {label: '个人信息修改', to: 'userinfo'},
-                    {label: '密码修改', to: 'test2'},
-                    {label: '客户评价', to: 'test3'}
+                    {label: '密码修改', to: 'passmod'}
                 ]},
                 {label: '系统管理员平台', children: [
                     {label: '用户管理', to: 'account'},
                     {label: '权限规则列表', to: 'authrole'},
-                    {label: '羊场管理', to: 'farm'},
                     {label: '代理管理', to: 'agent'},
-                    {label: '审核', to: 'review'},
-                    {label: '发布系统', to: 'release'}
+                    {label: '羊场管理', to: 'farm'},
+                    {label: '发布系统', to: 'release'},
+                    {label: '专家课堂视频发布', to: 'tes5'},
+                    {label: '留言统计', to: 'test6'},
+                    {label: '专家客户评价结果', to: 'test7'}
+                ]},
+                {label: '专家工作', children: [
+                    {label: '客户评价', to: 'test3'},
+                    {label: '专家在线课堂', to: 'test8'},
+                    {label: '审核', to: 'review'}
                 ]},
                 {label: '管理平台', children: [
                     {label: '专家课堂', to: 'course'},
@@ -164,11 +170,10 @@ export default {
         },
 
         changeActive (item, isTo) {
-            console.log(item, item.to)
             if (isTo) {
                 // itemprac -> itemlist
                 let idx = item.to.indexOf('prac')
-                if (idx === '-1') {
+                if (idx === -1) {
                     this.$router.push({name: item.to + 'list'})
                 } else {
                     this.$router.push({name: item.to.substr(0, item.to.indexOf('prac')) + 'list'})

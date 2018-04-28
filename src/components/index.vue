@@ -61,9 +61,9 @@ export default {
                 { class: 'cross', text: '卫生疫控' },
                 { class: 'daocha', text: '营养生产' },
                 { class: 'zhusheqi', text: '疾病防治' },
-                { class: 'wuzicaigou', text: '生产物资平台' },
+                { class: 'wuzicaigou', text: '生产物资' },
                 { class: 'jianshiqicai01', text: '可视系统' },
-                { class: 'goat', text: '有机养殖环境追溯' }
+                { class: 'goat', text: '养殖追溯' }
             ]
         }
     }
@@ -136,6 +136,7 @@ export default {
         cursor pointer
         >div
             display inline-block
+            vertical-align middle
             width 24%
             color color-main
             text-align center
@@ -152,4 +153,14 @@ export default {
     margin-bottom 10px
     overflow hidden
     text-align center
+
+@media screen and (max-width 600px)
+    .icon-group
+        .left-icons
+            width 100%
+            >div
+                i
+                    font-size 40px
+            &+img
+                display none
 </style>

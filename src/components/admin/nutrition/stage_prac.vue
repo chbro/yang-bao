@@ -8,7 +8,6 @@
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.note"></el-input>
         </div>
-        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
@@ -17,14 +16,13 @@
 </template>
 
 <script>
-import Submitter from '@/components/admin/submitter'
 import BasicInfo from '@/components/admin/basic_info'
 import Card from '@/components/admin/card'
 import { checkForm, checkSubmit, checkCards, getDryFeed, getConFeed } from '@/util/jskit'
 
 export default {
     components: {
-        Submitter, BasicInfo, Card
+        BasicInfo, Card
     },
 
     data () {
@@ -87,8 +85,7 @@ export default {
                     {label: '粗料', inputs: [{dose: '', day: ''}]},
                     {label: '其他', inputs: [{dose: '', day: ''}]}
                 ]}
-            ],
-            submitter: {}
+            ]
         }
     },
 

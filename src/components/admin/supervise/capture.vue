@@ -18,7 +18,6 @@
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="note"></el-input>
         </div>
-        <submitter :submitter.sync="submitter"></submitter>
         <div class="admin-send">
             <el-button type="primary">取消</el-button>
             <el-button type="primary" @click="submit()">提交/更新</el-button>
@@ -27,20 +26,14 @@
 </template>
 
 <script>
-import Submitter from '@/components/admin/submitter'
 import { checkForm, checkSubmit } from '@/util/jskit'
 
 export default {
-    components: {
-        Submitter
-    },
-
     data () {
         return {
             erpai: '',
             captures: [{model: null}],
-            note: '',
-            submitter: {}
+            note: ''
         }
     },
 

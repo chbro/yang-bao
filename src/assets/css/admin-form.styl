@@ -33,18 +33,18 @@
 
     .el-input-group
         width auto
-        .area-cascader-wrap
+        .area-cascader-wrap,
+        .area-select-wrap
             display inline-block
             .area-select
                 box-sizing border-box
                 width 199px
                 height 32px
+                margin-left 0 !important
                 border-radius 0
     .select
         >span
             vertical-align bottom !important
-    .block
-        display table
     .time
         display inline-block
         font-size 0 !important
@@ -78,7 +78,8 @@
                 font-size 14px
         .el-autocomplete
             width calc(100% - 140px)
-
+    .block
+        display table
     .border-main
         border 1px solid color-main
         border-top 0

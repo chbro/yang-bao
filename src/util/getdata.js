@@ -115,13 +115,24 @@ export const postRelease = data => fetch('/notice', data, 'POST')
 
 export const updateRelease = data => fetch('/notice', data, 'PATCH')
 
-export const getRelease = data => {
-    // data带有分页参数
-    let id = data.id
-    delete data.id
-    return fetch('/notice/' + id, data)
-}
+// data带有分页参数
+export const getRelease = (id, data = null) => fetch('/notice/' + id, data)
 
 export const getAllRelease = data => fetch('/notice', data)
 
 export const deleteRelease = (id, data) => fetch('/notice/' + id, data, 'DELETE')
+
+/**
+ * 羊场管理CURD
+ */
+export const postFarm = data => fetch('/factory', data, 'POST')
+
+export const updateFarm = (id, data) => fetch(`/factory/${id}`, data, 'PUT')
+
+export const getFarms = (id, data) => fetch('/factory/agent/' + id, data)
+
+export const getFarmById = id => fetch(`/factory/${id}`)
+
+export const getFarmByLocation = loc => fetch(`/factory/location`, {location: loc})
+
+export const deleteFarm = id => fetch('/factory/' + id, null, 'DELETE')

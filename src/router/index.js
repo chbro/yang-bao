@@ -16,7 +16,8 @@ const SearchRes = () => import('@/components/search_res')
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
 // 个人信息
-const UserInfo = () => import('@/components/admin/user')
+const UserInfo = () => import('@/components/admin/user/user')
+const PasswordModify = () => import('@/components/admin/user/pass')
 // 审核
 const Review = () => import('@/components/admin/review/index')
 // 留言管理
@@ -95,6 +96,7 @@ export default new Router({
         {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'auth', component: Auth},
             {path: 'userinfo', name: 'userinfo', component: UserInfo},
+            {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
             {path: 'auth/role', name: 'authrole', component: AuthRole},

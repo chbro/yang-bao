@@ -6,8 +6,8 @@
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 
-                <el-input :placeholder="item.placeholder" :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
-                    <template slot="prepend">免疫耳牌号文件:<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
+                <el-input :placeholder="item.placeholder" :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="item.label || holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
+                    <template slot="prepend">{{ item.label || '免疫耳牌号文件:'}}<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
                 </el-input>
 
                 <div :key="i" v-else-if="item.type === 'time'" class="time el-input-group" :class="{'double-width': item.doubleWidth, mr: item.mr}">
@@ -26,7 +26,7 @@
                     <el-input-number :min="1" size="small" v-model="models[item.model]"></el-input-number>
                 </div>
 
-                <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'select'" class="time el-input-group select">
+                <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'select'" class="time el-input-group select">
                     <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
                     <el-autocomplete
                         size="small"
@@ -42,7 +42,11 @@
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address'" class="time el-input-group address">
                     <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <area-cascader type='text' v-model="area" :level='1' :data="pcaa" @change="changeArea()"></area-cascader>
+                    <area-cascader type='text' v-model="models[item.model]" :level='item.level === undefined ? 1 : item.level' :data="pcaa"></area-cascader>
+                </div>
+                <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address-select'" class="time el-input-group address">
+                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
+                    <area-select type='text' :level='0' v-model="models[item.model]" :data="pcaa"></area-select>
                 </div>
             </template>
         </div>
@@ -65,26 +69,13 @@ export default {
             dafault () {
                 return {}
             }
-        },
-        fetchSuggestions: {
-            type: Function,
-            default () {
-                return () => {}
-            }
-        },
-        onSelect: {
-            type: Function,
-            default () {
-                return () => {}
-            }
         }
     },
 
     data () {
         return {
             holder: '上传耳牌号文件',
-            pcaa,
-            area: null
+            pcaa
         }
     },
 
@@ -93,10 +84,6 @@ export default {
             let file = this.$refs.erpai[0].files[0]
             this.models[item.model] = file
             this.holder = file.name
-        },
-
-        changeArea () {
-            console.log(this.area)
         }
     }
 }

@@ -200,8 +200,7 @@ export default {
             float left
             li
                 float left
-                height h=66px
-                line-height h
+                line-height 66px
                 a
                     color #fff
                     display: block;
@@ -240,4 +239,37 @@ export default {
             color #fff
             &:hover
                 text-decoration underline
+
+@media screen and (max-width 600px)
+    .app-header
+        .top-bar
+            >div
+                span
+                    display block
+            .social-icons
+                display flex
+                line-height 30px
+                li
+                    padding 0 10px
+                    i
+                        display block
+                        text-align center
+                    &:last-child
+                        border 0
+    .header-menu.fadeInDown
+        .nav-tabs
+            li
+                line-height 30px
+        .nav-search
+            float left
+            margin-left 20px
+            input
+                line-height 30px
+            button
+                line-height 30px
+        .login-entry
+            line-height 32px
+            font-size 15px
+    .icon-text >div p
+        display none
 </style>

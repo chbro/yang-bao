@@ -98,8 +98,8 @@ export default {
             if (this.prevfile) {
                 form.append('immuneEartag', this.prevfile)
             }
+            form.append('id', this.edit)
             if (this.edit) {
-                form.append('id', this.edit)
                 window.fetch(baseUrl + '/ip/update', {
                     method: 'POST',
                     body: form
