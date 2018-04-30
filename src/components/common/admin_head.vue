@@ -18,26 +18,36 @@
             </div>
 
             <div class="tab-right">
-                <span>用户：{{user.name}}</span>
-                <span class="dept">部门：{{user.department}}</span>
+                <span>用户：{{user.pkUserid || 'user'}}</span>
+                <span class="dept">部门：{{user.userFactory || '无'}}</span>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
                 <span><i class="iconfont icon-user yellow"></i>通讯录</span>
-                <span><i class="el-icon-message"></i>（{{ user.msg_cnt }}）</span>
+                <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { LogOut } from '@/util/getdata'
+import { isReqSuccessful, jumpToLogin, retrieveUid } from '@/util/jskit'
+
 export default {
+    props: {
+        user: {
+            type: Object,
+            default () {
+                return {
+                    pkUserid: '',
+                    userFactory: ''
+                }
+            }
+        }
+    },
+
     data () {
         return {
-            datestr: '',
-            user: {
-                name: '二狗',
-                department: 'xxx养殖代理厂',
-                msg_cnt: 10
-            }
+            datestr: ''
         }
     },
 
@@ -59,6 +69,21 @@ export default {
     methods: {
         refresh () {
             window.location.reload()
+        },
+
+        logout () {
+            this.$confirm('确定要注销吗?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                LogOut(retrieveUid()).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('注销成功')
+                        jumpToLogin(this.$router)
+                    }
+                })
+            }).catch(() => {
+                return false
+            })
         }
     }
 }

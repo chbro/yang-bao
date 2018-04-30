@@ -2,7 +2,7 @@
     <div class="border-main">
         <div class="form-summary">
             <template v-for="(item, i) in items">
-                <el-input :placeholder="item.placeholder" :minlength="item.trade ? 15 : 1" :maxlength="item.trade ? 15 : 100" :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text'" size="small" v-model="models[item.model]">
+                <el-input :placeholder="item.placeholder" :minlength="item.trade ? 15 : 1" :maxlength="item.trade ? 15 : 100" :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text' || item.type === 'password'" :type="item.type || 'text'" size="small" v-model="models[item.model]" :disabled="item.disabled">
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 

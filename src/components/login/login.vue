@@ -74,13 +74,13 @@ export default {
             },
             rules: {
                 username: [
-                    { validator: validateName, trigger: 'blur' }
+                    {validator: validateName, trigger: 'blur'}
                 ],
                 pass: [
-                    { validator: validatePass, trigger: 'blur' }
+                    {validator: validatePass, trigger: 'blur'}
                 ],
                 code: [
-                    { validator: validateCode, trigger: 'blur' }
+                    {validator: validateCode, trigger: 'blur'}
                 ]
             },
             // identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
@@ -88,10 +88,12 @@ export default {
             identifyCode: ''
         }
     },
+
     mounted () {
-        window.md5 = md5
         this.makeCode(this.identifyCodes, 4)
+        // console.log(this.$store)
     },
+
     methods: {
         submitForm (formName) {
             this.$refs[formName].validate(valid => {
@@ -102,6 +104,7 @@ export default {
                     }
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
+                            this.$message.success('登录成功')
                             this.$router.push('/admin')
                         }
                     }, _ => {
@@ -112,13 +115,16 @@ export default {
                 }
             })
         },
+
         randomNum (min, max) {
             return Math.floor(Math.random() * (max - min) + min)
         },
+
         refreshCode () {
             this.identifyCode = ''
             this.makeCode(this.identifyCodes, 4)
         },
+
         makeCode (o, l) {
             this.identifyCode = ''
             for (let i = 0; i < l; i++) {
@@ -128,6 +134,7 @@ export default {
     }
 }
 </script>
+
 <style lang="stylus">
 @import '~@/assets/css/color'
 @import '~@/assets/css/login-common'

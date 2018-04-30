@@ -1,6 +1,6 @@
 <template>
     <div class="app-home">
-        <admin-head></admin-head>
+        <admin-head :user.sync="user"></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
                 <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
@@ -19,9 +19,12 @@
 
                     <div class="bg-blue pad">
                         <div class="admin-search">
-                            <div class="options">
+                            <div class="options" v-if="!isProCheck">
                                 <el-button class="admin-hl hl-btn" @click="changeActive(module)" type="primary">{{ module.label }}</el-button>
-                                <el-button v-if="isProdModule()" class="admin-hl hl-btn"  type="primary" @click="changeActive(module, 1)">{{ module.label }}列表</el-button>
+                                <el-button v-if="isProdModule()" class="admin-hl hl-btn" type="primary" @click="changeActive(module, 1)">{{ module.label }}列表</el-button>
+                            </div>
+                            <div class="options" v-else>
+                                <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" type="primary" @click="checkModule(item)">{{ item.label }}</el-button>
                             </div>
                             <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -42,6 +45,8 @@
 <script>
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
+import { isReqSuccessful, retrieveUid } from '@/util/jskit'
+import { getUser } from '@/util/getdata'
 
 /* eslint-disable object-property-newline */
 export default {
@@ -49,41 +54,15 @@ export default {
         AdminHead, AdminFoot
     },
 
-    mounted () {
-        // rid '/admin/'
-        let path = this.$route.path.substr(7)
-        let [parent, child, postfix] = path.split('/')
-
-        let arr = [{text: '溯源管理'}]
-        let mod
-        let submod
-        this.treedata.forEach(v => {
-            let m = v.children.find(v => v.to === parent || v.name === parent)
-            if (m) {
-                mod = m
-                if (mod.children) {
-                    submod = mod.children.find(v => v.to === child + postfix || v.name === child + postfix)
-                }
+    watch: {
+        '$route' (newV, oldV) {
+            // console.log(newV)
+            if (newV.name !== 'review') {
+                this.isProCheck = false
+            } else {
+                this.isProCheck = true
             }
-        })
-        if (mod && submod) {
-            // open left tree
-            this.expanded_key = [child]
-
-            arr.push({text: mod.label}, {text: submod.label})
-            this.module = submod
-        } else if (mod) {
-            this.expanded_key = [parent]
-
-            // some module has no child
-            arr.push({text: mod.label})
-            this.module = mod
-        } else {
-            // default index of admin
-            arr.push({text: '用户权限'})
-            this.module = {label: '用户权限', to: 'auth'}
         }
-        this.bread = arr
     },
 
     data () {
@@ -103,24 +82,25 @@ export default {
                     {label: '代理管理', to: 'agent'},
                     {label: '羊场管理', to: 'farm'},
                     {label: '发布系统', to: 'release'},
-                    {label: '专家课堂视频发布', to: 'tes5'},
-                    {label: '留言统计', to: 'test6'},
+                    {label: '专家课堂视频发布', to: 'test5'},
+                    {label: '短信平台', to: 'test6'},
+                    {label: '留言统计', to: 'test10'},
                     {label: '专家客户评价结果', to: 'test7'}
                 ]},
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
                     {label: '专家在线课堂', to: 'test8'},
-                    {label: '审核', to: 'review'}
+                    {label: '生产档案审核', to: 'review'}
                 ]},
-                {label: '管理平台', children: [
+                {label: '生产管理平台', children: [
                     {label: '专家课堂', to: 'course'},
                     {label: '系谱档案', to: 'genealogic'},
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
-                        {label: '卫生与动物福利管理方案', to: 'welfare1'},
+                        {label: '卫生与动物福利管理方案', to: 'welfareplan'},
                         {label: '卫生与动物福利操作档案', to: 'welfare'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
-                        {label: '消毒实施档案', to: 'disinfectprac'},
+                        {label: '消毒实施档案', to: 'disinfect'},
                         {label: '免疫方案', to: 'immuneplan'},
                         {label: '免疫实施档案', to: 'immuneprac'},
                         {label: '驱虫方案', to: 'antiscolicplan'},
@@ -133,7 +113,7 @@ export default {
                         {label: '配种产子管理方案', to: 'breedplan'},
                         {label: '配种产子实施档案', to: 'breedprac'}
                     ]},
-                    {label: '疫病防治', name: 'prevention', children: [
+                    {label: '疫病防治', to: 'prevention', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '疫病防治方案', to: 'preventionplan'},
                         {label: '疫病防治实施档案', to: 'preventionprac'}
@@ -159,11 +139,84 @@ export default {
             showTree: true,
             bread: [
                 {text: '溯源管理', to: 'auth'}
-            ]
+            ],
+            isProCheck: false,
+            // 7大生产环节
+            production: [
+                {label: '卫生与动物福利', mod: 'welfare'},
+                {label: '消毒', mod: 'disinfect'},
+                {label: '免疫', mod: 'immune'},
+                {label: '驱虫', mod: 'antiscolic'},
+                {label: '阶段营养', mod: 'stage'},
+                {label: '配种产子', mod: 'breed'},
+                {label: '疫病防治', mod: 'prevention'}
+            ],
+
+            user: {
+                pkUserid: '',
+                userFactory: ''
+            }
         }
     },
 
+    mounted () {
+        getUser(retrieveUid()).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        }).catch(_ => {
+            this.$message.error('获取用户信息失败')
+        })
+
+        this.isProCheck = this.$route.name === 'review'
+
+        // rid '/admin/'
+        let path = this.$route.path.substr(7)
+        let [parent, child, postfix] = path.split('/')
+
+        let arr = [{text: '溯源管理'}]
+        let mod
+        let submod
+        this.treedata.forEach(v => {
+            let m = v.children.find(v => v.to === parent || v.name === parent)
+            if (m) {
+                mod = m
+                if (mod.children) {
+                    submod = mod.children.find(v => v.to === child + postfix || v.name === child + postfix || v.to === child + 'prac' || v.name === child + 'prac')
+                }
+            }
+        })
+        // console.log(mod, submod)
+        if (mod && submod) {
+            // open left tree
+            if (postfix === 'list') {
+                this.expanded_key = [child + 'prac']
+            } else {
+                this.expanded_key = [child]
+            }
+            // console.log(this.expanded_key)
+
+            arr.push({text: mod.label}, {text: submod.label})
+            this.module = submod
+        } else if (mod) {
+            this.expanded_key = [parent]
+
+            // some module has no child
+            arr.push({text: mod.label})
+            this.module = mod
+        } else {
+            // default index of admin
+            arr.push({text: '用户权限'})
+            this.module = {label: '用户权限', to: 'auth'}
+        }
+        this.bread = arr
+    },
+
     methods: {
+        checkModule (item) {
+            console.log(item)
+        },
+
         isProdModule () {
             let name = this.$route.name
             return ['welfare', 'genealogic', 'farm', 'agent', 'release', 'diagnose'].includes(name) || name.endsWith('prac') || name.endsWith('list')

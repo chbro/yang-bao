@@ -7,9 +7,11 @@ import Vue from 'vue'
 import { tokenStr } from './fetch'
 
 let app = new Vue()
-export const jumpToLogin = () => {
-    localStorage.removeItem(tokenStr)
-    window.location.replace(window.location.host + '/#/login')
+export const jumpToLogin = r => {
+    window.localStorage.removeItem(tokenStr)
+    r.push('/login')
+    // 无法跳转锚点
+    // window.location.assign(window.location.host + '/#/login')
 }
 
 export const checkPassStrength = val => {
@@ -23,16 +25,9 @@ export const checkPassStrength = val => {
 }
 
 export const validateName = (rule, value, callback) => {
-    if (!value) {
-        callback(new Error('用户名不能为空'))
-        return
-    }
-
-    let len = value.length
-    if (value === '') {
-        callback(new Error('用户名不能为空'))
-    } else if (len < 4 || len > 20) {
-        callback(new Error('用户名长度必须是4-20'))
+    let userReg = /^[a-zA-Z0-9]{4,12}$/
+    if (!userReg.test(value)) {
+        callback(new Error('用户名由字母a-z或数字组成，长度为4-12位'))
     } else {
         callback()
     }
@@ -96,48 +91,6 @@ export const checkForm = form => {
         return false
     }
     return true
-}
-
-export const checkCards = cards => {
-    try {
-        cards.forEach(v => {
-            v.items.forEach(v2 => {
-                v2.inputs.forEach(v3 => {
-                    if (!(v3.dose && v3.day)) {
-                        app.$message.warning('请完善配方和用量信息')
-                        throw new Error('break')
-                    }
-                })
-            })
-        })
-    } catch (e) {
-        if (e.message !== 'break') {
-            throw e
-        }
-        return false
-    }
-    return true
-}
-
-export const getConFeed = (q, cb) => {
-    let conFeed = [
-        {value: '玉米'},
-        {value: '豆粕'},
-        {value: '麸皮'},
-        {value: '食盐'},
-        {value: '预混料'}
-    ]
-
-    cb(conFeed)
-}
-
-export const getDryFeed = (q, cb) => {
-    let dryFeed = [
-        {value: '干草'},
-        {value: '青草'}
-    ]
-
-    cb(dryFeed)
 }
 
 export const getImmuneTypes = (q, cb) => {
@@ -218,11 +171,18 @@ export const resetFile = dom => {
 let jump = (msg, name) => {
     app.$message.success(msg)
     // here app.$router is undefined
-    window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
+    setTimeout(() => {
+        window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
+    }, 1000)
 }
 export const postJump = routename => {
     jump('录入成功', routename)
 }
 export const patchJump = routename => {
     jump('修改成功', routename)
+}
+
+export const retrieveUid = _ => {
+    let val = window.localStorage.getItem(tokenStr)
+    return val.substr(0, val.indexOf(':'))
 }

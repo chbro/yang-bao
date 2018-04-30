@@ -3,104 +3,214 @@
         <p class="card-title">阶段营养实施档案</p>
 
         <basic-info :items="items" :models="models"></basic-info>
-        <card v-for="(item, i) in cards" :key="i" :card.sync="item"></card>
+        <div class="card" v-for="(card, index) in cards" :key="index">
+            <p class="card-title" v-text="card.title"></p>
+
+            <div class="border-main">
+                <div v-for="(item, i) in card.items" :key="i" class="card-item">
+                    <template v-for="(input, j) in item.inputs">
+                        <el-input placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
+                            <template slot="prepend">{{ item.label }}:</template>
+                        </el-input>
+                        <div :key="j" v-else-if="item.type === 'select'" class="time el-input-group select">
+                            <span class="time-span" v-text="item.label + ':'"></span>
+                            <el-autocomplete
+                                :ref="item.model + '-' + j"
+                                placeholder="名称和百分比"
+                                size="small"
+                                v-model="models[item.model]"
+                                @select="() => {}"
+                                :fetch-suggestions="item.fetchSuggestions">
+                            </el-autocomplete>
+                        </div>
+                    </template>
+                    <span class="cursor-p" @click="addItem(index, i)"><i class="el-icon-caret-right"></i>增加{{ item.label }}设置</span>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <p class="card-title">备注:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
+            <el-input type="textarea" v-model="models.remark"></el-input>
         </div>
         <div class="admin-send">
-            <el-button type="primary">取消</el-button>
-            <el-button type="primary" @click="submit()">提交/更新</el-button>
+            <el-button :disabled="disableBtn" type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
 </template>
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import Card from '@/components/admin/card'
-import { checkForm, checkSubmit, checkCards, getDryFeed, getConFeed } from '@/util/jskit'
+import { isReqSuccessful, checkForm, postJump, patchJump } from '@/util/jskit'
+import { getStages, getDryFeed, getConFeed } from '@/util/dataselect'
+import { postStage, getStage, updateStage } from '@/util/getdata'
 
 export default {
     components: {
-        BasicInfo, Card
+        BasicInfo
     },
 
     data () {
-        let stages = [
-            {value: '引种应激前期（引种前三天）', key: 0},
-            {value: '引种应激后期（引种3—15天）', key: 1},
-            {value: '非配种期公羊（后备种公羊）', key: 2},
-            {value: '空怀期母羊（后备种母羊）', key: 3},
-            {value: '配种期公羊', key: 4},
-            {value: '配种期母羊', key: 5},
-            {value: '怀孕前期（孕娠前三月）', key: 6},
-            {value: '怀孕后期（孕娠后两月）', key: 7},
-            {value: '哺乳期母羊', key: 8},
-            {value: '羔羊诱导采食期（7—80日龄）', key: 9},
-            {value: '育成羊（80—180日龄）', key: 10},
-            {value: '预饲期（181—220日龄）', key: 11}
-        ]
-        let getStages = (q, cb) => {
-            cb(stages)
-        }
-
         return {
             items: [
-                {label: '栋号', model: 'house_id'},
-                {label: '使用日期', model: 'use_date', type: 'time'},
-                {label: '羊数', model: 'lamb_num', type: 'number', mr: true},
-                {label: '阶段', model: 'stage', type: 'select', fetchSuggestions: getStages},
+                {label: '栋号', model: 'building'},
+                {label: '使用日期', model: 'nutritionT', type: 'time'},
+                {label: '羊数', model: 'quantity', type: 'number', mr: true},
+                {label: '阶段', model: 'period', type: 'select', fetchSuggestions: getStages},
                 {label: '饮水', model: 'water'}
             ],
             models: {
-                house_id: null,
-                use_date: null,
-                lamb_num: 1,
-                stage: null,
-                water: null
+                building: null,
+                nutritionT: null,
+                quantity: 1,
+                period: null,
+                water: null,
+                remark: null
+            },
+            form: {
+                materialA: null,
+                materialM: null,
+                materialO: null,
+                materialWM: null,
+                materialWO: null,
+                roughageP: null,
+                roughageD: null,
+                roughageO: null,
+                roughageWP: null,
+                roughageWD: null,
+                roughageWO: null,
+                pickingM: null,
+                pickingR: null,
+                pickingO: null
             },
             /* eslint-disable object-property-newline */
             cards: [
+                // 商品名， 厂家，%
+                // 原材料，%
+                // 临时添加，%
                 {title: '精料配方（%）', items: [
-                    {label: '添加剂', inputs: [{dose: '', day: ''}]},
-                    {label: '精料', inputs: [{dose: '', day: ''}]},
-                    {label: '其他', inputs: [{dose: '', day: ''}]}
+                    {label: '预混料', model: 'materialA', inputs: [1]},
+                    {label: '精料', model: 'materialM', inputs: [1]},
+                    {label: '其他', model: 'materialO', inputs: [1]}
                 ]},
                 {title: '精料用量（体重%）', items: [
-                    {label: '精料', type: 'select', fetchSuggestions: getConFeed, inputs: [{dose: '', day: ''}]},
-                    {label: '其他', inputs: [{dose: '', day: ''}]}
+                    {label: '精料', model: 'materialWM', type: 'select', fetchSuggestions: getConFeed, inputs: [1]},
+                    {label: '其他', model: 'materialWO', inputs: [1]}
                 ]},
                 {title: '粗饲料配方（%）', items: [
-                    {label: '青料', inputs: [{dose: '', day: ''}]},
-                    {label: '干料', type: 'select', fetchSuggestions: getDryFeed, inputs: [{dose: '', day: ''}]},
-                    {label: '其他', inputs: [{dose: '', day: ''}]}
+                    {label: '青料', model: 'roughageP', inputs: [1]},
+                    {label: '干料', model: 'roughageD', type: 'select', fetchSuggestions: getDryFeed, inputs: [1]},
+                    {label: '其他', model: 'roughageO', inputs: [1]}
                 ]},
                 {title: '粗饲料用量（体重%）', items: [
-                    {label: '青料', inputs: [{dose: '', day: ''}]},
-                    {label: '干料', type: 'select', fetchSuggestions: getDryFeed, inputs: [{dose: '', day: ''}]},
-                    {label: '其他', inputs: [{dose: '', day: ''}]}
+                    {label: '青料', model: 'roughageWP', inputs: [1]},
+                    {label: '干料', model: 'roughageWD', type: 'select', fetchSuggestions: getDryFeed, inputs: [1]},
+                    {label: '其他', model: 'roughageWO', inputs: [1]}
                 ]},
                 {title: '领料总量', items: [
-                    {label: '精料', inputs: [{dose: '', day: ''}]},
-                    {label: '粗料', inputs: [{dose: '', day: ''}]},
-                    {label: '其他', inputs: [{dose: '', day: ''}]}
+                    {label: '精料', model: 'pickingM', inputs: [1]},
+                    {label: '粗料', model: 'pickingR', inputs: [1]},
+                    {label: '其他', model: 'pickingO', inputs: [1]}
                 ]}
-            ]
+            ],
+            disableBtn: false,
+            edit: false
+        }
+    },
+
+    watch: {
+        '$route' (newV, oldV) {
+            // from edit to post
+            if (oldV.query.edit && !newV.query.edit) {
+                this.edit = false
+            }
+        }
+    },
+
+    mounted () {
+        this.edit = this.$route.query.edit
+        if (this.edit) {
+            getStage(this.edit).then(res => {
+                if (isReqSuccessful(res)) {
+                    let data = res.data.model
+                    let obj = {}
+                    Object.keys(this.models).forEach(v => {
+                        obj[v] = data[v]
+                    })
+                    // make form items
+                    Object.keys(this.form).forEach(v => {
+                        for (let v2 of this.cards) {
+                            let card = v2.items.find(v3 => v3.model === v)
+                            if (card) {
+                                card.inputs = JSON.parse(data[v])
+
+                                this.$nextTick(() => {
+                                    card.inputs.forEach((v4, j) => {
+                                        this.$refs[v + '-' + j][0].$el.querySelector('input').value = v4
+                                    })
+                                })
+                                break
+                            }
+                        }
+                        // obj[v] = JSON.parse(data[v])
+                    })
+                    this.models = obj
+                }
+            })
         }
     },
 
     methods: {
+        addItem (cardIndex, itemIndex) {
+            this.cards[cardIndex].items[itemIndex].inputs.push(1)
+        },
+
         submit () {
+            Object.keys(this.$refs).forEach(v => {
+                let key = v.substr(0, v.indexOf('-'))
+                // when catch error reset this.form[key]
+                if (Array.isArray(this.form[key])) {
+                    this.form[key].push(this.$refs[v][0].$el.querySelector('input').value)
+                } else {
+                    this.form[key] = [this.$refs[v][0].$el.querySelector('input').value]
+                }
+            })
+
+            console.log(this.models)
+            Object.keys(this.form).forEach(v => {
+                this.models[v] = JSON.stringify(this.form[v])
+            })
             if (!checkForm(this.models)) {
                 return
             }
-            if (!checkCards(this.cards)) {
-                return
+
+            this.models.operatorName = '嫖'
+            this.models.operatorId = 1
+            this.models.factoryNum = 1
+            this.models.factoryName = '老嫖猪场'
+
+            this.disableBtn = true
+            if (this.edit) {
+                updateStage(this.edit, this.models).then(res => {
+                    if (isReqSuccessful(res)) {
+                        patchJump('nutrition/stage')
+                    }
+                    this.disableBtn = false
+                }).catch(_ => {
+                    this.disableBtn = false
+                    this.$message.error('修改失败')
+                })
+            } else {
+                postStage(this.models).then(res => {
+                    if (isReqSuccessful(res)) {
+                        postJump('nutrition/stage')
+                    }
+
+                    this.disableBtn = false
+                }).catch(_ => {
+                    this.disableBtn = false
+                    this.$message.error('录入失败')
+                })
             }
-            if (!checkSubmit(this.submitter)) {
-                return
-            }
-            console.log(this.models, this.submitter)
         }
     }
 }

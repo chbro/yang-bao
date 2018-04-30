@@ -1,12 +1,12 @@
 <template>
     <div>
-<!--         <div class="admin-list-pass">
-            <el-input class="pick-erpai" size="small">
-                <template slot="prepend">工厂名:</template>
+        <div class="admin-list-pass">
+            <el-input class="pick-erpai" size="small" v-model="factoryName">
+                <template slot="prepend">单位名:</template>
             </el-input>
-            <el-input class="pick-erpai" size="small">
+<!--             <el-input class="pick-erpai" size="small" v-model="eartag">
                 <template slot="prepend">耳牌号:</template>
-            </el-input>
+            </el-input> -->
             <el-select width="120" v-if="!isGenea" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
@@ -15,7 +15,7 @@
                     :value="val">
                 </el-option>
             </el-select>
-            <el-date-picker
+<!--             <el-date-picker
                 size="small"
                 type="datetimerange"
                 range-separator="至"
@@ -24,22 +24,21 @@
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 align="right">
-            </el-date-picker>
-            <el-date-picker
+            </el-date-picker> -->
+<!--             <el-date-picker
                 v-if="isDisinfect"
                 placeholder="消毒时间:"
                 size="small"
                 type="datetime">
-            </el-date-picker>
+            </el-date-picker> -->
             <el-button @click="fetchData()" size="small" type="primary">查询</el-button>
-        </div> -->
+        </div>
         <el-table
             v-loading="load"
             ref="table"
             tooltip-effect="light"
             class="admin-table"
             :data="tableData">
-            <!-- :filter-method="filterMethod" -->
             <el-table-column
                 show-overflow-tooltip
                 v-for="(th, i) in headers"
@@ -54,8 +53,10 @@
                 <template slot-scope="scope">
                     <div class="opr">
                         <span @click="showDetail(scope.$index)">查看</span>
-                        <span @click="edit(scope.$index)">编辑</span>
-                        <span @click="deleteItem(scope.$index)">删除</span>
+                        <template v-if="!checkData.length">
+                            <span @click="edit(scope.$index)">编辑</span>
+                            <span @click="deleteItem(scope.$index)">删除</span>
+                        </template>
                     </div>
                 </template>
             </el-table-column>
@@ -82,15 +83,21 @@ export default {
             type: Function
         },
         deleteData: {
-            type: Function
+            type: Function,
+            default () {
+                return () => {}
+            }
         },
-        postfix: {
-            type: Boolean,
-            default: true
+        checkData: {
+            type: Function,
+            default () {
+                return () => {}
+            }
         },
         headers: {
             type: Array
         },
+
         // 系谱档案模块没有审核功能
         isGenea: {
             type: Boolean,
@@ -114,42 +121,40 @@ export default {
 
     data () {
         return {
-            id: 1,
             load: true,
             page: 1,
             total: 10,
-            isPass: null,
             tableData: [],
+
+            // eartag: null,
+            isPass: null,
+            factoryName: null,
             options: {
                 所有数据: 4,
                 已通过: 1,
                 未通过: 0,
                 待审核: 2
-            },
-            filterData: []
+            }
         }
     },
 
     methods: {
-        filterMethod (value, row, column) {
-            console.log(value, row, column)
-        },
-
         showDetail (index) {
             console.log(this.tableData[index])
         },
 
         fetchData () {
             let param = {
+                factoryNum: 1,
                 page: this.page - 1,
                 size: 10
             }
+            if (this.isPass !== null) {
+                param.ispassCheck = this.isPass
+            }
             this.load = true
-            // if (this.isRelease) {
-            //     delete param.factoryNum
-            //     delete param.isPass
-            // }
-            this.getData(this.id, param).then(res => {
+
+            this.getData(param).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data
                     let map = {
@@ -171,16 +176,6 @@ export default {
                 this.load = false
                 this.$message.error('获取数据失败')
             })
-        },
-
-        setTop (index) {
-            if (index === 0) {
-                return
-            }
-
-            let item = this.tableData[index]
-            this.tableData.splice(index, 1)
-            this.tableData.unshift(item)
         },
 
         edit (index) {

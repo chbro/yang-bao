@@ -1,12 +1,10 @@
 <template>
     <div>
         <admin-table
+            name="驱虫档案"
+            modpath="health/antiscolic"
             :getData="getAntiscolic"
             :deleteData="deleteAntiscolic"
-            name="驱虫档案"
-            :postfix="false"
-            :id="1"
-            modpath="health/antiscolic"
             :headers="headers">
         </admin-table>
     </div>

@@ -32,7 +32,6 @@ const Consult = () => import('@/components/admin/consult')
 const Genealogic = () => import('@/components/admin/genealogic/index')
 const GenealogicList = () => import('@/components/admin/genealogic/list')
 // 卫生疫控
-const DisinfectPlan = () => import('@/components/admin/health/disinfect_plan')
 const DisinfectPrac = () => import('@/components/admin/health/disinfect_prac')
 const DisinfectList = () => import('@/components/admin/health/disinfect_list')
 const ImmunePlan = () => import('@/components/admin/health/immune_plan')
@@ -51,6 +50,7 @@ const BreedList = () => import('@/components/admin/nutrition/breed_list')
 // 疫病防治
 const PreventionPlan = () => import('@/components/admin/prevention/prevention_plan')
 const PreventionPrac = () => import('@/components/admin/prevention/prevention_prac')
+const PreventionList = () => import('@/components/admin/prevention/prevention_list')
 // 可视系统
 const DiagnoseVisual = () => import('@/components/admin/visual/diagnose')
 const ProductionVisual = () => import('@/components/admin/visual/production')
@@ -94,17 +94,16 @@ export default new Router({
 
         // 管理员模块
         {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
-            {path: '', name: 'auth', component: Auth},
-            {path: 'userinfo', name: 'userinfo', component: UserInfo},
+            {path: '', name: 'userinfo', component: UserInfo},
+            {path: 'auth', name: 'auth', component: Auth},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'consult', name: 'consult', component: Consult},
-            {path: 'genealogic', name: 'genealogic', component: Genealogic},
+            {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
             // 卫生疫控
-            {path: 'health/disinfect/plan', name: 'disinfectplan', component: DisinfectPlan},
             {path: 'health/disinfect/prac', name: 'disinfectprac', component: DisinfectPrac},
             {path: 'health/disinfect/list', name: 'disinfectlist', component: DisinfectList},
             {path: 'health/immune/plan', name: 'immuneplan', component: ImmunePlan},
@@ -123,9 +122,11 @@ export default new Router({
             // auth, comment, account
             {path: 'comment', name: 'comment', component: Comment},
             {path: 'account', name: 'account', component: Account},
-
-            {path: 'prevention/preventionplan', name: 'preventionplan', component: PreventionPlan},
-            {path: 'prevention/preventionprac', name: 'preventionprac', component: PreventionPrac},
+            // 疾病防治
+            {path: 'prevention/plan', name: 'preventionplan', component: PreventionPlan},
+            {path: 'prevention', name: 'preventionprac', component: PreventionPrac},
+            {path: 'prevention/list', name: 'preventionlist', component: PreventionList},
+            // 诊断
             {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
             {path: 'visual/production', name: 'production', component: ProductionVisual},
             {path: 'trace', name: 'trace', component: TraceCharts},

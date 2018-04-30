@@ -118,7 +118,7 @@ export default {
                         this.questions = res.data
                         this.canModify = true
                     }
-                }, _ => {
+                }).catch(_ => {
                     this.$message.error('获取问题失败')
                 })
             }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <admin-table
-            :getData="getFarms"
+            :getData="getAllFarms"
             :deleteData="deleteFarm"
             name="羊场"
             :postfix="false"
@@ -14,7 +14,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getFarms, deleteFarm } from '@/util/getdata'
+import { getAllFarms, deleteFarm } from '@/util/getdata'
 
 export default {
     components: {
@@ -23,7 +23,7 @@ export default {
 
     data () {
         return {
-            getFarms,
+            getAllFarms,
             deleteFarm,
             headers: [
                 {prop: 'pkNumber', label: '羊场编号'},

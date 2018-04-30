@@ -73,6 +73,8 @@ export default {
 <style lang="stylus">
 @import '../assets/css/color'
 
+img
+    max-width 100%
 .po-r
     position relative
 

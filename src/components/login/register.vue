@@ -10,7 +10,7 @@
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="用户名" prop="username">
                     <el-input :minlength="4" :maxlength="20" type="test" v-model="ruleForm.username" auto-complete="off"></el-input>
-                    <p class="note"><span>*</span>账户名是您以后登录所用的账号，可以由字母a-z或数字组成</p>
+                    <p class="note"><span>*</span>账户名是您以后登录所用的账号，由字母a-z或数字组成</p>
                 </el-form-item>
                 <el-form-item label="email" prop="userEmail">
                     <el-input type="test" v-model="ruleForm.userEmail" auto-complete="off"></el-input>
@@ -121,6 +121,14 @@ export default {
                 callback()
             }
         }
+        let validateQQ = (rule, value, callback) => {
+            let qqReg = /^$|[1-9]\d{4,9}$/
+            if (!qqReg.test(value)) {
+                callback(new Error('请输入正确的qq号'))
+            } else {
+                callback()
+            }
+        }
 
         return {
             ruleForm: {
@@ -152,6 +160,9 @@ export default {
                 ],
                 userTelephone: [
                     { validator: validatePhone, trigger: 'blur' }
+                ],
+                qq: [
+                    { validator: validateQQ, trigger: 'blur' }
                 ]
             },
             options: [
@@ -185,6 +196,7 @@ export default {
                         }
                     }
                     data.password = md5(form.password)
+                    delete data.checkPass
 
                     this.disableReg = true
                     Register(data).then(res => {

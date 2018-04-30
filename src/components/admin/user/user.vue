@@ -1,63 +1,22 @@
 <template>
     <div class="user-info admin-form">
-        <!-- <el-form ref="form" :model="form" label-width="120px">
-            <el-form-item label="用户名">
-                <el-input size="small" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号">
-                <el-input size="small" v-model="form.userTelephone"></el-input>
-            </el-form-item>
-
-            <el-form-item label="密码提示问题1">
-                <el-select size="small" class="select-q" v-model="form.question_1" placeholder="请选择密码提示问题">
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="密码问题答案1" prop="answer_1">
-                <el-input size="small" v-model.number="form.answer_1"></el-input>
-            </el-form-item>
-            <el-form-item label="密码提示问题2">
-                <el-select size="small" class="select-q" v-model="form.question_1" placeholder="请选择密码提示问题">
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="密码问题答案2" prop="answer_2">
-                <el-input size="small" v-model.number="form.answer_2"></el-input>
-            </el-form-item>
-            <el-form-item label="密码提示问题3">
-                <el-select size="small" class="select-q" v-model="form.question_1" placeholder="请选择密码提示问题">
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="密码问题答案3" prop="answer_3">
-                <el-input size="small" v-model.number="form.answer_3"></el-input>
-            </el-form-item>
-        </el-form> -->
         <p class="card-title">个人中心</p>
         <basic-info :items="items" :models="models"></basic-info>
+
+        <div class="card">
+            <p class="card-title">用户备注信息:</p>
+            <el-input type="textarea" v-model="models.remark"></el-input>
+        </div>
         <div class="admin-send">
-            <el-button type="primary" @click="submit()">提交/更新</el-button>
+            <el-button :disabled="disableBtn" type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
 </template>
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
+import { getUser, updateUser } from '@/util/getdata'
+import { isReqSuccessful, retrieveUid } from '@/util/jskit'
 
 export default {
     components: {
@@ -65,56 +24,106 @@ export default {
     },
 
     data () {
+        let getQ = (q, cb) => {
+            let data = [
+                {value: '您的出生日期是？'},
+                {value: '您父亲的名字？'},
+                {value: '您母亲的名字？'},
+                {value: '您的小学教师的姓名是？'},
+                {value: '您毕业的学校是？'}
+            ]
+            cb(data)
+        }
         return {
-            form: {
-                name: '',
-                userTelephone: '',
-                question_1: '',
-                question_2: '',
-                question_3: '',
-                answer_1: '',
-                answer_2: '',
-                answer_3: ''
-            },
-            options: [
-                {label: 'hello', value: 1}
-            ],
-
+            disableBtn: false,
             items: [
-                {label: '用户名', model: 'region'},
-                {label: '用户密码', model: 'region'},
-                {label: '员工编号', model: 'region'},
-                {label: '照片信息', model: 'region'},
-                {label: '真实姓名', model: 'region'},
-                {label: '家庭住址', model: 'region'},
-                {label: '个人手机', model: 'region'},
-                {label: '备注信息', model: 'region'},
-                {label: '用户所在单位', model: 'region'},
-                {label: '用户角色', model: 'region'},
-                {label: '是否具有扩展权限', model: 'region'},
-                {label: '代理/羊场', model: 'region'},
-                {label: '代理名称', model: 'name'},
-                {label: '找回密码问题1', model: 'name'},
-                {label: '找回密码问题2', model: 'name'},
-                {label: '找回密码问题3', model: 'name'},
-                {label: '找回密码答案1', model: 'name'},
-                {label: '找回密码答案2', model: 'name'},
-                {label: '找回密码答案3', model: 'name'},
-                {label: '邮箱', model: 'name'},
-                {label: '微信', model: 'name'},
-                {label: 'qq', model: 'name'},
-                {label: '办公电话', model: 'name'},
-                {label: '家庭电话', model: 'name'}
+                {label: '用户名', model: 'pkUserid', disabled: true},
+                // {label: '用户密码', model: 'region'},
+                {label: '员工编号', model: 'userNum', disabled: true},
+                // {label: '照片信息', model: 'region'},
+                {label: '真实姓名', model: 'userRealname'},
+                {label: '家庭住址', model: 'userLocation'},
+                {label: '个人手机', model: 'userTelephone', mr: 1},
+                {label: '用户所在单位', model: 'userFactory'},
+                // {label: '用户角色', model: 'region'},
+                // {label: '是否具有扩展权限', model: 'region'},
+                // {label: '代理/羊场', model: 'region'},
+                // {label: '代理名称', model: 'name'},
+                {label: '邮箱', model: 'userEmail'},
+                {label: '微信', model: 'msn', mr: 1},
+                {label: 'qq', model: 'qq'},
+                {label: '办公电话', model: 'officialPhone'},
+                {label: '家庭电话', model: 'familyPhone', mr: 1},
+                {label: '找回密码问题1', type: 'select', fetchSuggestions: getQ, model: 'question_1'},
+                {label: '找回密码问题2', type: 'select', fetchSuggestions: getQ, model: 'question_2'},
+                {label: '找回密码问题3', type: 'select', fetchSuggestions: getQ, model: 'question_3', mr: 1},
+                {label: '找回密码答案1', type: 'select', fetchSuggestions: getQ, model: 'answer_1'},
+                {label: '找回密码答案2', model: 'answer_2'},
+                {label: '找回密码答案3', model: 'answer_3', mr: 1}
             ],
             models: {
-                name: null
+                pkUserid: null,
+                userNum: null,
+                userRealname: null,
+                userLocation: null,
+                userTelephone: null,
+                userFactory: null,
+                userEmail: null,
+                msn: null,
+                qq: null,
+                officialPhone: null,
+                familyPhone: null,
+                question_1: null,
+                question_2: null,
+                question_3: null,
+                answer_1: null,
+                answer_2: null,
+                answer_3: null,
+                userRemark: null
             }
         }
     },
 
+    mounted () {
+        getUser(retrieveUid()).then(res => {
+            if (isReqSuccessful(res)) {
+                this.models = res.data.model
+            }
+        }).catch(_ => {
+            this.$message.error('获取用户信息失败')
+        })
+    },
+
     methods: {
         submit () {
-            console.log(1)
+            let phoneRe = /^1[34578]\d{9}$/
+            let mailRe = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
+            let qqRe = /^[1-9]\d{4,9}$/
+            let { userTelephone, userEmail, QQ } = this.models
+            let warn = this.$message.warning
+            if (userTelephone && !phoneRe.test(userTelephone)) {
+                warn('个人手机格式不正确')
+                return
+            }
+            if (userEmail && !mailRe.test(userEmail)) {
+                warn('邮箱格式不正确')
+                return
+            }
+            if (QQ && !qqRe.test(QQ)) {
+                warn('qq格式不正确')
+                return
+            }
+
+            this.disableBtn = true
+            updateUser(retrieveUid(), this.models).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('修改成功')
+                }
+                this.disableBtn = false
+            }).catch(() => {
+                this.$message.error('修改失败')
+                this.disableBtn = false
+            })
         }
     }
 }
@@ -124,8 +133,6 @@ export default {
 .user-info
     .form-summary
         color red
-        >.el-input:nth-child(3n)
-            margin-right 0
     .el-form
         .el-input
             width 20%

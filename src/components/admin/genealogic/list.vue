@@ -1,12 +1,10 @@
 <template>
     <div>
         <admin-table
+            name="系谱档案"
+            modpath="genealogic"
             :getData="getGeneas"
             :deleteData="deleteGeneaRec"
-            name="系谱档案"
-            :postfix="false"
-            :id="1"
-            modpath="genealogic"
             :isGenea="true"
             :headers="headers">
         </admin-table>

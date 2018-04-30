@@ -1,5 +1,5 @@
 <template>
-    <div class="admin-form">
+    <div class="admin-form release">
         <div class="release-module el-input-group__prepend">选择发布位置</div><el-cascader
             size="small"
             :options="options"
@@ -10,8 +10,9 @@
             <template slot="prepend">标题:</template>
         </el-input>
 
-        <p class="card-title">发布系统</p>
-        <textarea name="myeditor" id="myeditor"></textarea>
+        <p class="card-title file-wrap">发布系统<i class="iconfont icon-3801wenjian" @click="$refs.image.click()" title="上传图片"></i></p>
+        <input type="file" ref="image" hidden @change="postReleaseFile()">
+        <textarea v-loading="sendingImage" name="myeditor" id="myeditor"></textarea>
         <div class="admin-send">
             <el-button type="primary" @click="submit()">提交/更新</el-button>
         </div>
@@ -21,7 +22,8 @@
 <script>
 import '@/../static/ckeditor/ckeditor.js'
 import { postRelease, getRelease, updateRelease } from '@/util/getdata'
-import { isReqSuccessful, postJump, patchJump } from '@/util/jskit'
+import { isReqSuccessful, postJump, patchJump, resetFile } from '@/util/jskit'
+import { baseUrl } from '@/util/fetch'
 
 export default {
     mounted () {
@@ -31,10 +33,10 @@ export default {
         if (this.edit) {
             getRelease(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
-                    let data = res.data.List[0]
+                    let data = res.data.List
                     this.title = data.title
-                    this.content = data.content
-                    this.type = data.type
+                    window.CKEDITOR.instances.myeditor.setData(data.content)
+                    console.log(this.options.find(v => v.children.find(v2 => v2.value === data.type)))
                 }
             })
         }
@@ -50,17 +52,14 @@ export default {
     data () {
         return {
             /* eslint-disable object-property-newline */
+            sendingImage: false,
             options: [
-                {label: '专家课堂', children: [
+                {label: '专家课堂', value: 0, children: [
                     {label: '模块1', value: '0'},
                     {label: '模块2', value: '1'}
-                ]},
-                {label: '发布位置2', value: '2'},
-                {label: '发布位置3', value: '3'},
-                {label: '发布位置4', value: '4'},
-                {label: '发布位置5', value: '5'}
+                ]}
             ],
-            type: [],
+            type: null,
             config: {},
             operatorId: 1,
             operatorName: '老嫖',
@@ -72,6 +71,32 @@ export default {
     },
 
     methods: {
+        postReleaseFile () {
+            let ref = this.$refs.image
+            let file = ref.files[0]
+
+            let formdata = new FormData()
+            formdata.append('file', file)
+            this.sendingImage = true
+            window.fetch(baseUrl + '/notice/upload', {
+                body: formdata,
+                method: 'POST'
+            }).then(async res => {
+                let body = await res.json()
+                if (isReqSuccessful(body)) {
+                    this.$message.success('上传成功')
+                    // remember to take http://
+                    window.CKEDITOR.instances.myeditor.insertHtml(`<img src="http://${body.data.List}"/>`)
+                }
+                this.sendingImage = false
+                resetFile(ref)
+            }).catch(() => {
+                this.$message.error('上传失败')
+                this.sendingImage = false
+                resetFile(ref)
+            })
+        },
+
         handleChange (v) {
             console.log(v)
         },
@@ -87,14 +112,14 @@ export default {
             } else {
                 let { title, type, operatorId, operatorName } = this
                 let data = {
-                    type: type,
+                    type: type.pop(),
                     operatorId,
                     operatorName,
                     title,
                     content: html
                 }
                 if (this.edit) {
-                    updateRelease(data).then(res => {
+                    updateRelease(this.edit, data).then(res => {
                         if (isReqSuccessful(res)) {
                             patchJump('release')
                         }
@@ -113,11 +138,19 @@ export default {
 </script>
 
 <style lang="stylus">
-.release-to,
-.release-title
-    margin 15px 0
-.release-module
-    display inline-block
-    line-height 32px
-    font-size 14px
+.release
+    .release-to,
+    .release-title
+        margin 15px 0
+    .release-module
+        display inline-block
+        line-height 32px
+        font-size 14px
+    .file-wrap
+        position relative
+        i
+            position absolute
+            bottom -96px
+            color #000
+            cursor pointer
 </style>
