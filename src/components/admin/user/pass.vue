@@ -11,7 +11,8 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { updatePassword } from '@/util/getdata'
-import { jumpToLogin, isReqSuccessful, retrieveUid } from '@/util/jskit'
+import { jumpToLogin, isReqSuccessful } from '@/util/jskit'
+import { retrieveUid } from '@/util/store'
 import md5 from 'md5'
 
 export default {

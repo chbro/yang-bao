@@ -1,12 +1,19 @@
 <template>
     <div>
-        <admin-table :getData="getGeneaRec" name="代理" :postfix="false" :id="1" modpath="farm"></admin-table>
+        <admin-table
+            modpath="agent"
+            :hide-filter="true"
+            :hide-view="true"
+            :getData="getAgents"
+            :deleteData="deleteAgent"
+            :headers="headers">
+        </admin-table>
     </div>
 </template>
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getGeneaRec } from '@/util/getdata'
+import { getAgents, deleteAgent } from '@/util/getdata'
 
 export default {
     components: {
@@ -15,7 +22,14 @@ export default {
 
     data () {
         return {
-            getGeneaRec
+            getAgents,
+            deleteAgent,
+            headers: [
+                {prop: 'agentRank', label: '代理等级'},
+                {prop: 'agentName', label: '代理名称', width: 300},
+                {prop: 'agentArea', label: '代理区域', width: 200},
+                {prop: 'responsibleName', label: '代理负责人'}
+            ]
         }
     }
 }

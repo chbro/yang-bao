@@ -1,12 +1,11 @@
 <template>
     <div>
         <admin-table
+            modpath="farm"
+            :hide-filter="true"
             :getData="getAllFarms"
             :deleteData="deleteFarm"
-            name="羊场"
-            :postfix="false"
             :is-release="true"
-            modpath="farm"
             :headers="headers">
         </admin-table>
     </div>

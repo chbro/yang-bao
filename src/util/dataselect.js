@@ -36,7 +36,6 @@ export const getDoses = (q, cb) => {
 
 export const getRegion = (q, cb) => {
     let regions = [
-        {value: '总代理'},
         {value: '省级代理'},
         {value: '市级代理'},
         {value: '县级代理'}

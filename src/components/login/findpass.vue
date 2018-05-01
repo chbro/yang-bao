@@ -10,7 +10,7 @@
 
             <el-form :model="form" ref="form" status-icon :rules="rules" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input type="text" v-model="form.username" auto-complete="off" placeholder="用户名"></el-input>
+                    <el-input autofocus type="text" v-model="form.username" auto-complete="off" placeholder="用户名"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="bywhich">
@@ -149,7 +149,7 @@ export default {
                             this.$message.success('密码重置成功')
                             setTimeout(() => {
                                 this.$router.push('/login')
-                            }, 2000)
+                            }, 800)
                         }
                         this.disableBtn = false
                     }, _ => {

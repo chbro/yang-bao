@@ -30,17 +30,15 @@
 
 <script>
 import { LogOut } from '@/util/getdata'
-import { isReqSuccessful, jumpToLogin, retrieveUid } from '@/util/jskit'
+import { isReqSuccessful, jumpToLogin } from '@/util/jskit'
+import { retrieveUid } from '@/util/store'
 
 export default {
     props: {
         user: {
             type: Object,
             default () {
-                return {
-                    pkUserid: '',
-                    userFactory: ''
-                }
+                return {}
             }
         }
     },

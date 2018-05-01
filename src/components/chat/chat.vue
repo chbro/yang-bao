@@ -93,6 +93,7 @@ import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 // import { baseUrl } from '@/util/fetch'
 import { getExpert, evalulateExpert } from '@/util/getdata'
+import { retrieveAid, retrieveRid, retrieveUid } from '@/util/store'
 
 export default {
     components: {
@@ -100,6 +101,10 @@ export default {
     },
 
     mounted () {
+        this.user.agentid = retrieveAid()
+        this.user.role_id = retrieveRid()
+        this.user.id = retrieveUid()
+
         // 表情组件初始化
         this.$refs.emoji.appendTo({
             area: this.$refs.edit,
@@ -113,7 +118,7 @@ export default {
         // last :port
         // let host = urlRidOfHost.substr(0, urlRidOfHost.indexOf(':'))
         // let wsUri = `ws://${host}:8080/websocket/${this.agentid}`
-        let wsUri = `ws://192.168.1.112:8080/websocket/${this.user.agentid}`
+        let wsUri = `ws://180.76.180.95:9010/websocket/${this.user.id}`
         this.websocket = new WebSocket(wsUri)
         this.websocket.onclose = evt => {
             this.$notify.error({
@@ -145,7 +150,7 @@ export default {
             // })
         }
 
-        getExpert(this.user.agentid).then(res => {
+        getExpert(this.user.id).then(res => {
             if (isReqSuccessful(res)) {
                 this.expertid = res.data.expert_id
             }
@@ -189,9 +194,9 @@ export default {
             ],
             websocket: null, // 本地ws连接
             user: {
-                id: 3,
-                role_id: 3,
-                agentid: 3
+                id: null,
+                role_id: null,
+                agentid: null
             },
             expertid: 10 // 聊天专家id
         }

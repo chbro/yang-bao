@@ -135,9 +135,9 @@ export default {
             intentionValue: null,
 
             news: [
-                {id: 1, imgsrc: '../../assets/imgs/blog/s1.jpg', content: '国务院扶贫办到贵州省努比亚牧业调研', date: '31 Dec, 2017'},
-                {id: 1, imgsrc: '../../assets/imgs/blog/s2.jpg', content: '贵州省努比亚牧业被列入全市重点企业', date: '31 Dec, 2017'},
-                {id: 1, imgsrc: '../../assets/imgs/blog/s3.jpg', content: '新华社记者对松桃“10＋1”扶贫模式进行专访', date: '31 Dec, 2017'}
+                {id: 1, imgsrc: '', content: '国务院扶贫办到贵州省努比亚牧业调研', date: '31 Dec, 2017'},
+                {id: 1, imgsrc: '', content: '贵州省努比亚牧业被列入全市重点企业', date: '31 Dec, 2017'},
+                {id: 1, imgsrc: '', content: '新华社记者对松桃“10＋1”扶贫模式进行专访', date: '31 Dec, 2017'}
             ]
         }
     },

@@ -45,8 +45,7 @@
 <script>
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
-import { isReqSuccessful, retrieveUid } from '@/util/jskit'
-import { getUser } from '@/util/getdata'
+import { retrieveName, retrieveFacName } from '@/util/store'
 
 /* eslint-disable object-property-newline */
 export default {
@@ -77,10 +76,10 @@ export default {
                     {label: '密码修改', to: 'passmod'}
                 ]},
                 {label: '系统管理员平台', children: [
-                    {label: '用户管理', to: 'account'},
-                    {label: '权限规则列表', to: 'authrole'},
                     {label: '代理管理', to: 'agent'},
                     {label: '羊场管理', to: 'farm'},
+                    {label: '用户管理', to: 'account'},
+                    {label: '角色权限管理', to: 'authrole'},
                     {label: '发布系统', to: 'release'},
                     {label: '专家课堂视频发布', to: 'test5'},
                     {label: '短信平台', to: 'test6'},
@@ -100,7 +99,7 @@ export default {
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
                         {label: '卫生与动物福利操作档案', to: 'welfare'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
-                        {label: '消毒实施档案', to: 'disinfect'},
+                        {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
                         {label: '免疫实施档案', to: 'immuneprac'},
                         {label: '驱虫方案', to: 'antiscolicplan'},
@@ -160,14 +159,8 @@ export default {
     },
 
     mounted () {
-        getUser(retrieveUid()).then(res => {
-            if (isReqSuccessful(res)) {
-                this.user = res.data.model
-            }
-        }).catch(_ => {
-            this.$message.error('获取用户信息失败')
-        })
-
+        this.user.pkUserid = retrieveName()
+        this.user.userFactory = retrieveFacName()
         this.isProCheck = this.$route.name === 'review'
 
         // rid '/admin/'
@@ -250,17 +243,12 @@ export default {
 
         clickTree (node, data) {
             if (data.isLeaf) {
-                if (node.to.startsWith('test')) {
+                if (node.to.startsWith('test') || node.to === 'app-delivery') {
                     return
                 }
                 // if chat open another page
                 if (node.to === 'chat') {
                     window.open(window.location.origin + '/#/chat?from=' + window.encodeURIComponent(data.parent.label))
-                    return
-                }
-                // if delivery jump to another system
-                if (node.to === 'app-delivery') {
-                    console.log('delivery')
                     return
                 }
 

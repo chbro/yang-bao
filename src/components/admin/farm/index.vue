@@ -57,8 +57,8 @@ export default {
                 {label: '羊场详细位置', model: 'breedLocationDetail'},
                 {label: '羊场负责人', model: 'responsiblePersonId', mr: 1},
                 {label: '消毒场所', model: 'disinfectP'},
-                {label: '上级代理', model: 'agent'},
-                {label: '加入时间', model: 'createTime', type: 'time', mr: 1}
+                // {label: '上级代理', model: 'agent'},
+                {label: '加入时间', model: 'createTime', type: 'time'}
             ],
             models: {
                 pkNumber: null,
@@ -67,7 +67,7 @@ export default {
                 breedLocationDetail: null,
                 responsiblePersonId: null,
                 disinfectP: null,
-                agent: null,
+                // agent: null,
                 createTime: null,
                 remark: null
             }

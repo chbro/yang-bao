@@ -128,7 +128,7 @@ export const getAllRelease = data => fetch('/notice', data)
 export const deleteRelease = (id, data) => fetch('/notice/' + id, data, 'DELETE')
 
 /**
- * 羊场管理CURD
+ * 羊场管理
  */
 export const postFarm = data => fetch('/factory', data, 'POST')
 
@@ -192,3 +192,16 @@ export const getFactories = agentid => fetch('/factory/' + agentid)
 
 // 修改密码
 export const updatePassword = (id, data) => fetch('/user/password/' + id, data, 'PATCH')
+
+/**
+ * 代理管理
+ */
+export const postAgent = data => fetch('/agent', data, 'POST')
+
+export const updateAgent = (id, data) => fetch('/agent/' + id, data, 'PUT')
+
+export const getAgents = data => fetch('/agent', data)
+
+export const getAgent = id => fetch('/agent/' + id)
+
+export const deleteAgent = id => fetch(`/agent/${id}`, null, 'DELETE')

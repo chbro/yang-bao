@@ -9,7 +9,7 @@
             <p>登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
+                    <el-input autofocus :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="pass">
@@ -26,7 +26,6 @@
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </el-form-item>
-
                 <!-- <el-form-item>
                     <el-checkbox>保存登录/Remember ME</el-checkbox>
                 </el-form-item> -->
@@ -41,6 +40,7 @@
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
 import { validateName, isReqSuccessful } from '@/util/jskit'
+import { storeUserInfo } from '@/util/store'
 import md5 from 'md5'
 
 export default {
@@ -49,9 +49,12 @@ export default {
     },
 
     data () {
-        var validatePass = (rule, value, callback) => {
+        let validatePass = (rule, value, callback) => {
+            let passReg = /^[a-zA-Z0-9_]{6,12}$/
             if (value === '') {
                 callback(new Error('请输入密码'))
+            } else if (!passReg.test(value)) {
+                callback(new Error('密码必须是6-20位字符数字和下划线'))
             } else {
                 callback()
             }
@@ -104,10 +107,11 @@ export default {
                     }
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
+                            storeUserInfo(res.data)
                             this.$message.success('登录成功')
                             this.$router.push('/admin')
                         }
-                    }, _ => {
+                    }).catch(_ => {
                         this.$message.error('登录失败')
                     })
                 } else {

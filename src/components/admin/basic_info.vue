@@ -2,7 +2,7 @@
     <div class="border-main">
         <div class="form-summary">
             <template v-for="(item, i) in items">
-                <el-input :placeholder="item.placeholder" :minlength="item.trade ? 15 : 1" :maxlength="item.trade ? 15 : 100" :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text' || item.type === 'password'" :type="item.type || 'text'" size="small" v-model="models[item.model]" :disabled="item.disabled">
+                <el-input :placeholder="item.placeholder" :minlength="item.trade ? 15 : 1" :maxlength="item.trade ? 15 : 100" :class="{block: item.block, mr: item.mr}" :key="i" v-if="item.type === undefined || item.type === 'text' || item.type === 'password'" :type="item.type || 'text'" size="small" v-model="models[item.model]" :disabled="disableAll || item.disabled">
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 
@@ -27,8 +27,8 @@
                 </div>
 
                 <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'select'" class="time el-input-group select">
-                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <el-autocomplete
+                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span><el-autocomplete
+                        :disabled="disableAll"
                         size="small"
                         v-model="models[item.model]"
                         :fetch-suggestions="item.fetchSuggestions">
@@ -58,6 +58,10 @@ import pcaa from 'area-data/pcaa'
 
 export default {
     props: {
+        disableAll: {
+            type: Boolean,
+            default: false
+        },
         items: {
             type: Array,
             default () {

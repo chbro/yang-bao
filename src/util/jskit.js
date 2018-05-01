@@ -173,7 +173,7 @@ let jump = (msg, name) => {
     // here app.$router is undefined
     setTimeout(() => {
         window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
-    }, 1000)
+    }, 800)
 }
 export const postJump = routename => {
     jump('录入成功', routename)
@@ -182,7 +182,15 @@ export const patchJump = routename => {
     jump('修改成功', routename)
 }
 
-export const retrieveUid = _ => {
-    let val = window.localStorage.getItem(tokenStr)
-    return val.substr(0, val.indexOf(':'))
+export const addressToArray = place => {
+    let arr = []
+    arr[0] = place.substr(0, place.indexOf('省') + 1)
+    if (place.indexOf('市') !== -1) {
+        arr[1] = place.substring(place.indexOf('省') + 1, place.indexOf('市') + 1)
+    }
+    if (place.indexOf('县') !== -1 || place.indexOf('区') !== -1) {
+        arr[2] = place.substr(place.indexOf('市') + 1)
+    }
+    console.log(arr)
+    return arr
 }

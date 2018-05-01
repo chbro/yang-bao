@@ -136,8 +136,9 @@ export default new Router({
             {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex},
             {path: 'farm', name: 'farm', component: Farm},
             {path: 'farm/list', name: 'farmlist', component: FarmList},
-            {path: 'agent', name: 'agent', component: Agent},
-            {path: 'agentlist', name: 'agentlist', component: AgentList},
+            // 代理
+            {path: 'agent/prac', name: 'agent', component: Agent},
+            {path: 'agent/list', name: 'agentlist', component: AgentList},
             {path: 'release', name: 'release', component: Release},
             {path: 'release/list', name: 'releaselist', component: ReleaseList}
         ]},

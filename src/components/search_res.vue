@@ -23,7 +23,7 @@
                         <span v-text="item.factory"></span>
                     </div>
                 </div>
-                <baidu-map class="bm-area" :center="center" :zoom="zoom" @ready="initBaiduMap()" :ak="ak"></baidu-map>
+                <!-- <baidu-map class="bm-area" :center="center" :zoom="zoom" @ready="initBaiduMap()" :ak="ak"></baidu-map> -->
             </div>
         </div>
 
@@ -125,12 +125,12 @@
 </template>
 
 <script>
-import BaiduMap from 'vue-baidu-map/components/Map/Map.vue'
+// import BaiduMap from 'vue-baidu-map/components/Map/Map.vue'
 
 export default {
-    components: {
-        BaiduMap
-    },
+    // components: {
+    //     BaiduMap
+    // },
 
     data () {
         return {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="admin-list-pass">
+        <div class="admin-list-pass" v-if="!hideFilter">
             <el-input class="pick-erpai" size="small" v-model="factoryName">
                 <template slot="prepend">单位名:</template>
             </el-input>
@@ -52,7 +52,7 @@
                 width="160">
                 <template slot-scope="scope">
                     <div class="opr">
-                        <span @click="showDetail(scope.$index)">查看</span>
+                        <span v-if="!hideView" @click="showDetail(scope.$index)">查看</span>
                         <template v-if="!checkData.length">
                             <span @click="edit(scope.$index)">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
@@ -73,9 +73,18 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
+import { retrieveAid } from '@/util/store'
 
 export default {
     props: {
+        hideView: {
+            type: Boolean,
+            default: false
+        },
+        hideFilter: {
+            type: Boolean,
+            default: false
+        },
         modpath: {
             type: String
         },
@@ -130,11 +139,12 @@ export default {
             isPass: null,
             factoryName: null,
             options: {
-                所有数据: 4,
-                已通过: 1,
                 未通过: 0,
-                待审核: 2
-            }
+                已通过: 1,
+                未审核: 2,
+                所有数据: 3
+            },
+            map: ['', '省级代理', '市级代理', '县级代理']
         }
     },
 
@@ -154,18 +164,25 @@ export default {
             }
             this.load = true
 
+            if (this.isRestful) {
+                this.getData(retrieveAid(), param).then(res => {
+                    if (isReqSuccessful(res)) {
+
+                    }
+                })
+            }
             this.getData(param).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data
-                    let map = {
-                        0: '未通过',
-                        1: '已通过',
-                        2: '未审核'
-                    }
                     // 发布系统不用审核
                     if (!this.isRelease) {
                         data.List.forEach(v => {
-                            v.ispassCheck = map[v.ispassCheck]
+                            v.ispassCheck = this.options[v.ispassCheck]
+                        })
+                    }
+                    if (this.hideView) {
+                        data.List.forEach(v => {
+                            v.agentRank = this.map[v.agentRank]
                         })
                     }
                     this.tableData = data.List

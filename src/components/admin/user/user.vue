@@ -1,13 +1,14 @@
 <template>
     <div class="user-info admin-form">
         <p class="card-title">个人中心</p>
-        <basic-info :items="items" :models="models"></basic-info>
+        <basic-info :disable-all="disableInput" :items="items" :models="models"></basic-info>
 
         <div class="card">
             <p class="card-title">用户备注信息:</p>
-            <el-input type="textarea" v-model="models.remark"></el-input>
+            <el-input :disabled="disableInput" type="textarea" v-model="models.userRemark"></el-input>
         </div>
         <div class="admin-send">
+            <el-button type="primary" @click="disableInput = !disableInput">编辑/取消</el-button>
             <el-button :disabled="disableBtn" type="primary" @click="submit()">提交/更新</el-button>
         </div>
     </div>
@@ -16,7 +17,8 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { getUser, updateUser } from '@/util/getdata'
-import { isReqSuccessful, retrieveUid } from '@/util/jskit'
+import { isReqSuccessful } from '@/util/jskit'
+import { retrieveUid } from '@/util/store'
 
 export default {
     components: {
@@ -36,6 +38,7 @@ export default {
         }
         return {
             disableBtn: false,
+            disableInput: true,
             items: [
                 {label: '用户名', model: 'pkUserid', disabled: true},
                 // {label: '用户密码', model: 'region'},
@@ -101,11 +104,19 @@ export default {
             let qqRe = /^[1-9]\d{4,9}$/
             let { userTelephone, userEmail, QQ } = this.models
             let warn = this.$message.warning
-            if (userTelephone && !phoneRe.test(userTelephone)) {
+            if (!userTelephone) {
+                warn('请输入个人手机')
+                return
+            }
+            if (!phoneRe.test(userTelephone)) {
                 warn('个人手机格式不正确')
                 return
             }
-            if (userEmail && !mailRe.test(userEmail)) {
+            if (!userEmail) {
+                warn('请输入邮箱')
+                return
+            }
+            if (!mailRe.test(userEmail)) {
                 warn('邮箱格式不正确')
                 return
             }
@@ -120,6 +131,7 @@ export default {
                     this.$message.success('修改成功')
                 }
                 this.disableBtn = false
+                this.disableInput = true
             }).catch(() => {
                 this.$message.error('修改失败')
                 this.disableBtn = false
@@ -137,7 +149,4 @@ export default {
         .el-input
             width 20%
             min-width 180px
-    .el-button
-        display block
-        margin 0 auto
 </style>

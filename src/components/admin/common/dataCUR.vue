@@ -15,10 +15,14 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
+import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
 
 export default {
     props: {
+        isAgent: {
+            type: Boolean,
+            default: false
+        },
         modpath: {
             type: String
         },
@@ -76,6 +80,11 @@ export default {
                     Object.keys(this.models).forEach(v => {
                         obj[v] = data[v]
                     })
+                    if (this.isAgent) {
+                        this.$emit('updateLevel', obj.agentRank)
+                        obj.agentRank = this.map[obj.agentRank]
+                        obj.agentArea = addressToArray(obj.agentArea)
+                    }
                     this.models = obj
                 }
             }).catch(_ => {
@@ -87,20 +96,31 @@ export default {
     data () {
         return {
             edit: false,
-            disableBtn: false
+            disableBtn: false,
+            map: ['', '省级代理', '市级代理', '县级代理']
         }
     },
 
     methods: {
         submit () {
-            console.log(this.models)
             if (!checkForm(this.models)) {
                 return
             }
-            this.models.operatorName = '嫖'
-            this.models.operatorId = 1
-            this.models.factoryNum = 1
-            this.models.factoryName = '老嫖猪场'
+            if (!this.isAgent) {
+                this.models.operatorName = '嫖'
+                this.models.operatorId = 1
+                this.models.factoryNum = 1
+                this.models.factoryName = '老嫖猪场'
+            } else {
+                this.models.responsibleId = -1
+                let area = this.models.agentArea
+                if (Array.isArray(area)) {
+                    this.models.agentArea = area.join('')
+                }
+                let rank = this.models.agentRank
+                this.models.agentRank = this.map.indexOf(rank)
+                console.log(rank, this.map.indexOf(rank), this.models)
+            }
 
             this.disableBtn = true
             if (this.edit) {
