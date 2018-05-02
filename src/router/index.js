@@ -26,8 +26,6 @@ const Comment = () => import('@/components/admin/comment/index')
 const Auth = () => import('@/components/admin/auth/auth')
 const AuthRole = () => import('@/components/admin/auth/role')
 const Account = () => import('@/components/admin/account/index')
-// 专家课堂
-const Consult = () => import('@/components/admin/consult')
 // 系谱档案
 const Genealogic = () => import('@/components/admin/genealogic/index')
 const GenealogicList = () => import('@/components/admin/genealogic/list')
@@ -100,7 +98,6 @@ export default new Router({
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
-            {path: 'consult', name: 'consult', component: Consult},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
             // 卫生疫控
@@ -134,14 +131,14 @@ export default new Router({
             {path: 'supervise/capture', name: 'capture', component: Capture},
             {path: 'supervise/audit', name: 'audit', component: Audit},
             {path: 'supervise/recovery_index', name: 'recovery_index', component: RecoveryIndex},
+            // 代理，羊场，发布系统
+            {path: 'agent', name: 'agent', component: Agent},
+            {path: 'agent/list', name: 'agentlist', component: AgentList},
             {path: 'farm', name: 'farm', component: Farm},
             {path: 'farm/list', name: 'farmlist', component: FarmList},
-            // 代理
-            {path: 'agent/prac', name: 'agent', component: Agent},
-            {path: 'agent/list', name: 'agentlist', component: AgentList},
             {path: 'release', name: 'release', component: Release},
             {path: 'release/list', name: 'releaselist', component: ReleaseList}
         ]},
-        {path: '*', component: NotFound}
+        {path: '*', name: 'notfound', component: NotFound}
     ]
 })

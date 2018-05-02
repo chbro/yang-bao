@@ -15,7 +15,9 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
+import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
+import { retrieveFacNum, retrieveUid, retrieveName, retrieveAid } from '@/util/store'
+// import pcaa from 'area-data/pcaa'
 
 export default {
     props: {
@@ -67,34 +69,41 @@ export default {
             if (oldV.query.edit && !newV.query.edit) {
                 this.edit = false
             }
+        },
+
+        'models.agentRank' (newV) {
+            this.area = newV
         }
     },
 
     mounted () {
         this.edit = this.$route.query.edit
-        if (this.edit) {
-            this.getData(this.edit).then(res => {
-                if (isReqSuccessful(res)) {
-                    let data = res.data.model
-                    let obj = {}
-                    Object.keys(this.models).forEach(v => {
-                        obj[v] = data[v]
-                    })
-                    if (this.isAgent) {
-                        this.$emit('updateLevel', obj.agentRank)
-                        obj.agentRank = this.map[obj.agentRank]
-                        obj.agentArea = addressToArray(obj.agentArea)
-                    }
-                    this.models = obj
-                }
-            }).catch(_ => {
-                this.$message.error(`获取${this.title}失败`)
-            })
-        }
+        // if (this.edit) {
+        //     this.getData(this.edit).then(res => {
+        //         if (isReqSuccessful(res)) {
+        //             let data = res.data.model
+        //             let obj = {}
+        //             Object.keys(this.models).forEach(v => {
+        //                 if (/^\d+$/.test(data[v])) {
+        //                     obj[v] = String(data[v])
+        //                 } else {
+        //                     obj[v] = data[v]
+        //                 }
+        //             })
+        //             if (this.isAgent) {
+        //                 obj.agentArea = addressToArray(obj.agentArea)
+        //             }
+        //             this.models = obj
+        //         }
+        //     }).catch(_ => {
+        //         this.$message.error(`获取${this.title}失败`)
+        //     })
+        // }
     },
 
     data () {
         return {
+            // pcaa,
             edit: false,
             disableBtn: false,
             map: ['', '省级代理', '市级代理', '县级代理']
@@ -106,25 +115,33 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
+
+            let data = Object.assign({}, this.models)
+            data.factoryNum = retrieveFacNum()
             if (!this.isAgent) {
-                this.models.operatorName = '嫖'
-                this.models.operatorId = 1
-                this.models.factoryNum = 1
-                this.models.factoryName = '老嫖猪场'
+                data.operatorName = retrieveName()
+                data.operatorId = retrieveUid()
+                data.factoryName = retrieveFacNum()
             } else {
-                this.models.responsibleId = -1
-                let area = this.models.agentArea
-                if (Array.isArray(area)) {
-                    this.models.agentArea = area.join('')
+                if (Array.isArray(this.models.agentArea) && !this.models.agentArea.length) {
+                    this.$message.warning('请选择代理所属地域')
+                    return
                 }
-                let rank = this.models.agentRank
-                this.models.agentRank = this.map.indexOf(rank)
-                console.log(rank, this.map.indexOf(rank), this.models)
+                data.responsibleId = -1
+                data.agentFather = retrieveAid()
+                let area = data.agentArea
+                if (Array.isArray(area)) {
+                    data.agentArea = area.join('')
+                }
+                // let rank = data.agentRank
+                // data.agentRank = String(this.map.indexOf(rank))
             }
+            console.log(data)
 
             this.disableBtn = true
+            console.log(this.edit)
             if (this.edit) {
-                this.updateData(this.edit, this.models).then(res => {
+                this.updateData(this.edit, data).then(res => {
                     if (isReqSuccessful(res)) {
                         patchJump(this.modpath)
                     }
@@ -134,7 +151,7 @@ export default {
                     this.$message.error('修改失败')
                 })
             } else {
-                this.postData(this.models).then(res => {
+                this.postData(data).then(res => {
                     if (isReqSuccessful(res)) {
                         postJump(this.modpath)
                     }

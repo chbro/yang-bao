@@ -17,6 +17,7 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
 import { baseUrl } from '@/util/fetch'
+import { retrieveFacName, retrieveFacNum, retrieveUid, retrieveName } from '@/util/store'
 
 export default {
     props: {
@@ -97,25 +98,16 @@ export default {
                 return
             }
 
-            this.models.operatorName = '嫖'
-            this.models.operatorId = 1
-            this.models.factoryNum = 123
-            this.models.factoryName = '老嫖猪场'
+            this.models.operatorName = retrieveName()
+            this.models.operatorId = retrieveUid()
+            this.models.factoryNum = retrieveFacNum()
+            this.models.factoryName = retrieveFacNum()
 
             let form = new FormData()
             Object.keys(this.models).forEach(v => {
                 form.append(v, this.models[v])
             })
-            // if (!this.models.repellentEartagFile) {
-            //     form.delete('repellentEartagFile')
-            // }
 
-            // if (this.remark !== null) {
-            //     form.append('remark', this.remark)
-            // }
-            // if (this.prevfile) {
-            //     form.append('repellentEartag', this.prevfile)
-            // }
             if (this.edit) {
                 form.append('id', this.edit)
                 window.fetch(baseUrl + this.apiurl + '/' + id, {

@@ -21,7 +21,7 @@ export default {
         '$route' (to) {
             document.documentElement.scrollTop = 0
             document.body.scrollTop = 0
-            this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(to.name)
+            this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat', 'notfound'].includes(to.name)
             this.isAdmin = window.location.hash.includes('admin')
         }
     },
@@ -36,6 +36,23 @@ export default {
     mounted () {
         this.isNotLogin = !['login', 'register', 'findpass', 'chat', 'prochat'].includes(this.$route.name)
         this.isAdmin = window.location.hash.includes('admin')
+
+        document.addEventListener('click', e => {
+            let target = e.target
+            let parent = target.parentNode || target.parentElement
+            // console.log(target.classList.contains('el-button'))
+            if (target.classList && target.classList.contains('el-button')) {
+                target.disabled = true
+                setTimeout(() => {
+                    target.disabled = false
+                }, 200)
+            } else if (parent.classList && parent.classList.contains('el-button')) {
+                parent.disabled = true
+                setTimeout(() => {
+                    parent.disabled = false
+                }, 400)
+            }
+        })
     }
 }
 </script>

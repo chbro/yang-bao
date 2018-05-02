@@ -2,6 +2,8 @@
     <div>
         <admin-table
             modpath="farm"
+            find-by="aid"
+            :is-restful="true"
             :hide-filter="true"
             :getData="getAllFarms"
             :deleteData="deleteFarm"

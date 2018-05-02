@@ -49,21 +49,21 @@ export default {
     data () {
         return {
             icontexts: [
-                { class: 'xitongtupianziyuan', sub: '网站查询', text: '推行互联网+“云养殖”模式，建设有机追溯体系。有机羊肉食品电子商务网络销售平台。利用大户局打造智慧型畜牧业……' },
-                { class: 'phone', sub: '手机查询', text: '通过移动终端使用“云羊宝”有机追溯平台，公众不仅满足努比亚山羊生产溯源的知情权，还能提升对山羊产品质量安全的信心......' },
+                {class: 'xitongtupianziyuan', sub: '网站查询', text: '推行互联网+“云养殖”模式，建设有机追溯体系。有机羊肉食品电子商务网络销售平台。利用大户局打造智慧型畜牧业……'},
+                {class: 'phone', sub: '手机查询', text: '通过移动终端使用“云羊宝”有机追溯平台，公众不仅满足努比亚山羊生产溯源的知情权，还能提升对山羊产品质量安全的信心......'},
                 // { class: 'duanxinzhongxin', sub: '短信查询', text: '短信查询服务: 电信用户、移动、联通用户编辑追溯码信息发送到“云羊宝”追溯系统特定的溯源查询号08566995166.....' },
-                { class: 'danganheji', sub: '溯源管理', text: '以培育国家级山羊品种“努比亚山羊、沿河有机白山羊”为课题，规模养殖、“云养殖”、立体有机养殖为路径建立有机追溯体系......' }
+                {class: 'danganheji', sub: '溯源管理', text: '以培育国家级山羊品种“努比亚山羊、沿河有机白山羊”为课题，规模养殖、“云养殖”、立体有机养殖为路径建立有机追溯体系......'}
             ],
 
             icons: [
-                { class: '111', text: '专家课堂' },
-                { class: 'renyuandanganguanli', text: '系谱档案' },
-                { class: 'cross', text: '卫生疫控' },
-                { class: 'daocha', text: '营养生产' },
-                { class: 'zhusheqi', text: '疾病防治' },
-                { class: 'wuzicaigou', text: '生产物资' },
-                { class: 'jianshiqicai01', text: '可视系统' },
-                { class: 'goat', text: '养殖追溯' }
+                {class: '111', text: '专家课堂'},
+                {class: 'renyuandanganguanli', text: '系谱档案'},
+                {class: 'cross', text: '卫生疫控'},
+                {class: 'daocha', text: '营养生产'},
+                {class: 'zhusheqi', text: '疾病防治'},
+                {class: 'wuzicaigou', text: '生产物资'},
+                {class: 'jianshiqicai01', text: '可视系统'},
+                {class: 'goat', text: '养殖追溯'}
             ]
         }
     }

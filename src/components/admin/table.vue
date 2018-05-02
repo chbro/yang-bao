@@ -4,10 +4,7 @@
             <el-input class="pick-erpai" size="small" v-model="factoryName">
                 <template slot="prepend">单位名:</template>
             </el-input>
-<!--             <el-input class="pick-erpai" size="small" v-model="eartag">
-                <template slot="prepend">耳牌号:</template>
-            </el-input> -->
-            <el-select width="120" v-if="!isGenea" size="small" v-model="isPass" placeholder="所有数据">
+            <el-select width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
                     :key="val"
@@ -15,7 +12,10 @@
                     :value="val">
                 </el-option>
             </el-select>
-<!--             <el-date-picker
+<!--             <el-input class="pick-erpai" size="small" v-model="eartag">
+                <template slot="prepend">耳牌号:</template>
+            </el-input>
+            <el-date-picker
                 size="small"
                 type="datetimerange"
                 range-separator="至"
@@ -24,8 +24,8 @@
                 format="yyyy-MM-dd HH:mm:ss"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 align="right">
-            </el-date-picker> -->
-<!--             <el-date-picker
+            </el-date-picker>
+            <el-date-picker
                 v-if="isDisinfect"
                 placeholder="消毒时间:"
                 size="small"
@@ -52,7 +52,7 @@
                 width="160">
                 <template slot-scope="scope">
                     <div class="opr">
-                        <span v-if="!hideView" @click="showDetail(scope.$index)">查看</span>
+                        <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
                         <template v-if="!checkData.length">
                             <span @click="edit(scope.$index)">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
@@ -73,18 +73,21 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveAid } from '@/util/store'
+import { retrieveAid, retrieveFacNum } from '@/util/store'
 
 export default {
     props: {
+        // 隐藏‘查看’
         hideView: {
             type: Boolean,
             default: false
         },
+        // 隐藏头部筛选
         hideFilter: {
             type: Boolean,
             default: false
         },
+        // 跳转路径
         modpath: {
             type: String
         },
@@ -97,6 +100,7 @@ export default {
                 return () => {}
             }
         },
+        // 审核接口
         checkData: {
             type: Function,
             default () {
@@ -108,7 +112,7 @@ export default {
         },
 
         // 系谱档案模块没有审核功能
-        isGenea: {
+        hidePass: {
             type: Boolean,
             default: false
         },
@@ -117,8 +121,25 @@ export default {
             type: Boolean,
             default: false
         },
+        // 跳转路径没有prac
+        noPrac: {
+            type: Boolean,
+            default: false
+        },
         // 发布模块采用rest接口，加以区分
         isRelease: {
+            type: Boolean,
+            default: false
+        },
+        isRestful: {
+            type: Boolean,
+            default: false
+        },
+        findBy: {
+            type: String,
+            default: ''
+        },
+        isAgent: {
             type: Boolean,
             default: false
         }
@@ -130,32 +151,25 @@ export default {
 
     data () {
         return {
-            load: true,
-            page: 1,
-            total: 10,
-            tableData: [],
+            load: true, // 是否显示loading动画
+            page: 1, // 当前页码
+            total: 10, // 总共数据条数
+            tableData: [], // 表格数据
 
-            // eartag: null,
-            isPass: null,
-            factoryName: null,
-            options: {
+            isPass: null, // 筛选条件-是否通过
+            factoryName: null, // 筛选条件-工厂奶茶
+            options: { // 表格审核状态列，显示转换映射
                 未通过: 0,
                 已通过: 1,
                 未审核: 2,
                 所有数据: 3
-            },
-            map: ['', '省级代理', '市级代理', '县级代理']
+            }
         }
     },
 
     methods: {
-        showDetail (index) {
-            console.log(this.tableData[index])
-        },
-
         fetchData () {
             let param = {
-                factoryNum: 1,
                 page: this.page - 1,
                 size: 10
             }
@@ -163,45 +177,77 @@ export default {
                 param.ispassCheck = this.isPass
             }
             this.load = true
-
             if (this.isRestful) {
-                this.getData(retrieveAid(), param).then(res => {
-                    if (isReqSuccessful(res)) {
+                let id
+                if (this.findBy === 'aid') {
+                    id = retrieveAid()
+                }
+                if (!id) {
+                    this.tableData = []
+                    this.load = false
+                } else {
+                    this.getData(id, param).then(res => {
+                        if (isReqSuccessful(res)) {
+                            let data = res.data
 
+                            if (this.isAgent) {
+                                data.List.forEach(v => {
+                                    let map = ['', '省级代理', '市级代理', '县级代理']
+                                    v.agentRank = map[v.agentRank]
+                                })
+                            }
+                            this.tableData = data.List
+                            this.total = data.size
+                        }
+                        this.load = false
+                    }).catch(_ => {
+                        this.load = false
+                        this.$message.error('获取数据失败')
+                    })
+                }
+            } else {
+                param.factoryNum = retrieveFacNum()
+                this.getData(param).then(res => {
+                    if (isReqSuccessful(res)) {
+                        let data = res.data
+                        // 发布系统不用审核
+                        // if (!this.isRelease) {
+                        //     data.List.forEach(v => {
+                        //         v.ispassCheck = this.options[v.ispassCheck]
+                        //     })
+                        // }
+                        if (this.isAgent) {
+                            data.List.forEach(v => {
+                                let map = ['', '省级代理', '市级代理', '县级代理']
+                                v.agentRank = map[v.agentRank]
+                            })
+                        }
+                        this.tableData = data.List
+                        this.total = data.size
                     }
+                    this.load = false
+                }).catch(_ => {
+                    this.load = false
+                    this.$message.error('获取数据失败')
                 })
             }
-            this.getData(param).then(res => {
-                if (isReqSuccessful(res)) {
-                    let data = res.data
-                    // 发布系统不用审核
-                    if (!this.isRelease) {
-                        data.List.forEach(v => {
-                            v.ispassCheck = this.options[v.ispassCheck]
-                        })
-                    }
-                    if (this.hideView) {
-                        data.List.forEach(v => {
-                            v.agentRank = this.map[v.agentRank]
-                        })
-                    }
-                    this.tableData = data.List
-                    this.total = data.size
-                }
-                this.load = false
-            }).catch(_ => {
-                this.load = false
-                this.$message.error('获取数据失败')
-            })
         },
 
-        edit (index) {
+        edit (index, isView) {
             let id = this.tableData[index].id
             let path
-            if (this.isRelease) {
-                path = `/admin/${this.modpath}?edit=${id}`
+            if (this.noPrac) {
+                if (isView) {
+                    path = `/admin/${this.modpath}?view=${id}`
+                } else {
+                    path = `/admin/${this.modpath}?edit=${id}`
+                }
             } else {
-                path = `/admin/${this.modpath}/prac?edit=${id}`
+                if (isView) {
+                    path = `/admin/${this.modpath}/prac?view=${id}`
+                } else {
+                    path = `/admin/${this.modpath}/prac?edit=${id}`
+                }
             }
             this.$router.push(path)
         },

@@ -2,6 +2,8 @@
     <div>
         <admin-table
             modpath="agent"
+            :is-agent="true"
+            :no-prac="true"
             :hide-filter="true"
             :hide-view="true"
             :getData="getAgents"

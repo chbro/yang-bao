@@ -184,13 +184,22 @@ export const patchJump = routename => {
 
 export const addressToArray = place => {
     let arr = []
-    arr[0] = place.substr(0, place.indexOf('省') + 1)
+    let index = 0
+    if (place.indexOf('省') !== -1) {
+        index = place.indexOf('省') + 1
+    } else if (place.indexOf('自治区')) {
+        index = place.indexOf('自治区') + 3
+    } else {
+        // 直辖市
+        index = 3
+    }
+    arr[0] = place.substr(0, index)
     if (place.indexOf('市') !== -1) {
-        arr[1] = place.substring(place.indexOf('省') + 1, place.indexOf('市') + 1)
+        arr[1] = place.substring(index, place.indexOf('市') + 1)
     }
     if (place.indexOf('县') !== -1 || place.indexOf('区') !== -1) {
         arr[2] = place.substr(place.indexOf('市') + 1)
     }
-    console.log(arr)
+    // console.log(arr)
     return arr
 }

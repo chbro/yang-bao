@@ -17,10 +17,10 @@
                     <el-input size="small" v-model="form.phone" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="初始密码" :label-width="formLabelWidth">
-                    <el-input type="password" size="small" v-model="form.password" auto-complete="off"></el-input>
+                    <el-input size="small" v-model="form.password" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="单位" :label-width="formLabelWidth">
-                    <el-select size="small" v-model="form.factory" filterable placeholder="选择单位">
+                    <el-select size="small" v-model="factory" filterable placeholder="选择单位">
                         <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -54,9 +54,9 @@ export default {
             form: {
                 name: null,
                 phone: null,
-                password: null,
-                factory: null
+                password: null
             },
+            factory: null,
             formLabelWidth: '120px',
             dialogVisible: false,
             getUsers,
@@ -95,6 +95,9 @@ export default {
             if (this.form.password.length < 6) {
                 this.$message.warning('密码长度不能小于6')
                 return
+            }
+            if (this.factory) {
+                this.form.factory = this.factorys
             }
             console.log(this.form)
             postUser(this.form).then(res => {

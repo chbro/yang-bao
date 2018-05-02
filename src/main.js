@@ -8,10 +8,8 @@ import ElementUI from 'element-ui'
 import VueAreaLinkage from 'vue-area-linkage'
 import 'vue-area-linkage/dist/index.css'
 import { tokenStr } from './util/fetch'
-import vuex from 'vuex'
 
 Vue.config.productionTip = false
-Vue.use(vuex)
 Vue.use(ElementUI)
 Vue.use(VueAreaLinkage)
 
@@ -34,19 +32,9 @@ router.beforeEach((to, from, next) => {
     }
 })
 
-var store = new vuex.Store({
-    state: {
-        name: '',
-        id: null,
-        factory: null,
-        role: null
-    }
-})
-
 new Vue({
     el: '#app',
     router,
-    store,
     components: { App },
     template: '<App/>'
 })

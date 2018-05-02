@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="info-item">
-                    <button>留言/Contact Us</button>
+                    <button @click="toBottom()">留言/Contact Us</button>
                 </div>
             </div>
         </header>
@@ -55,13 +55,13 @@
             <div class="navigation">
                 <ul class="nav-tabs">
                     <li><router-link to="/">首页</router-link></li>
-                    <li><router-link to="about.html">集团</router-link></li>
-                    <li><router-link to="service.html">产品</router-link></li>
-                    <li><router-link to="service-details.html">有机</router-link></li>
-                    <li><router-link to="contact.html">效益</router-link></li>
-                    <li><router-link to="contact.html">加盟</router-link></li>
-                    <li><router-link to="contact.html">新闻</router-link></li>
-                    <li><router-link to="contact.html">联系我们</router-link></li>
+                    <li><router-link to="/">集团</router-link></li>
+                    <li><router-link to="/">产品</router-link></li>
+                    <li><router-link to="/">有机</router-link></li>
+                    <li><router-link to="/">效益</router-link></li>
+                    <li><router-link to="/">加盟</router-link></li>
+                    <li><router-link to="/">新闻</router-link></li>
+                    <li><router-link to="/">联系我们</router-link></li>
                 </ul>
                 <div class="login-entry">
                     <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>
@@ -77,12 +77,6 @@
 
 <script>
 export default {
-    data () {
-        return {
-
-        }
-    },
-
     mounted () {
         let nav = this.$refs.indexNav
         let ticking = false
@@ -110,6 +104,12 @@ export default {
                 ticking = true
             }
         }, {passive: false})
+    },
+
+    methods: {
+        toBottom () {
+            document.body.scrollTop = document.body.scrollHeight
+        }
     }
 }
 </script>

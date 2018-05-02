@@ -3,7 +3,6 @@
         <data-cur
             title="代理管理"
             modpath="agent"
-            @updateLevel="updateLevel"
             :is-agent="true"
             :has-remark="false"
             :models.sync="models"
@@ -19,30 +18,37 @@
 import dataCur from '@/components/admin/common/dataCUR'
 import { postAgent, updateAgent, getAgent } from '@/util/getdata'
 import { getRegion } from '@/util/dataselect'
+import { addressToArray, isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
         dataCur
     },
 
-    watch: {
-        'models.agentRank' (newV, oldV) {
-            if (newV) {
-                let item = this.items[3]
-                if (newV === '省级代理') {
-                    item.type = 'address-select'
-                } else if (newV === '市级代理') {
-                    item.level = 0
-                    item.type = 'address'
-                } else if (newV === '县级代理') {
-                    item.level = 1
-                    item.type = 'address'
+    mounted () {
+        this.edit = this.$route.query.edit
+        if (this.edit) {
+            getAgent(this.edit).then(res => {
+                if (isReqSuccessful(res)) {
+                    let data = res.data.model
+                    let obj = {}
+                    Object.keys(this.models).forEach(v => {
+                        obj[v] = data[v]
+                    })
+                    let area = addressToArray(obj.agentArea)
+                    let len = this.items.length
+                    if (area.length === 1) {
+                        this.items[len - 1] = {label: '代理所属地域', type: 'address-select', model: 'agentArea'}
+                    } else {
+                        this.items[len - 1] = {label: '代理所属地域', type: 'address', level: area.length - 2, model: 'agentArea'}
+                    }
+                    obj.agentArea = area
+                    obj.agentRank = String(obj.agentRank)
+                    this.models = obj
                 }
-                console.log(item)
-                this.$nextTick(() => {
-                    this.items.push()
-                })
-            }
+            }).catch(_ => {
+                this.$message.error('获取代理失败')
+            })
         }
     },
 
@@ -62,18 +68,6 @@ export default {
                 agentRank: null,
                 agentName: null,
                 responsibleName: null
-            }
-        }
-    },
-
-    methods: {
-        updateLevel (lv) {
-            let item = this.items[3]
-            item.level = lv
-            if (lv === 1) {
-                item.type = 'address-select'
-            } else {
-                item.type = 'address'
             }
         }
     }

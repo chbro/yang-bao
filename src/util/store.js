@@ -14,7 +14,7 @@ export const retrieveAid = _ => user.agentId
 
 export const retrieveRid = _ => user.roleId
 
-export const retrieveFacNum = _ => user.factorNum
+export const retrieveFacNum = _ => user.factoryId
 
 export const retrieveFacName = _ => user.departmentName
 

@@ -1,13 +1,11 @@
 <template>
     <div>
         <admin-table
+            modpath="release"
             :getData="getAllRelease"
             :deleteData="deleteRelease"
-            name="发布系统"
-            :postfix="false"
-            :id="1"
             :is-release="true"
-            modpath="release"
+            :no-prac="true"
             :headers="headers">
         </admin-table>
     </div>
