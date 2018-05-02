@@ -17,8 +17,8 @@ export default {
         }
     },
     methods: {
-        search: function () {
-            if(!this.key) {
+        search () {
+            if (!this.key) {
                 this.$message({
                     message: '请先输入溯源码',
                     type: 'warning'
@@ -26,6 +26,7 @@ export default {
                 return
             }
             // TODO: 路由跳转加查询参数
+            this.$router.push('search')
         }
     }
 }

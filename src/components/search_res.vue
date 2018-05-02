@@ -23,7 +23,7 @@
                         <span v-text="item.factory"></span>
                     </div>
                 </div>
-                <!-- <baidu-map class="bm-area" :center="center" :zoom="zoom" @ready="initBaiduMap()" :ak="ak"></baidu-map> -->
+                <b-map address="贵州省铜仁市沿河县努比亚山羊养殖场"></b-map>
             </div>
         </div>
 
@@ -125,13 +125,9 @@
 </template>
 
 <script>
-// import BaiduMap from 'vue-baidu-map/components/Map/Map.vue'
+import BMap from './map'
 
 export default {
-    // components: {
-    //     BaiduMap
-    // },
-
     data () {
         return {
             ak: 'GSEcVhNVMzjFympEWRH9EOkmZw7mbKRp',
@@ -185,7 +181,9 @@ export default {
             tab: 'first'
         }
     },
-
+    components: {
+        BMap
+    },
     methods: {
         initBaiduMap () {
             this.center = {
@@ -218,9 +216,11 @@ p
         padding 5px 10px
         border-bottom 1px solid #ddd
     .image
+        display flex
+        justify-content space-between
         >img
-            width 30%
-            height 30%
+            width 300px
+            height 300px
             margin-right 10px
         >div
             width calc(70% - 15px)
@@ -228,6 +228,8 @@ p
             vertical-align top
         .t-item
             display flex
+            box-sizing border-box
+            height 56px
             border 1px solid #ddd
             >div
                 padding 5px
