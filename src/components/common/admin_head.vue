@@ -94,7 +94,7 @@ export default {
     overflow hidden
     color #fff
 .logo
-    width 17%
+    width 18%
     min-width 100px
     text-align center
     float left
@@ -136,7 +136,7 @@ export default {
             border-color #fff
             border-bottom 0
 .tab-right
-    margin-left 80px
+    margin-left 100px
     span
         margin-right 15px
         i

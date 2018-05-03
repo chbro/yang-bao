@@ -1,12 +1,11 @@
 <template>
     <div>
         <admin-table
-            :getData="getImmune"
-            :deleteData="deleteImmune"
             name="免疫实施档案"
-            :postfix="false"
-            :id="1"
             modpath="health/immune"
+            find-by="factoryNum"
+            :get-data="getAllImmune"
+            :delete-data="deleteImmune"
             :headers="headers">
         </admin-table>
     </div>
@@ -14,7 +13,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getImmune, deleteImmune } from '@/util/getdata'
+import { getAllImmune, deleteImmune } from '@/util/getdata'
 
 export default {
     components: {
@@ -23,7 +22,7 @@ export default {
 
     data () {
         return {
-            getImmune,
+            getAllImmune,
             deleteImmune,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},

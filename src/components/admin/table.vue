@@ -147,10 +147,10 @@ export default {
             isPass: null, // 筛选条件-是否通过
             factoryName: null, // 筛选条件-工厂名称
             options: { // 表格审核状态列，显示转换映射
+                所有数据: null,
                 未通过: 0,
                 已通过: 1,
-                未审核: 2,
-                所有数据: 3
+                未审核: 2
             }
         }
     },
@@ -193,11 +193,18 @@ export default {
                                 v.agentRank = map[v.agentRank]
                             })
                         }
+                        let item = data.List[0]
+                        if (item && item.ispassCheck !== null && item.ispassCheck !== undefined) {
+                            data.List.forEach(v => {
+                                let map = ['未通过', '已通过', '未审核']
+                                v.ispassCheck = map[v.ispassCheck]
+                            })
+                        }
                         this.tableData = data.List
                         this.total = data.size
                     }
                     this.load = false
-                }).catch(_ => {
+                }, _ => {
                     this.load = false
                     this.$message.error('获取数据失败')
                 })
@@ -230,12 +237,8 @@ export default {
                 let { id } = this.tableData[index]
                 this.deleteData(id).then(res => {
                     if (isReqSuccessful(res)) {
-                        // this.tableData.splice(index, 1)
                         this.fetchData()
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        })
+                        this.$message.success('删除成功!')
                     }
                 })
             }).catch(() => {

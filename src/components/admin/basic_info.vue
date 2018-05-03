@@ -6,7 +6,7 @@
                     <template slot="prepend">{{ item.label }}:</template>
                 </el-input>
 
-                <el-input :placeholder="item.placeholder" :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="item.label || holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
+                <el-input :placeholder="item.placeholder" :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
                     <template slot="prepend">{{ item.label || '免疫耳牌号文件:'}}<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
                 </el-input>
 
@@ -37,7 +37,12 @@
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
                     <span class="ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <el-radio v-model="models[item.model]" v-for="(r, i) in item.radios" :key="i" :label="i">{{item.radios[i]}}</el-radio>
+                    <!-- <el-radio v-model="models[item.model]" v-for="(r, i) in item.radios" :key="i" :label="i">{{item.radios[i]}}</el-radio> -->
+                    <el-switch
+                        v-model="models[item.model]"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949">
+                    </el-switch>
                 </div>
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address'" class="time el-input-group address">

@@ -2,8 +2,9 @@
     <div>
         <admin-table
             modpath="review"
-            :getData="getAllReviews"
-            :chekcData="doReview"
+            find-by="aid"
+            :is-review="true"
+            :get-data="getAllDisinfects"
             :headers="headers">
         </admin-table>
     </div>
@@ -11,7 +12,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getAllReviews, doReview } from '@/util/getdata'
+import { getAllDisinfects } from '@/util/getdata'
 
 export default {
     components: {
@@ -20,14 +21,13 @@ export default {
 
     data () {
         return {
-            getAllReviews,
-            doReview,
+            getAllDisinfects,
             headers: [
-                {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {prop: 'factoryName', label: '工厂名'},
-                {prop: 'building', label: '提交人'},
-                {prop: 'mEtI', label: '提交时间'},
-                {prop: 'mEtB', label: '文件'}
+                {prop: 'ispassCheck', label: '审核状态'},
+                {prop: 'factoryName', label: '工厂名', width: 200},
+                {prop: 'building', label: '提交人', width: 180},
+                {prop: 'mEtI', label: '提交时间', width: 200},
+                {prop: 'mEtB', label: '文件', width: 200}
             ]
         }
     }

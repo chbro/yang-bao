@@ -67,7 +67,7 @@ export default {
     data () {
         return {
             module: {label: '', to: ''},
-            side_width: '17%',
+            side_width: '18%',
             expanded_key: null,
             showEditTable: false,
             treedata: [
@@ -82,7 +82,7 @@ export default {
                     {label: '角色权限管理', to: 'authrole'},
                     {label: '发布系统', to: 'release'},
                     {label: '专家课堂视频发布', to: 'test5'},
-                    {label: '短信平台', to: 'test6'},
+                    {label: '短信平台', to: 'message'},
                     {label: '留言统计', to: 'test10'},
                     {label: '专家客户评价结果', to: 'test7'}
                 ]},
@@ -159,8 +159,10 @@ export default {
     },
 
     mounted () {
-        this.user.pkUserid = retrieveName()
-        this.user.userFactory = retrieveFacName()
+        this.user = {
+            pkUserid: retrieveName(),
+            userFactory: retrieveFacName()
+        }
         this.isProCheck = this.$route.name === 'review'
 
         // rid '/admin/'
@@ -179,7 +181,10 @@ export default {
                 }
             }
         })
-        // console.log(mod, submod)
+        // if (!m) {
+        //     m = this.treedata[3].children
+        // }
+        console.log(mod, submod)
         if (mod && submod) {
             // open left tree
             if (postfix === 'list') {
@@ -235,7 +240,7 @@ export default {
                 this.$refs.hidespan.classList.remove('el-icon-arrow-left')
                 this.$refs.hidespan.classList.add('el-icon-arrow-right')
             } else {
-                this.side_width = '17%'
+                this.side_width = '18%'
                 this.$refs.hidespan.classList.remove('el-icon-arrow-right')
                 this.$refs.hidespan.classList.add('el-icon-arrow-left')
             }

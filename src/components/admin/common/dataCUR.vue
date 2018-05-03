@@ -22,7 +22,6 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
 import { retrieveFacNum, retrieveUid, retrieveName, retrieveAid } from '@/util/store'
-// import pcaa from 'area-data/pcaa'
 
 export default {
     props: {
@@ -115,7 +114,6 @@ export default {
 
     data () {
         return {
-            // pcaa,
             edit: false,
             check: false,
             supervise: false,

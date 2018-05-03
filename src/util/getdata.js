@@ -93,25 +93,31 @@ export const getBreeding = (id, data) => fetch('/breeding/' + id, data)
 export const deleteBreeding = id => fetch(`/breeding/${id}`, null, 'DELETE')
 
 /**
- * 消毒实施档案RD
+ * 消毒RD
  */
-export const getDisinfect = data => fetch('/df/findshow', data, 'POST')
+export const getAllDisinfects = (id, data) => fetch(`/df/${id}`, data)
 
-export const deleteDisinfect = (id, data) => fetch(`/df/delete/${id}`, data, 'DELETE')
+export const getDisinfect = (id, data) => fetch(`/df/find/${id}`, data)
+
+export const deleteDisinfect = id => fetch(`/df/${id}`, null, 'DELETE')
 
 /**
  * 免疫RD
  */
-export const getImmune = data => fetch('/ip/findshow', data, 'POST')
+export const getAllImmune = (id, data) => fetch(`/ip/${id}`, data)
 
-export const deleteImmune = (id, data) => fetch(`/ip/delete/${id}`, data, 'DELETE')
+export const getImmune = (id, data) => fetch(`/ip/find/${id}`, data)
+
+export const deleteImmune = id => fetch(`/ip/${id}`, null, 'DELETE')
 
 /**
  * 驱虫RD
  */
-export const getAntiscolic = data => fetch('/rp/findshow', data, 'POST')
+export const getAllAntiscolic = (id, data) => fetch(`/rp/${id}`, data)
 
-export const deleteAntiscolic = (id, data) => fetch(`/rp/delete/${id}`, data, 'DELETE')
+export const getAntiscolic = (id, data) => fetch(`/rp/find/${id}`, data)
+
+export const deleteAntiscolic = id => fetch(`/rp/${id}`, null, 'DELETE')
 
 /**
  * 发布系统CURD
