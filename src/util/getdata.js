@@ -128,21 +128,6 @@ export const getAllRelease = data => fetch('/notice', data)
 export const deleteRelease = (id, data) => fetch('/notice/' + id, data, 'DELETE')
 
 /**
- * 羊场管理
- */
-export const postFarm = data => fetch('/factory', data, 'POST')
-
-export const updateFarm = (id, data) => fetch(`/factory/${id}`, data, 'PUT')
-
-export const getAllFarms = (id, data) => fetch('/factory/agent/' + id, data)
-
-export const getFarmById = id => fetch(`/factory/${id}`)
-
-export const getFarmByLocation = loc => fetch(`/factory/location`, {location: loc})
-
-export const deleteFarm = id => fetch('/factory/' + id, null, 'DELETE')
-
-/**
  * 专家审核
  */
 export const getAllReviews = data => fetch('/diagnosis', data)
@@ -198,10 +183,25 @@ export const updatePassword = (id, data) => fetch('/user/password/' + id, data, 
  */
 export const postAgent = data => fetch('/agent', data, 'POST')
 
-export const updateAgent = (id, data) => fetch('/agent/' + id, data, 'PUT')
+export const updateAgent = (id, data) => fetch(`/agent/${id}`, data, 'PUT')
 
 export const getAgents = data => fetch('/agent', data)
 
-export const getAgent = id => fetch('/agent/' + id)
+export const getAgent = id => fetch(`/agent/${id}`)
 
 export const deleteAgent = id => fetch(`/agent/${id}`, null, 'DELETE')
+
+/**
+ * 羊场管理
+ */
+export const postFarm = data => fetch('/factory', data, 'POST')
+
+export const updateFarm = (id, data) => fetch(`/factory/${id}`, data, 'PUT')
+
+export const getFarms = (id, data) => fetch(`/factory/agent/${id}`, data)
+
+export const getFarmById = id => fetch(`/factory/${id}`)
+
+export const getFarmByLocation = loc => fetch(`/factory/location`, {location: loc})
+
+export const deleteFarm = id => fetch(`/factory/${id}`, null, 'DELETE')

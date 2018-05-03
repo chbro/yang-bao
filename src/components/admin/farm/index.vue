@@ -3,9 +3,11 @@
         <data-cur
             title="羊场管理"
             modpath="farm"
+            find-by="aid"
+            :is-agent="true"
             :models.sync="models"
             :items="items"
-            :get-data="getFarm"
+            :get-data="getFarmById"
             :post-data="postFarm"
             :update-data="updateFarm">
         </data-cur>
@@ -14,7 +16,7 @@
 
 <script>
 import dataCur from '@/components/admin/common/dataCUR'
-import { postFarm, updateFarm, getFarm } from '@/util/getdata'
+import { postFarm, updateFarm, getFarmById } from '@/util/getdata'
 import { addressToArray, isReqSuccessful } from '@/util/jskit'
 
 export default {
@@ -25,7 +27,7 @@ export default {
     mounted () {
         this.edit = this.$route.query.edit
         if (this.edit) {
-            getFarm(this.edit).then(res => {
+            getFarmById(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data.model
                     let obj = {}
@@ -43,9 +45,9 @@ export default {
 
     data () {
         return {
-            getAgent,
-            postAgent,
-            updateAgent,
+            getFarmById,
+            postFarm,
+            updateFarm,
             items: [
                 {label: '羊场编号', model: 'pkNumber'},
                 {label: '羊场名称', model: 'breedName'},

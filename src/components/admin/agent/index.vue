@@ -3,6 +3,7 @@
         <data-cur
             title="代理管理"
             modpath="agent"
+            @update:models="v => models = v"
             :is-agent="true"
             :has-remark="false"
             :models.sync="models"

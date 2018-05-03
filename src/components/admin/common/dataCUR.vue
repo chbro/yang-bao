@@ -8,14 +8,19 @@
             <el-input type="textarea" v-model="models.remark"></el-input>
         </div>
         <div class="admin-send">
-            <el-button type="primary" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
+            <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
+            <template v-else-if="!view">
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(true)">通过</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv()">拒绝</el-button>
+            </template>
+            <el-button type="primary" v-else :disabled="disableBtn" @click="$router.back()">返回</el-button>
         </div>
     </div>
 </template>
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
+import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
 import { retrieveFacNum, retrieveUid, retrieveName, retrieveAid } from '@/util/store'
 // import pcaa from 'area-data/pcaa'
 
@@ -56,6 +61,13 @@ export default {
         },
         updateData: {
             type: Function
+        },
+
+        superviseData: {
+            type: Function
+        },
+        checkData: {
+            type: Function
         }
     },
 
@@ -69,49 +81,74 @@ export default {
             if (oldV.query.edit && !newV.query.edit) {
                 this.edit = false
             }
-        },
-
-        'models.agentRank' (newV) {
-            this.area = newV
+            this.check = newV.query.check
+            this.supervise = newV.query.supervise
+            this.view = newV.query.view
         }
     },
 
     mounted () {
-        this.edit = this.$route.query.edit
-        // if (this.edit) {
-        //     this.getData(this.edit).then(res => {
-        //         if (isReqSuccessful(res)) {
-        //             let data = res.data.model
-        //             let obj = {}
-        //             Object.keys(this.models).forEach(v => {
-        //                 if (/^\d+$/.test(data[v])) {
-        //                     obj[v] = String(data[v])
-        //                 } else {
-        //                     obj[v] = data[v]
-        //                 }
-        //             })
-        //             if (this.isAgent) {
-        //                 obj.agentArea = addressToArray(obj.agentArea)
-        //             }
-        //             this.models = obj
-        //         }
-        //     }).catch(_ => {
-        //         this.$message.error(`获取${this.title}失败`)
-        //     })
-        // }
+        this.check = this.$route.query.check
+        this.supervise = this.$route.query.supervise
+        this.view = this.$route.query.view
+        this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
+        if (this.edit) {
+            this.getData(this.edit).then(res => {
+                if (isReqSuccessful(res)) {
+                    let obj = {}
+                    Object.keys(this.models).forEach(v => {
+                        obj[v] = res.data.model[v]
+                    })
+                    if ('agentArea' in obj) {
+                        obj.agentArea = addressToArray(obj.agentArea)
+                    }
+                    if ('breedLocation' in obj) {
+                        obj.breedLocation = addressToArray(obj.breedLocation)
+                    }
+                    this.$emit('update:models', obj)
+                }
+            }, _ => {
+                this.$message.error(`获取${this.title}失败`)
+            })
+        }
     },
 
     data () {
         return {
             // pcaa,
             edit: false,
+            check: false,
+            supervise: false,
+            view: false,
+
             disableBtn: false,
             map: ['', '省级代理', '市级代理', '县级代理']
         }
     },
 
     methods: {
+        spv (isPass) {
+            if (this.supervise) {
+                this.superviseData({ispassSup: isPass}).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.suucess('审核成功')
+                    }
+                }).catch(_ => {
+                    this.$message.suucess('审核失败')
+                })
+            } else if (this.check) {
+                this.checkData({ispassCheck: isPass}).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.suucess('修改监督状态成功')
+                    }
+                }).catch(_ => {
+                    this.$message.suucess('修改监督状态失败')
+                })
+            }
+        },
+
         submit () {
+            console.log(this.models)
             if (!checkForm(this.models)) {
                 return
             }
@@ -123,23 +160,28 @@ export default {
                 data.operatorId = retrieveUid()
                 data.factoryName = retrieveFacNum()
             } else {
-                if (Array.isArray(this.models.agentArea) && !this.models.agentArea.length) {
-                    this.$message.warning('请选择代理所属地域')
-                    return
+                let area = data.agentArea || data.breedLocation
+                if (Array.isArray(area)) {
+                    if (data.agentArea) {
+                        if (!area.length) {
+                            this.$message.warning('请选择代理所属地域')
+                            return
+                        } else {
+                            data.agentArea = area.join('')
+                        }
+                    } else {
+                        if (!area.length) {
+                            this.$message.warning('请选择羊场地理位置')
+                            return
+                        } else {
+                            data.breedLocation = area.join('')
+                        }
+                    }
                 }
                 data.responsibleId = -1
-                data.agentFather = retrieveAid()
-                let area = data.agentArea
-                if (Array.isArray(area)) {
-                    data.agentArea = area.join('')
-                }
-                // let rank = data.agentRank
-                // data.agentRank = String(this.map.indexOf(rank))
+                data.agent = retrieveAid()
             }
-            console.log(data)
-
             this.disableBtn = true
-            console.log(this.edit)
             if (this.edit) {
                 this.updateData(this.edit, data).then(res => {
                     if (isReqSuccessful(res)) {
@@ -147,8 +189,8 @@ export default {
                     }
                     this.disableBtn = false
                 }).catch(_ => {
-                    this.disableBtn = false
                     this.$message.error('修改失败')
+                    this.disableBtn = false
                 })
             } else {
                 this.postData(data).then(res => {
@@ -157,8 +199,8 @@ export default {
                     }
                     this.disableBtn = false
                 }).catch(_ => {
-                    this.disableBtn = false
                     this.$message.error('录入失败')
+                    this.disableBtn = false
                 })
             }
         }

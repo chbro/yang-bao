@@ -107,9 +107,12 @@ export default {
                     }
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
+                            delete res.data.successMessage
                             storeUserInfo(res.data)
                             this.$message.success('登录成功')
-                            this.$router.push('/admin')
+                            setTimeout(() => {
+                                this.$router.push('/admin')
+                            }, 1000)
                         }
                     }).catch(_ => {
                         this.$message.error('登录失败')

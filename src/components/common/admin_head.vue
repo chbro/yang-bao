@@ -14,14 +14,14 @@
                 <el-button>溯源管理</el-button>
                 <el-button>进销存系统</el-button>
                 <el-button>财务管理管理</el-button>
-                <el-button>退出</el-button>
+                <el-button @click="logout()">退出</el-button>
             </div>
 
             <div class="tab-right">
                 <span>用户：{{user.pkUserid || 'user'}}</span>
                 <span class="dept">部门：{{user.userFactory || '无'}}</span>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
-                <span><i class="iconfont icon-user yellow"></i>通讯录</span>
+                <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
                 <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span>
             </div>
         </div>
@@ -136,6 +136,7 @@ export default {
             border-color #fff
             border-bottom 0
 .tab-right
+    margin-left 80px
     span
         margin-right 15px
         i

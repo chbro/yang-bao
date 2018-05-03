@@ -18,7 +18,7 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { getUser, updateUser } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveUid } from '@/util/store'
+import { retrieveUid, retrieveFacNum } from '@/util/store'
 
 export default {
     components: {
@@ -40,18 +40,18 @@ export default {
             disableBtn: false,
             disableInput: true,
             items: [
-                {label: '用户名', model: 'pkUserid', disabled: true},
                 // {label: '用户密码', model: 'region'},
-                {label: '员工编号', model: 'userNum', disabled: true},
                 // {label: '照片信息', model: 'region'},
-                {label: '真实姓名', model: 'userRealname'},
-                {label: '家庭住址', model: 'userLocation'},
-                {label: '个人手机', model: 'userTelephone', mr: 1},
-                {label: '用户所在单位', model: 'userFactory'},
                 // {label: '用户角色', model: 'region'},
                 // {label: '是否具有扩展权限', model: 'region'},
                 // {label: '代理/羊场', model: 'region'},
                 // {label: '代理名称', model: 'name'},
+                {label: '用户名', model: 'pkUserid', disabled: true},
+                {label: '员工编号', model: 'userNum', disabled: true},
+                {label: '真实姓名', model: 'userRealname'},
+                {label: '家庭住址', model: 'userLocation'},
+                {label: '个人手机', model: 'userTelephone', mr: 1},
+                {label: '用户所在单位', model: 'factoryName'},
                 {label: '邮箱', model: 'userEmail'},
                 {label: '微信', model: 'msn', mr: 1},
                 {label: 'qq', model: 'qq'},
@@ -65,12 +65,13 @@ export default {
                 {label: '找回密码答案3', model: 'answer_3', mr: 1}
             ],
             models: {
+                factoryNum: retrieveFacNum(),
                 pkUserid: null,
                 userNum: null,
                 userRealname: null,
                 userLocation: null,
                 userTelephone: null,
-                userFactory: null,
+                factoryName: null,
                 userEmail: null,
                 msn: null,
                 qq: null,

@@ -14,7 +14,7 @@
                         <el-breadcrumb separator="-">
                             <el-breadcrumb-item :to="{name: item.to}" v-for="(item, i) in bread" :key="i">{{item.text}}</el-breadcrumb-item>
                         </el-breadcrumb>
-                        <span class="fs"><i class="el-icon-menu"></i>全屏</span>
+                        <!-- <span class="fs"><i class="el-icon-menu"></i>全屏</span> -->
                     </div>
 
                     <div class="bg-blue pad">

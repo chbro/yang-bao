@@ -2,7 +2,7 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :items="items" :models="models"></basic-info>
+        <basic-info :items="items" :models.sync="models"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
@@ -42,14 +42,7 @@ export default {
         apiurl: {
             type: String
         },
-
-        postData: {
-            type: Function
-        },
         getData: {
-            type: Function
-        },
-        updateData: {
             type: Function
         }
     },
@@ -93,7 +86,6 @@ export default {
 
     methods: {
         submit () {
-            console.log(this.models)
             if (!checkForm(this.models)) {
                 return
             }
@@ -110,7 +102,7 @@ export default {
 
             if (this.edit) {
                 form.append('id', this.edit)
-                window.fetch(baseUrl + this.apiurl + '/' + id, {
+                window.fetch(baseUrl + this.apiurl + '/' + this.edit, {
                     method: 'POST',
                     body: form
                 }).then(async res => {
@@ -120,11 +112,6 @@ export default {
                     }
                 })
             } else {
-                // if (!this.models.eartagFile) {
-                //     this.$message.warning('请选择耳牌文件')
-                //     return
-                // }
-
                 window.fetch(baseUrl + '/' + this.apiurl, {
                     method: 'POST',
                     body: form

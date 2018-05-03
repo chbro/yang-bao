@@ -73,11 +73,11 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveAid, retrieveFacNum } from '@/util/store'
+import { retrieveAid, retrieveFacNum, retrieveUid } from '@/util/store'
 
 export default {
     props: {
-        // 隐藏‘查看’
+        // 隐藏操作栏的查看功能
         hideView: {
             type: Boolean,
             default: false
@@ -111,34 +111,22 @@ export default {
             type: Array
         },
 
-        // 系谱档案模块没有审核功能
+        // 是否显示操作栏的审核功能
         hidePass: {
             type: Boolean,
             default: false
         },
-        //
-        isDisinfect: {
-            type: Boolean,
-            default: false
-        },
-        // 跳转路径没有prac
+        // 跳转路径是否没有prac
         noPrac: {
             type: Boolean,
             default: false
         },
-        // 发布模块采用rest接口，加以区分
-        isRelease: {
-            type: Boolean,
-            default: false
-        },
-        isRestful: {
-            type: Boolean,
-            default: false
-        },
+        // id字段含义
         findBy: {
             type: String,
-            default: ''
+            default: 'factoryNum'
         },
+        // 代理表头需要转换
         isAgent: {
             type: Boolean,
             default: false
@@ -157,7 +145,7 @@ export default {
             tableData: [], // 表格数据
 
             isPass: null, // 筛选条件-是否通过
-            factoryName: null, // 筛选条件-工厂奶茶
+            factoryName: null, // 筛选条件-工厂名称
             options: { // 表格审核状态列，显示转换映射
                 未通过: 0,
                 已通过: 1,
@@ -176,46 +164,29 @@ export default {
             if (this.isPass !== null) {
                 param.ispassCheck = this.isPass
             }
-            this.load = true
-            if (this.isRestful) {
-                let id
-                if (this.findBy === 'aid') {
-                    id = retrieveAid()
-                }
-                if (!id) {
-                    this.tableData = []
-                    this.load = false
-                } else {
-                    this.getData(id, param).then(res => {
-                        if (isReqSuccessful(res)) {
-                            let data = res.data
+            if (this.factoryName) {
+                param.factoryName = this.factoryName
+            }
 
-                            if (this.isAgent) {
-                                data.List.forEach(v => {
-                                    let map = ['', '省级代理', '市级代理', '县级代理']
-                                    v.agentRank = map[v.agentRank]
-                                })
-                            }
-                            this.tableData = data.List
-                            this.total = data.size
-                        }
-                        this.load = false
-                    }).catch(_ => {
-                        this.load = false
-                        this.$message.error('获取数据失败')
-                    })
-                }
+            let id
+            let findBy = this.findBy
+            if (findBy === 'aid') {
+                id = retrieveAid()
+            } else if (findBy === 'factoryNum') {
+                id = retrieveFacNum()
+            } else if (findBy === 'uid') {
+                id = retrieveUid()
+            }
+
+            if (id === null || id === undefined) {
+                this.tableData = []
+                this.load = false
             } else {
-                param.factoryNum = retrieveFacNum()
-                this.getData(param).then(res => {
+                this.load = true
+                this.getData(id, param).then(res => {
                     if (isReqSuccessful(res)) {
                         let data = res.data
-                        // 发布系统不用审核
-                        // if (!this.isRelease) {
-                        //     data.List.forEach(v => {
-                        //         v.ispassCheck = this.options[v.ispassCheck]
-                        //     })
-                        // }
+
                         if (this.isAgent) {
                             data.List.forEach(v => {
                                 let map = ['', '省级代理', '市级代理', '县级代理']
@@ -257,9 +228,10 @@ export default {
                 type: 'warning'
             }).then(() => {
                 let { id } = this.tableData[index]
-                this.deleteData(id, {}).then(res => {
+                this.deleteData(id).then(res => {
                     if (isReqSuccessful(res)) {
-                        this.tableData.splice(index, 1)
+                        // this.tableData.splice(index, 1)
+                        this.fetchData()
                         this.$message({
                             type: 'success',
                             message: '删除成功!'

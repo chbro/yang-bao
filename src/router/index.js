@@ -50,7 +50,8 @@ const PreventionPlan = () => import('@/components/admin/prevention/prevention_pl
 const PreventionPrac = () => import('@/components/admin/prevention/prevention_prac')
 const PreventionList = () => import('@/components/admin/prevention/prevention_list')
 // 可视系统
-const DiagnoseVisual = () => import('@/components/admin/visual/diagnose')
+const Diagnose = () => import('@/components/admin/visual/diagnose')
+const DiagnoseList = () => import('@/components/admin/visual/diagnose_list')
 const ProductionVisual = () => import('@/components/admin/visual/production')
 // 有机养殖环境追溯
 const TraceCharts = () => import('@/components/admin/trace/index')
@@ -123,10 +124,13 @@ export default new Router({
             {path: 'prevention/plan', name: 'preventionplan', component: PreventionPlan},
             {path: 'prevention', name: 'preventionprac', component: PreventionPrac},
             {path: 'prevention/list', name: 'preventionlist', component: PreventionList},
-            // 诊断
-            {path: 'visual/diagnose', name: 'diagnose', component: DiagnoseVisual},
+            // 可视系统
+            {path: 'visual/diagnose', name: 'diagnose', component: Diagnose},
+            {path: 'visual/diagnose/list', name: 'diagnose_list', component: DiagnoseList},
             {path: 'visual/production', name: 'production', component: ProductionVisual},
+            // 追溯图表
             {path: 'trace', name: 'trace', component: TraceCharts},
+            // 有机监管
             {path: 'supervise/nation', name: 'nation', component: Nation},
             {path: 'supervise/capture', name: 'capture', component: Capture},
             {path: 'supervise/audit', name: 'audit', component: Audit},

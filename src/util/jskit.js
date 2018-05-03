@@ -9,9 +9,12 @@ import { tokenStr } from './fetch'
 let app = new Vue()
 export const jumpToLogin = r => {
     window.localStorage.removeItem(tokenStr)
-    r.push('/login')
-    // 无法跳转锚点
-    // window.location.assign(window.location.host + '/#/login')
+    if (r) {
+        r.push('/login')
+    } else {
+        // 无法跳转锚点
+        window.location.href = window.location.origin + '/#/login'
+    }
 }
 
 export const checkPassStrength = val => {
