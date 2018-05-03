@@ -55,13 +55,13 @@
             <div class="navigation">
                 <ul class="nav-tabs">
                     <li><router-link to="/">首页</router-link></li>
-                    <li><router-link to="/">集团</router-link></li>
-                    <li><router-link to="/">产品</router-link></li>
-                    <li><router-link to="/">有机</router-link></li>
-                    <li><router-link to="/">效益</router-link></li>
-                    <li><router-link to="/">加盟</router-link></li>
-                    <li><router-link to="/">新闻</router-link></li>
-                    <li><router-link to="/">联系我们</router-link></li>
+                    <li><router-link to="/company">集团</router-link></li>
+                    <li><router-link to="/product">产品</router-link></li>
+                    <li><router-link to="/organic">有机</router-link></li>
+                    <li><router-link to="/benefit">效益</router-link></li>
+                    <li><router-link to="/league">加盟</router-link></li>
+                    <li><router-link to="/news">新闻</router-link></li>
+                    <li><router-link to="/contact">联系我们</router-link></li>
                 </ul>
                 <div class="login-entry">
                     <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>

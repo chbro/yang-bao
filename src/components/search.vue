@@ -25,8 +25,7 @@ export default {
                 })
                 return
             }
-            // TODO: 路由跳转加查询参数
-            this.$router.push('search')
+            this.$router.push({name: 'search', query: { code: this.key }})
         }
     }
 }

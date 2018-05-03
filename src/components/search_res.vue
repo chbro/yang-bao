@@ -73,14 +73,19 @@
                 <i class="el-icon-edit"></i>
                 <div>
                     <p>溯源档案</p>
-                    档案完整度
-                    <el-button size="small" type="primary">用户评分</el-button>
+                    <span class="mod_search_doc">档案完整度</span>
+                    <el-rate
+                        class="mod_search_rate"
+                        :colors="['#6aaf08', '#6aaf08', '#6aaf08']"
+                        v-model="rate">
+                    </el-rate>
+                    <el-button class="btn_green" size="small" type="primary">用户评分</el-button>
                 </div>
             </div><div class="mod">
                 <div v-for="(v, i) in modules" :key="i">
                     <i class="iconfont" :class="'icon-' + v.icon"></i>
-                    <span v-text="v.text"></span>
-                    <router-link to="/"><el-button size="small" type="primary">点击查看</el-button></router-link>
+                    <span class="color-gr" v-text="v.text"></span>
+                    <el-button @click="show(v.name)" class="btn_green" size="small" type="primary">点击查看</el-button>
                 </div>
             </div>
         </div>
@@ -90,14 +95,19 @@
                 <i class="el-icon-edit"></i>
                 <div>
                     <p>产品认证</p>
-                    认证完整度
-                    <el-button size="small" type="primary">用户评分</el-button>
+                    <span class="mod_search_doc">认证完整度</span>
+                    <el-rate
+                        class="mod_search_rate"
+                        :colors="['#6aaf08', '#6aaf08', '#6aaf08']"
+                        v-model="rate">
+                    </el-rate>
+                    <el-button class="btn_green" size="small" type="primary">用户评分</el-button>
                 </div>
             </div><ul class="lists">
                 <li v-for="(v, i) in reports" :key="i">
                     <span v-text="v.text"></span>
-                    <span><i class="el-icon-success color-gr"></i>已检测</span>
-                    <router-link to="/">查看证书</router-link>
+                    <span><i class="el-icon-success color-gr"></i> 已检测 </span>
+                    <a @click="show(i)" class="mod_search_cert" href="javascript:void(0);">查看证书</a> <i class="el-icon-arrow-right color-gr"></i>
                 </li>
             </ul>
         </div>
@@ -108,9 +118,11 @@
             </div><div class="tabs">
                 <el-tabs v-model="tab" type="card">
                     <el-tab-pane label="电商平台" name="first">
-                        <img width="20%" src="../assets/imgs/header-logo.png">
-                        <img width="20%" src="../assets/imgs/header-logo.png">
-                        <img width="20%" src="../assets/imgs/header-logo.png">
+                        <a href="" class="mod_search_ec"><img class="ec_logo" src="../assets/imgs/header-logo.png"></a>
+                        <a href="" class="mod_search_ec"><img class="ec_logo" src="../assets/imgs/header-logo.png"></a>
+                        <a href="" class="mod_search_ec"><img class="ec_logo" src="../assets/imgs/header-logo.png"></a>
+                        <a href="" class="mod_search_ec"><img class="ec_logo" src="../assets/imgs/header-logo.png"></a>
+                        <a href="" class="mod_search_ec"><img class="ec_logo" src="../assets/imgs/header-logo.png"></a>
                     </el-tab-pane>
                     <el-tab-pane label="实体店购买" name="second">
                         1111
@@ -121,18 +133,51 @@
                 </el-tabs>
             </div>
         </div>
+        <!-- 系谱档案 -->
+        <div v-if="dialog.gen" class="mod_search_dialog">
+            <div class="dialog_body">
+                <el-tabs v-model="gen" type="card">
+                    <el-tab-pane label="卫生消毒实验档案" name="first">
+                        <my-table></my-table>
+                    </el-tab-pane>
+                    <el-tab-pane label="免疫实施档案" name="second">
+                        1111
+                    </el-tab-pane>
+                    <el-tab-pane label="驱虫实施档案" name="third">
+                        2222
+                    </el-tab-pane>
+                </el-tabs>
+
+                <div class="dialog_btn">
+                    <span class="btn_print">打印</span>
+                    <span class="btn_close">关闭</span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import BMap from './map'
+import MyTable from './table'
 
 export default {
     data () {
         return {
             ak: 'GSEcVhNVMzjFympEWRH9EOkmZw7mbKRp',
-            center: null,
-            zoom: 1,
+            // 溯源码
+            code: '',
+            // 档案完整度
+            rate: 3,
+            dialog: {
+                gen: true,
+                san: false,
+                nut: false,
+                dis: false,
+                vis: false,
+                org: false
+            },
+            gen: 'first',
             item: {
                 name: '商品羊',
                 erpai: '000000001',
@@ -163,11 +208,12 @@ export default {
             ],
 
             modules: [
-                {icon: 'smile', text: '1'},
-                {icon: 'smile', text: '1'},
-                {icon: 'smile', text: '1'},
-                {icon: 'smile', text: '1'},
-                {icon: 'smile', text: '1'}
+                {icon: 'smile', text: '系谱档案', name: 'gen'},
+                {icon: 'smile', text: '卫生疫控', name: 'san'},
+                {icon: 'smile', text: '营养生产', name: 'nut'},
+                {icon: 'smile', text: '疫病防治', name: 'dis'},
+                {icon: 'smile', text: '可视系统', name: 'vis'},
+                {icon: 'smile', text: '有机养殖环境', name: 'org'}
             ],
             reports: [
                 {text: '土壤检测报告'},
@@ -182,14 +228,16 @@ export default {
         }
     },
     components: {
-        BMap
+        BMap,
+        MyTable
+    },
+    created () {
+        this.code = this.$route.query.code || ''
     },
     methods: {
-        initBaiduMap () {
-            this.center = {
-                lat: 28.5639700000,
-                lng: 108.5030100000
-            }
+        show (name) {
+            document.body.style.overflow = 'hidden'
+            this.$set(this.dialog, name, true)
         }
     }
 }
@@ -197,6 +245,51 @@ export default {
 
 <style lang="stylus" scoped>
 @import '~@/assets/css/color'
+
+.btn_green
+    border 1px solid color-green
+    background-color color-green
+.mod_search_doc
+    font-size 12px
+.mod_search_rate
+    margin 0 0 10px 0
+.mod_search_cert
+    margin-right 20px
+    text-decoration-line underline
+.mod_search_ec
+    display inline-block
+    margin 0 30px 10px 0
+    padding 5px
+    box-sizing border-box
+    border-radius 5px
+    border 1px solid #ddd
+    width 150px
+    height 80px
+    .ec_logo
+        width 100%
+        height 100%
+.mod_search_dialog
+    position fixed
+    z-index 999
+    top 0
+    bottom 0
+    left 0
+    right 0
+    background-color rgba(0, 0, 0, 0.6)
+    .dialog_body
+        margin 150px auto 0
+        padding 30px 40px
+        box-sizing border-box
+        border 2px solid color-green
+        width 800px
+        background-color #fff
+    .dialog_btn
+        text-align right
+        font-size 15px
+        color color-green
+        cursor pointer
+        .btn_print
+            margin-right 30px
 
 .color-gr
     color color-green
@@ -218,10 +311,6 @@ p
     .image
         display flex
         justify-content space-between
-        >img
-            width 300px
-            height 300px
-            margin-right 10px
         >div
             width calc(70% - 15px)
             display inline-block
@@ -243,6 +332,8 @@ p
         width 100%
         height 100px
 
+.trace-res .mid-summary
+    padding 0 10px
 .mid-summary
     display flex
     >div
@@ -311,6 +402,8 @@ p
                 display block
                 text-align center
                 margin 10px
+            >button
+                margin 10px auto 10px
             i
                 font-size 40px
 
