@@ -190,6 +190,10 @@ export const deleteUser = id => fetch('/user/' + id, null, 'DELETE')
 
 export const getFactories = agentid => fetch('/factory/' + agentid)
 
+export const getAgentUnit = () => fetch('/agent/fr')
+
+export const getFactoryUnit = () => fetch('/factory/fr')
+
 // 修改密码
 export const updatePassword = (id, data) => fetch('/user/password/' + id, data, 'PATCH')
 
@@ -200,8 +204,8 @@ export const postAgent = data => fetch('/agent', data, 'POST')
 
 export const updateAgent = (id, data) => fetch('/agent/' + id, data, 'PUT')
 
-export const getAgents = data => fetch('/agent', data)
+export const getAgents = (id, data) => fetch(`/agent/${id}`, data)
 
-export const getAgent = id => fetch('/agent/' + id)
+export const getAgent = id => fetch('/agent/find' + id)
 
 export const deleteAgent = id => fetch(`/agent/${id}`, null, 'DELETE')

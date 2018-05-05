@@ -88,7 +88,7 @@ export default {
                 ]},
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
-                    {label: '专家在线课堂', to: 'test8'},
+                    {label: '专家在线课堂', to: 'onlineCourse'},
                     {label: '生产档案审核', to: 'review'}
                 ]},
                 {label: '生产管理平台', children: [
