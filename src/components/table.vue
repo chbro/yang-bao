@@ -47,9 +47,9 @@ export default {
       default: ''
     },
     data: {
-      type: Object,
+      type: Array,
       default: function() {
-        return {}
+        return []
       }
     }
   },
@@ -61,7 +61,7 @@ export default {
       if(width) {
         return size && size === 'large' ? (parseInt(width)/2) + '%' : width
       } else {
-        return size && size === 'large' ? '15%' : '30%'
+        return size && size === 'large' ? '20%' : '40%'
       }
     }
   }
@@ -99,22 +99,22 @@ export default {
       .item_name
         box-sizing border-box
         padding 8px 15px
-        width 30%
+        // width 30%
         border-right 1px solid #ddd
         border-bottom 1px solid #ddd
       .item_value
         box-sizing border-box
         padding 8px 15px
-        width 70%
+        // width 70%
         border-right 1px solid #ddd
         border-bottom 1px solid #ddd
         text-align left
     .item_large
       width 100%
       .item_name
-        width 15%
+        // width 15%
       .item_value
-        width 85%
+        // width 85%
   .table_grid
     display flex
     flex-wrap wrap

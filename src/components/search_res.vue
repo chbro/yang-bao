@@ -58,9 +58,7 @@
                     <span v-text="item.company[v.model]"></span>
                 </p>
             </div>
-            <div>
-                <img width="100%" src="../assets/imgs/header-logo.png">
-            </div>
+            <div ref="qrcode"></div>
         </div>
 
         <div class="prod-intro">
@@ -191,13 +189,25 @@
                     </record-table>
                 </el-tab-pane>
                 <el-tab-pane label="消毒实施档案" name="second">
-                    
+                    <record-table
+                        type="table"
+                        title="卫生·疫控档案"
+                        :data="sanData.disinfect">
+                    </record-table>
                 </el-tab-pane>
                 <el-tab-pane label="免疫实施档案" name="third">
-                    
+                    <record-table
+                        type="table"
+                        title="卫生·疫控档案"
+                        :data="sanData.immune">
+                    </record-table>
                 </el-tab-pane>
                 <el-tab-pane label="驱虫实施档案" name="fourth">
-                    
+                    <record-table
+                        type="table"
+                        title="卫生·疫控档案"
+                        :data="sanData.expelling">
+                    </record-table>
                 </el-tab-pane>
             </el-tabs>
             <div class="dialog_btn">
@@ -216,11 +226,15 @@
                     <record-table
                         type="table"
                         title="营养·生产档案"
-                        :data="genData">
+                        :data="nutData.stage">
                     </record-table>
                 </el-tab-pane>
                 <el-tab-pane label="配种产子实施档案" name="second">
-                    
+                    <record-table
+                        type="table"
+                        title="卫生·疫控档案"
+                        :data="nutData.hybrid">
+                    </record-table>
                 </el-tab-pane>
             </el-tabs>
             <div class="dialog_btn">
@@ -237,7 +251,7 @@
             <record-table
                 type="table"
                 title="疫病防治档案"
-                :data="genData">
+                :data="disData">
             </record-table>
             <div class="dialog_btn">
                 <span class="btn_print">打印</span>
@@ -266,6 +280,7 @@
 <script>
 import BMap from './map'
 import RecordTable from './table'
+import QRCode from 'qrcodejs2'
 
 export default {
     data () {
@@ -318,28 +333,69 @@ export default {
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '是否做到人员安全防护是否合格', name: 'safetyProtection' },
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '实验室垃圾与排水是否无害化处理', name: 'rubbishWater' },
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '是否遵守操作规范', name: 'operationSpecification' },
-                    { fieldName: 'remark', fieldNameWidth: '40%', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { fieldName: 'remark', fieldNameWidth: '60%', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 disinfect: [ // 消毒实施档案
-
+                    { fieldName: '免疫耳牌号', fieldValue: '', name: 'disinfectEartagFile' },
+                    { fieldName: '消毒药名称', fieldValue: '', name: 'disinfectName' },
+                    { fieldName: '用药剂量', fieldValue: '', name: 'dose' },
+                    { fieldName: '消毒场所', fieldValue: '', name: 'place' },
+                    { fieldName: '消毒时间', fieldValue: '', name: 'disinfectTime', size: 'large' },
+                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 immune: [ // 免疫实施档案
-
+                    { fieldName: '接种时间', fieldValue: '', name: 'immuneTime' },
+                    { fieldName: '接种羊群', fieldValue: '', name: 'crowdNum' },
+                    { fieldName: '疫苗种类', fieldValue: '', name: 'immuneKind' },
+                    { fieldName: '接种方法', fieldValue: '', name: 'immuneWay' },
+                    { fieldName: '接种剂量', fieldValue: '', name: 'dose' },
+                    { fieldName: '免疫期', fieldValue: '', name: 'immuneDuring' },
+                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 expelling: [ // 驱虫实施档案
-
+                    { fieldName: '免疫耳牌号', fieldValue: '', name: 'repellentEartagFile' },
+                    { fieldName: '接种羊（群）', fieldValue: '', name: 'crowdNum'},
+                    { fieldName: '驱虫时间', fieldValue: '', name: 'repellentTime' },
+                    { fieldName: '药物名称', fieldValue: '', name: 'repellentfieldName' },
+                    { fieldName: '给药途径', fieldValue: '', name: 'repellentWay' },
+                    { fieldName: '给药剂量', fieldValue: '', name: 'dose' },
+                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ]
             },
             nutData: {
                 stage: [ // 阶段营养实施档案
-
+                    { fieldName: '栋号', fieldValue: '', name: 'building' },
+                    { fieldName: '使用日期', fieldValue: '', name: 'nutritionT' },
+                    { fieldName: '羊数', fieldValue: '', name: 'quantity' },
+                    { fieldName: '阶段', fieldValue: '', name: 'period' },
+                    { fieldName: '饮水', fieldValue: '', name: 'water', size: 'large' },
+                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 hybrid: [ // 配种产子实施档案
+                    { fieldName: '栏/栋', fieldValue: '', name: 'building' },
+                    { fieldName: '母羊免疫耳牌', fieldValue: '', name: 'mEtI' },
+                    { fieldName: '母羊商标耳牌', fieldValue: '', name: 'mEtB' },
+                    { fieldName: '种公羊免疫耳牌', fieldValue: '', name: 'fEtI' },
+                    { fieldName: '种公羊商标耳牌', fieldValue: '', name: 'fEtB' },
+                    { fieldName: '配种时间', fieldValue: '', name: 'breedingT' },
+                    { fieldName: '妊娠时间', fieldValue: '', name: 'gestationT' },
+                    { fieldName: '产羔时间', fieldValue: '', name: 'cubT' },
+                    { fieldName: '产前免疫（三联四防）接种时间', fieldValue: '', name: 'prenatalIT' },
+                    { fieldName: '产羔', fieldValue: '', name: 'quantity' },
+                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
 
                 ]
             },
             disData: [ // 疫病防治
-
+                { fieldName: '商标耳牌号', fieldValue: '', name: 'earTag' },
+                { fieldName: '栏/栋', fieldValue: '', name: 'buildingNum' },
+                { fieldName: '诊断结果', fieldValue: '', name: 'diagnosisResult' },
+                { fieldName: '诊断方法', fieldValue: '', name: 'diagnosisMethod' },
+                { fieldName: '诊断效果', fieldValue: '', name: 'treatEffect' },
+                { fieldName: '监督确认时间', fieldValue: '', name: 'gmtSup' },
+                { fieldName: '诊疗时间', fieldValue: '', name: 'diagnosisTime' },
+                { fieldName: '剂量', fieldValue: '', name: 'dose'},
+                { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
             ],
             item: {
                 name: '商品羊',
@@ -397,7 +453,18 @@ export default {
     created () {
         this.code = this.$route.query.code || ''
     },
+    mounted () {
+        this.qrcode()
+    },
     methods: {
+        // 生成二维码
+        qrcode () {
+            let qrcode = new QRCode(this.$refs.qrcode, {
+                width: 120,
+                height: 120,
+                text: window.location.href
+            })
+        },
         open (name) {
             this.$set(this.dialog, name, true)
         },
@@ -528,7 +595,9 @@ export default {
         width calc(50% - 10px)
         line-height 30px
         &:last-child
-            width 20%
+            margin 20px
+            width 120px
+            height 120px
         span
             display inline-block
             padding-right 10px
