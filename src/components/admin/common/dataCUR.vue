@@ -2,12 +2,12 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :items="items" :models.sync="models"></basic-info>
+        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
         </div>
-        <div class="admin-send">
+        <div class="admin-send" v-if="canModify">
             <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
             <template v-else-if="!view">
                 <el-button type="primary" :disabled="disableBtn" @click="Spv(true)">通过</el-button>
@@ -15,13 +15,13 @@
             </template>
             <el-button type="primary" v-else :disabled="disableBtn" @click="$router.back()">返回</el-button>
         </div>
+        <div class="admin-send" v-else>已审核</div>
     </div>
 </template>
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
-import { retrieveFacNum, retrieveUid, retrieveName, retrieveAid } from '@/util/store'
 
 export default {
     props: {
@@ -67,6 +67,11 @@ export default {
         },
         checkData: {
             type: Function
+        },
+
+        radioSex: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -118,6 +123,7 @@ export default {
             check: false,
             supervise: false,
             view: false,
+            canModify: true,
 
             disableBtn: false,
             map: ['', '省级代理', '市级代理', '县级代理']
@@ -131,7 +137,7 @@ export default {
                     if (isReqSuccessful(res)) {
                         this.$message.suucess('审核成功')
                     }
-                }).catch(_ => {
+                }, _ => {
                     this.$message.suucess('审核失败')
                 })
             } else if (this.check) {
@@ -139,24 +145,24 @@ export default {
                     if (isReqSuccessful(res)) {
                         this.$message.suucess('修改监督状态成功')
                     }
-                }).catch(_ => {
+                }, _ => {
                     this.$message.suucess('修改监督状态失败')
                 })
             }
         },
 
         submit () {
-            console.log(this.models)
+            console.log(this.models, this.$store.state.user)
             if (!checkForm(this.models)) {
                 return
             }
 
             let data = Object.assign({}, this.models)
-            data.factoryNum = retrieveFacNum()
+            data.factoryNum = this.$store.state.user.factoryId
             if (!this.isAgent) {
-                data.operatorName = retrieveName()
-                data.operatorId = retrieveUid()
-                data.factoryName = retrieveFacNum()
+                data.operatorName = this.$store.state.user.username
+                data.operatorId = this.$store.state.user.id
+                data.factoryName = this.$store.state.user.departmentName
             } else {
                 let area = data.agentArea || data.breedLocation
                 if (Array.isArray(area)) {
@@ -177,7 +183,7 @@ export default {
                     }
                 }
                 data.responsibleId = -1
-                data.agent = retrieveAid()
+                data.agent = this.$store.state.user.id
             }
             this.disableBtn = true
             if (this.edit) {
@@ -186,7 +192,7 @@ export default {
                         patchJump(this.modpath)
                     }
                     this.disableBtn = false
-                }).catch(_ => {
+                }, _ => {
                     this.$message.error('修改失败')
                     this.disableBtn = false
                 })
@@ -196,7 +202,7 @@ export default {
                         postJump(this.modpath)
                     }
                     this.disableBtn = false
-                }).catch(_ => {
+                }, _ => {
                     this.$message.error('录入失败')
                     this.disableBtn = false
                 })

@@ -103,7 +103,7 @@ export default {
             if (value === '') {
                 callback(new Error('请输入密码'))
             } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+                callback(new Error('密码必须是6-12位字符数字和下划线'))
             } else if (this.ruleForm.checkPass !== '') {
                 this.$refs.ruleForm.validateField('checkPass')
             }
@@ -114,7 +114,7 @@ export default {
             if (value === '') {
                 callback(new Error('请再次输入密码'))
             } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+                callback(new Error('密码必须是6-12位字符数字和下划线'))
             } else if (value !== this.ruleForm.password) {
                 callback(new Error('两次输入密码不一致!'))
             } else {
@@ -187,6 +187,13 @@ export default {
         submitForm (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    /* eslint-disable camelcase */
+                    let { question_1, question_2, question_3, answer_1, answer_2, answer_3 } = this.ruleForm
+                    if (!(question_1 && question_2 && question_3 && answer_1 && answer_2 && answer_3)) {
+                        this.$message.warning('请完善密保问题和答案')
+                        return
+                    }
+
                     let data = {}
                     let form = this.ruleForm
 
@@ -202,9 +209,7 @@ export default {
                     Register(data).then(res => {
                         if (isReqSuccessful(res)) {
                             this.$message.success('注册成功')
-                            setTimeout(() => {
-                                this.$router.push('/login')
-                            }, 800)
+                            this.$router.push('/login')
                         } else {
                             this.disableReg = false
                         }

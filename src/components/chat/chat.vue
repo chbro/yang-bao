@@ -5,7 +5,7 @@
                 <el-container>
                     <el-main>
                         <div class="dialog_box" ref="dialog">
-                            <div class="dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? '用户' : '专家'"></span><span class="msg" v-html="item.html"></span></div>
+                            <div class="dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? user.name : expert.name"></span><span class="msg" v-html="item.html"></span></div>
                         </div>
                         <div class="input_box">
                             <div class="chat-option">
@@ -61,7 +61,7 @@
 
         <el-dialog title="评价" :visible.sync="dialogFormVisible">
             <el-form :model="form" class="chat-formdialog">
-                <el-form-item label="评价" :label-width="formLabelWidth">
+                <el-form-item label="评价" label-width="80px">
                     <el-radio-group v-model="evaluation">
                         <el-radio :label="5">非常满意</el-radio>
                         <el-radio :label="4">满意</el-radio>
@@ -70,7 +70,7 @@
                         <el-radio :label="1">很差</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="描述" :label-width="formLabelWidth">
+                <el-form-item label="描述" label-width="80px">
                     <el-input
                         type="textarea"
                         :rows="3"
@@ -91,9 +91,8 @@
 import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-// import { baseUrl } from '@/util/fetch'
-import { getExpert, evalulateExpert } from '@/util/getdata'
-import { retrieveAid, retrieveRid, retrieveUid } from '@/util/store'
+import { getExpert, evalulateExpert, getUserById } from '@/util/getdata'
+import { wsUrl } from '@/util/fetch'
 
 export default {
     components: {
@@ -101,9 +100,30 @@ export default {
     },
 
     mounted () {
-        this.user.agentid = retrieveAid()
-        this.user.role_id = retrieveRid()
-        this.user.id = retrieveUid()
+        let id = 17
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = {
+                    id,
+                    name: res.data.model.userRealname
+                }
+            }
+        })
+
+        getExpert(1).then(res => {
+            if (isReqSuccessful(res)) {
+                this.expert = {
+                    id: res.data.expert_id,
+                    name: res.data.expert
+                }
+            }
+        }, _ => {
+            this.$notify.error({
+                duration: 5000,
+                title: '错误',
+                message: '当前没有专家在线'
+            })
+        })
 
         // 表情组件初始化
         this.$refs.emoji.appendTo({
@@ -111,18 +131,12 @@ export default {
             btn: this.$refs.btn,
             position: 'top left'
         })
-        // console.log(window.decodeURIComponent(this.$route.query.from))
 
-        // first http:
-        // let urlRidOfHost = baseUrl.substr(baseUrl.indexOf(':'))
-        // last :port
-        // let host = urlRidOfHost.substr(0, urlRidOfHost.indexOf(':'))
-        // let wsUri = `ws://${host}:8080/websocket/${this.agentid}`
-        let wsUri = `ws://180.76.180.95:9010/websocket/${this.user.id}`
-        this.websocket = new WebSocket(wsUri)
+        let ws = wsUrl + '/' + this.$route.query.id
+        this.websocket = new WebSocket(ws)
         this.websocket.onclose = evt => {
             this.$notify.error({
-                duration: 5000, // will not close automatically
+                duration: 5000,
                 title: '错误',
                 message: '连接已关闭'
             })
@@ -139,32 +153,13 @@ export default {
                 html = `<a href="${addr}"><i class="el-icon-document"></i>${name}</a>`
             } else {
                 html = data.message
+                this.pushChatMessage(html, data.order === 'self')
             }
-            this.pushChatMessage(html)
-        }
-        this.websocket.onerror = evt => {
-            // this.$notify.error({
-            //     duration: 5000,
-            //     title: '连接错误',
-            //     message: '连接发生了一个错误'
-            // })
         }
 
-        getExpert(this.user.id).then(res => {
-            if (isReqSuccessful(res)) {
-                this.expertid = res.data.expert_id
-            }
-        }, res => {
-            this.$notify.error({
-                duration: 5000,
-                title: '错误',
-                message: res.meta.errorMsg || '当前没有专家在线'
-            })
-        })
-
-        window.onbeforeunload = function () {
-            return false
-        }
+        // window.onbeforeunload = function () {
+        //     return false
+        // }
     },
 
     destroyed () {
@@ -184,21 +179,12 @@ export default {
                 name: '',
                 message: ''
             },
-            formLabelWidth: '80px',
 
-            activeIndex: '1',
             showEmoji: false, // 表情选择框是否可见
-            items: [ // 聊天内容数组
-                {html: '你好啊，请问有什么问题？'},
-                {html: '你好', self: 1}
-            ],
+            items: [],
             websocket: null, // 本地ws连接
-            user: {
-                id: null,
-                role_id: null,
-                agentid: null
-            },
-            expertid: 10 // 聊天专家id
+            user: {},
+            expert: {}
         }
     },
 
@@ -243,12 +229,13 @@ export default {
             }
             let data = {
                 message: edit.innerHTML,
-                role_id: this.user.role_id,
-                user_id: this.user.agentid,
-                name: 'zym',
-                talk_id: this.expertid,
+                isExpert: false,
+                user_id: this.user.id,
+                name: this.user.name,
+                talk_id: this.expert.id,
                 mode: 0
             }
+            console.log(data)
             try {
                 this.websocket.send(JSON.stringify(data))
             } catch (e) {
@@ -276,7 +263,7 @@ export default {
             form.append('file', file)
             form.append('user_id', this.user.id)
             form.append('user_name', this.user.name)
-            form.append('talk_id', this.expertid)
+            form.append('talk_id', this.expert.id)
             form.append('role_id', this.user.role_id)
             form.append('mode', 0)
 
@@ -299,8 +286,8 @@ export default {
             resetFile(filedom)
         },
 
-        pushChatMessage (html) {
-            this.items.push({html, self: 1})
+        pushChatMessage (html, isSelf) {
+            this.items.push({html, self: isSelf})
             this.$nextTick(_ => {
                 let dialog = this.$refs.dialog
                 dialog.scrollTop = dialog.scrollHeight

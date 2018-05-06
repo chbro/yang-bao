@@ -37,12 +37,13 @@
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
                     <span class="ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <!-- <el-radio v-model="models[item.model]" v-for="(r, i) in item.radios" :key="i" :label="i">{{item.radios[i]}}</el-radio> -->
-                    <el-switch
+                    <el-radio v-model="models[item.model]" :label="0">{{radioSex ? '公' : '是'}}</el-radio>
+                    <el-radio v-model="models[item.model]" :label="1">{{radioSex ? '母' : '否'}}</el-radio>
+                    <!-- <el-switch
                         v-model="models[item.model]"
                         active-color="#13ce66"
                         inactive-color="#ff4949">
-                    </el-switch>
+                    </el-switch> -->
                 </div>
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address'" class="time el-input-group address">
@@ -78,6 +79,10 @@ export default {
             dafault () {
                 return {}
             }
+        },
+        radioSex: {
+            type: Boolean,
+            default: false
         }
     },
 

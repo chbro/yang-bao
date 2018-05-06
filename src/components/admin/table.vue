@@ -73,7 +73,6 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveAid, retrieveFacNum, retrieveUid } from '@/util/store'
 
 export default {
     props: {
@@ -169,13 +168,14 @@ export default {
             }
 
             let id
-            let findBy = this.findBy
-            if (findBy === 'aid') {
-                id = retrieveAid()
-            } else if (findBy === 'factoryNum') {
-                id = retrieveFacNum()
-            } else if (findBy === 'uid') {
-                id = retrieveUid()
+            let { factoryId, agentId } = this.$store.state.user
+            // let findBy = this.findBy
+            if (this.$store.state.user.id !== undefined) {
+                id = this.$store.state.user.id
+            } else if (factoryId !== undefined) {
+                id = factoryId
+            } else if (agentId !== undefined) {
+                id = agentId
             }
 
             if (id === null || id === undefined) {

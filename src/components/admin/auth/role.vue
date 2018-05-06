@@ -1,21 +1,21 @@
 <template>
     <div class="auth-role">
-        <el-button @click="addUser = true">添加角色</el-button>
+        <el-button @click="addUserVisible = true">添加角色</el-button>
         <el-table
             :data="tableData"
             style="width: 100%">
             <el-table-column
-                prop="rolename"
+                prop="typeName"
                 label="角色名"
                 width="240">
             </el-table-column>
             <el-table-column
-                prop="rolename"
+                prop="id"
                 label="角色编号"
                 width="240">
             </el-table-column>
             <el-table-column
-                prop="rolename"
+                prop="roleDescription"
                 label="角色说明"
                 width="240">
             </el-table-column>
@@ -23,7 +23,7 @@
                 <template slot-scope="scope">
                     <el-button
                       size="mini"
-                      @click="addUser = true">编辑</el-button>
+                      @click="preEdit(scope.$index)">编辑</el-button>
                     <el-button
                       size="mini"
                       type="danger"
@@ -31,15 +31,24 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="getAllRoles"
+            :current-page.sync="page">
+        </el-pagination>
+
         <el-dialog
-            :visible.sync="addUser"
+            class="role-dialogue"
+            :visible.sync="addUserVisible"
             :model="rules"
             width="50%"
             center>
-            <el-input v-model="rolename" size="small">
+            <el-input v-model="typeName" size="small">
                 <template slot="prepend">角色名:</template>
             </el-input>
-            <el-input v-model="rolenote" size="small">
+            <el-input v-model="roleDescription" size="small">
                 <template slot="prepend">角色说明:</template>
             </el-input>
             <div class="rules" v-for="(item, i) in items" :key="i">
@@ -66,7 +75,7 @@
             员工
             <el-select size="small" v-model="user" placeholder="请选择">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in empOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -75,7 +84,7 @@
             角色
             <el-select size="small" v-model="userrole" placeholder="请选择">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in roleOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -87,22 +96,27 @@
 </template>
 
 <script>
+import { isReqSuccessful } from '@/util/jskit'
+import { getRoles, getUsers, getRoleDetail, getFactoryUsers } from '@/util/getdata'
+
 export default {
     data () {
         return {
+            page: 1,
+            total: 1,
+
             user: null,
             userrole: null,
-            options: [],
+            empOptions: [],
+            roleOptions: [],
 
-            rolename: '',
-            rolenote: '',
-            tableData: [
-                {rolename: 'aaa'}
-            ],
-            addUser: false,
+            typeName: '',
+            roleDescription: '',
+            tableData: [],
+            addUserVisible: false,
             checkAll: [],
             items: [
-                {text: '免疫实施档案', supervise: 1},
+                {text: '配种产子档案', supervise: 1},
                 {text: '疾病防治档案', supervise: 1},
                 {text: '卫生消毒档案', supervise: 1},
                 {text: '免疫实施档案', supervise: 1},
@@ -130,7 +144,55 @@ export default {
         }
     },
 
+    mounted () {
+        getRoles().then(res => {
+            if (isReqSuccessful(res)) {
+                this.tableData = res.data.List
+                this.total = res.data.size
+                for (let v of res.data.List) {
+                    this.roleOptions.push({
+                        label: v.typeName,
+                        value: v.id
+                    })
+                }
+            }
+        })
+        getUsers().then(res => {
+            if (isReqSuccessful(res)) {
+                this.options = res.data.List
+            }
+        })
+        getFactoryUsers(this.$store.state.factoryId).then(res => {
+            if (isReqSuccessful(res)) {
+                for (let v of res.data.List) {
+                    this.empOptions.push({
+                        label: v.userRealname,
+                        value: v.id
+                    })
+                }
+            }
+        })
+    },
+
     methods: {
+        preEdit (idx) {
+            let data = this.tableData[idx]
+            console.log(idx, data)
+            this.editId = data.id
+            this.typeName = data.typeName
+            this.roleDescription = data.roleDescription
+            this.addUserVisible = true
+        },
+
+        getAllRoles () {
+            getRoles({page: this.page - 1}).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.tableData = res.data.List
+                    this.total = res.data.size
+                }
+            })
+        },
+
         handleCheckAllChange (item, idx) {
             let len = 4
             if (item.supervise) {
@@ -169,4 +231,9 @@ export default {
         &+.el-button
             background-color c=#f78989
             border-color c
+
+    .role-dialogue
+        .el-dialog__body
+            >.el-input
+                margin-bottom 10px
 </style>

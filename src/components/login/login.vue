@@ -40,7 +40,6 @@
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
 import { validateName, isReqSuccessful } from '@/util/jskit'
-import { storeUserInfo } from '@/util/store'
 import md5 from 'md5'
 
 export default {
@@ -108,13 +107,11 @@ export default {
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
                             delete res.data.successMessage
-                            storeUserInfo(res.data)
                             this.$message.success('登录成功')
-                            setTimeout(() => {
-                                this.$router.push('/admin')
-                            }, 1000)
+                            this.$store.commit('storeUserInfo', res.data)
+                            this.$router.push('/admin')
                         }
-                    }).catch(_ => {
+                    }, _ => {
                         this.$message.error('登录失败')
                     })
                 } else {

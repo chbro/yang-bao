@@ -21,7 +21,7 @@
 
 <script>
 import '@/../static/ckeditor/ckeditor.js'
-import { postRelease, getRelease, updateRelease } from '@/util/getdata'
+import { postRelease, getReleaseById, updateRelease } from '@/util/getdata'
 import { isReqSuccessful, postJump, patchJump, resetFile } from '@/util/jskit'
 import { baseUrl } from '@/util/fetch'
 
@@ -31,7 +31,7 @@ export default {
 
         this.edit = this.$route.query.edit
         if (this.edit) {
-            getRelease(this.edit).then(res => {
+            getReleaseById(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data.List
                     this.title = data.title
@@ -54,15 +54,19 @@ export default {
             /* eslint-disable object-property-newline */
             sendingImage: false,
             options: [
-                {label: '专家课堂', value: 0, children: [
-                    {label: '模块1', value: '0'},
-                    {label: '模块2', value: '1'}
+                {label: '专家课堂视频', value: 'teach'},
+                {label: '首页介绍', value: 'index', children: [
+                    {label: '集团', value: 'company'},
+                    {label: '产品', value: 'product'},
+                    {label: '有机', value: 'organic'},
+                    {label: '效益', value: 'efficiency'},
+                    {label: '加盟', value: 'join'},
+                    {label: '新闻', value: 'news'},
+                    {label: '联系我们', value: 'contact'}
                 ]}
             ],
             type: null,
             config: {},
-            operatorId: 1,
-            operatorName: '老嫖',
             title: '',
 
             edit: false
@@ -90,7 +94,7 @@ export default {
                 }
                 this.sendingImage = false
                 resetFile(ref)
-            }).catch(() => {
+            }, () => {
                 this.$message.error('上传失败')
                 this.sendingImage = false
                 resetFile(ref)
@@ -103,19 +107,16 @@ export default {
 
         submit () {
             let html = window.CKEDITOR.instances.myeditor.getData()
-            console.log(html)
 
             if (!html.replace(/\s/g, '')) {
                 this.$message.warning('发布信息不能为空')
             } else if (!this.type && this.type !== 0) {
                 this.$message.warning('发布位置不能为空')
             } else {
-                let { title, type, operatorId, operatorName } = this
+                let type = this.type.slice(0).pop()
                 let data = {
-                    type: type.pop(),
-                    operatorId,
-                    operatorName,
-                    title,
+                    type,
+                    title: this.title,
                     content: html
                 }
                 if (this.edit) {
@@ -123,13 +124,17 @@ export default {
                         if (isReqSuccessful(res)) {
                             patchJump('release')
                         }
-                    }).catch('更新失败')
+                    }, _ => {
+                        this.$message.error('更新失败')
+                    })
                 } else {
                     postRelease(data).then(res => {
                         if (isReqSuccessful(res)) {
                             postJump('release')
                         }
-                    }).catch('发布失败')
+                    }, _ => {
+                        this.$message.error('发布失败')
+                    })
                 }
             }
         }

@@ -16,9 +16,8 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { getUser, updateUser } from '@/util/getdata'
-import { isReqSuccessful } from '@/util/jskit'
-import { retrieveUid, retrieveFacNum } from '@/util/store'
+import { getUserById, updateUser } from '@/util/getdata'
+import { isReqSuccessful, getLocalUid } from '@/util/jskit'
 
 export default {
     components: {
@@ -65,7 +64,6 @@ export default {
                 {label: '找回密码答案3', model: 'answer_3', mr: 1}
             ],
             models: {
-                factoryNum: retrieveFacNum(),
                 pkUserid: null,
                 userNum: null,
                 userRealname: null,
@@ -84,12 +82,13 @@ export default {
                 answer_2: null,
                 answer_3: null,
                 userRemark: null
-            }
+            },
+            id: null
         }
     },
 
     mounted () {
-        getUser(retrieveUid()).then(res => {
+        getUserById(getLocalUid()).then(res => {
             if (isReqSuccessful(res)) {
                 this.models = res.data.model
             }
@@ -127,7 +126,7 @@ export default {
             }
 
             this.disableBtn = true
-            updateUser(retrieveUid(), this.models).then(res => {
+            updateUser(this.id, this.models).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功')
                 }

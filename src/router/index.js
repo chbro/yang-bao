@@ -24,7 +24,6 @@ const Review = () => import('@/components/admin/review/index')
 // 留言管理
 const Comment = () => import('@/components/admin/comment/index')
 // 用户权限
-const Auth = () => import('@/components/admin/auth/auth')
 const AuthRole = () => import('@/components/admin/auth/role')
 const Account = () => import('@/components/admin/account/index')
 // 系谱档案
@@ -58,6 +57,7 @@ const ProductionVisual = () => import('@/components/admin/visual/production')
 const TraceCharts = () => import('@/components/admin/trace/index')
 // 动物福利
 const Welfare = () => import('@/components/admin/welfare/index')
+const WelfareList = () => import('@/components/admin/welfare/list')
 // 有机监管
 const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
@@ -95,11 +95,11 @@ export default new Router({
         // 管理员模块
         {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'userinfo', component: UserInfo},
-            {path: 'auth', name: 'auth', component: Auth},
             {path: 'message', name: 'message', component: Message},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
+            {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},

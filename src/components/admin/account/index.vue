@@ -3,7 +3,7 @@
         <el-button @click="dialogVisible = true">添加用户</el-button>
 
         <admin-table
-            :getData="getUsers"
+            :getData="getFactoryUsers"
             :deleteData="deleteUser"
             :headers.sync="headers">
         </admin-table>
@@ -41,7 +41,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getUsers, deleteUser, postUser, getFactories } from '@/util/getdata'
+import { getFactoryUsers, deleteUser, postUser } from '@/util/getdata'
 import { checkForm, isReqSuccessful } from '@/util/jskit'
 
 export default {
@@ -59,7 +59,7 @@ export default {
             factory: null,
             formLabelWidth: '120px',
             dialogVisible: false,
-            getUsers,
+            getFactoryUsers,
             deleteUser,
             headers: [
                 {label: '用户名', prop: ''},
@@ -75,16 +75,6 @@ export default {
                 {label: '11', value: 2}
             ]
         }
-    },
-
-    mounted () {
-        getFactories(1).then(res => {
-            if (isReqSuccessful(res)) {
-                this.options = res.data
-            }
-        }).catch(_ => {
-            this.$message.error('请求失败')
-        })
     },
 
     methods: {

@@ -23,11 +23,11 @@ export default {
             getAllBreeding,
             deleteBreeding,
             headers: [
-                {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {prop: 'factoryName', label: '工厂名'},
-                {prop: 'building', label: '栏/栋'},
-                {prop: 'mEtI', label: '母羊免疫耳牌'},
-                {prop: 'mEtB', label: '母羊商标耳牌'},
+                {prop: 'ispassCheck', label: '审核状态'},
+                {prop: 'factoryName', label: '工厂名', width: 150},
+                {prop: 'building', label: '栏/栋', width: 150},
+                {prop: 'mEtI', label: '母羊免疫耳牌', width: 180},
+                {prop: 'mEtB', label: '母羊商标耳牌', width: 180},
                 {prop: 'quantity', label: '产羔'}
             ]
         }

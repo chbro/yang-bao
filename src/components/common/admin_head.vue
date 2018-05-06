@@ -31,21 +31,15 @@
 <script>
 import { LogOut } from '@/util/getdata'
 import { isReqSuccessful, jumpToLogin } from '@/util/jskit'
-import { retrieveUid } from '@/util/store'
 
 export default {
-    props: {
-        user: {
-            type: Object,
-            default () {
-                return {}
-            }
-        }
-    },
-
     data () {
         return {
-            datestr: ''
+            datestr: '',
+            user: {
+                pkUserid: this.$store.state.user.username,
+                userFactor: this.$store.state.user.username || '无'
+            }
         }
     },
 
@@ -73,7 +67,7 @@ export default {
             this.$confirm('确定要注销吗?', '提示', {
                 type: 'warning'
             }).then(() => {
-                LogOut(retrieveUid()).then(res => {
+                LogOut(this.$store.state.user.id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('注销成功')
                         jumpToLogin(this.$router)

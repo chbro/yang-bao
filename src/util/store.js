@@ -8,7 +8,10 @@ export const storeUserInfo = data => {
     localStorage.setItem(token, JSON.stringify(data))
 }
 
-export const retrieveUid = _ => user.id
+export const retrieveUid = _ => {
+    console.log(this, this.$store)
+    return user.id
+}
 
 export const retrieveAid = _ => user.agentId
 

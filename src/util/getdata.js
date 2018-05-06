@@ -23,9 +23,9 @@ export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${
 /**
  * 系谱档案CURD
  */
-export const postGeneaRec = data => fetch('/gf/save', data, 'POST')
+export const postGeneaRec = data => fetch('/gf', data, 'POST')
 
-export const updateGeneaRec = (id, data) => fetch(`/gf/update/${id}`, data, 'PATCH')
+export const updateGeneaRec = (id, data) => fetch(`/gf/${id}`, data, 'PUT')
 
 export const getGeneaRec = id => fetch(`/gf/find/${id}`)
 
@@ -37,7 +37,7 @@ export const getSheepTypes = id => fetch('/gf/types')
 // 系谱档案多条件查询
 export const queryGenea = data => fetch('/gf/findshow', data, 'POST')
 
-export const getGeneas = data => fetch('/gf/find', data)
+export const getGeneas = (id, data) => fetch(`/gf/${id}`, data)
 
 /**
  * 权限CURD
@@ -80,15 +80,15 @@ export const getTalkRecordDetail = id => fetch('/getTalkRecord/' + id)
 export const evalulateExpert = data => fetch('/evaluation', data, 'POST')
 
 /**
- * 配种产子实施档案CURD
+ * 配种产子
  */
 export const postBreeding = data => fetch('/breeding', data, 'POST')
 
-export const updateBreeding = (id, data) => fetch('/breeding/operator/' + id, data, 'PATCH')
+export const updateBreeding = (id, data) => fetch(`/breeding/${id}`, data, 'PUT')
 
-export const getAllBreeding = data => fetch('/breeding', data)
+export const getAllBreeding = (id, data) => fetch(`/breeding/${id}`, data)
 
-export const getBreeding = (id, data) => fetch('/breeding/' + id, data)
+export const getBreeding = (id, data) => fetch(`/breeding/find/${id}`, data)
 
 export const deleteBreeding = id => fetch(`/breeding/${id}`, null, 'DELETE')
 
@@ -124,14 +124,15 @@ export const deleteAntiscolic = id => fetch(`/rp/${id}`, null, 'DELETE')
  */
 export const postRelease = data => fetch('/notice', data, 'POST')
 
-export const updateRelease = (id, data) => fetch('/notice/' + id, data, 'PATCH')
+export const updateRelease = (id, data) => fetch(`/notice/${id}`, data, 'PATCH')
 
-// data带有分页参数
-export const getRelease = (id, data = {}) => fetch('/notice/' + id, data)
+export const getReleaseById = id => fetch(`/notice/${id}`)
 
-export const getAllRelease = data => fetch('/notice', data)
+export const getReleaseByName = name => fetch(`/notice/name/${name}`)
 
-export const deleteRelease = (id, data) => fetch('/notice/' + id, data, 'DELETE')
+export const getAllRelease = (id, data) => fetch(`/notice`, data)
+
+export const deleteRelease = id => fetch(`/notice/${id}`, null, 'DELETE')
 
 /**
  * 专家审核
@@ -145,11 +146,11 @@ export const doReview = (id, data) => fetch(`/review/${id}`, data, 'PATCH')
  */
 export const postStage = data => fetch('/nutrition', data, 'POST')
 
-export const updateStage = (id, data) => fetch('/nutrition/' + id, data, 'PATCH')
+export const updateStage = (id, data) => fetch(`/nutrition/${id}`, data, 'PUT')
 
-export const getAllStages = data => fetch('/nutrition', data)
+export const getStage = (id, data) => fetch(`/nutrition/find/${id}`, data)
 
-export const getStage = id => fetch('/nutrition/' + id)
+export const getAllStages = (id, data) => fetch(`/nutrition/${id}`, data)
 
 export const deleteStage = id => fetch(`/nutrition/${id}`, null, 'DELETE')
 
@@ -171,9 +172,11 @@ export const deletePrevention = id => fetch(`/diagnosis/${id}`, null, 'DELETE')
  */
 export const postUser = data => fetch('/user', data, 'POST')
 
-export const getUser = id => fetch('/user/detail/' + id)
+export const getUserById = id => fetch('/user/detail/' + id)
 
-export const getUsers = data => fetch('/user/subordinate/', data)
+export const getUserByName = id => fetch('/user/id/' + id)
+
+export const getUsers = data => fetch('/user/subordinate', data)
 
 export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
 
@@ -211,3 +214,25 @@ export const getFarmById = id => fetch(`/factory/${id}`)
 export const getFarmByLocation = loc => fetch(`/factory/location`, {location: loc})
 
 export const deleteFarm = id => fetch(`/factory/${id}`, null, 'DELETE')
+
+/**
+ * 动物福利
+ */
+export const postWelfare = data => fetch('/of', data, 'POST')
+
+export const updateWelfare = (id, data) => fetch(`/of/${id}`, data, 'PUT')
+
+export const getAllWelfare = (id, data) => fetch(`/of/${id}`, data)
+
+export const getWelfare = id => fetch(`/of/find/${id}`)
+
+export const deleteWelfare = id => fetch(`/of/${id}`, null, 'DELETE')
+
+/**
+ * 角色权限管理
+ */
+export const getRoles = (facid, data) => fetch('/role/' + facid, data)
+
+export const getRoleDetail = roleid => fetch('/role/find' + roleid)
+
+export const getFactoryUsers = facid => fetch('/user/factory/' + facid)

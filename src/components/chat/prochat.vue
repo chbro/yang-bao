@@ -36,13 +36,13 @@
                         :data="data3"
                         :props="defaultProps3"
                         default-expand-all
-                        :filter-node-method="filterNode3"
+                        :filter-node-method="filterNode"
                         ref="tree3">
                     </el-tree>
                 </el-aside>
                 <el-main>
                     <div class="pro-dialog_box" ref="dialog">
-                        <div class="pro-dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? '专家' : '用户'"></span><span class="msg" v-html="item.html"></span></div>
+                        <div class="pro-dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? expert.name : user.name"></span><span class="msg" v-html="item.html"></span></div>
                     </div>
                     <div class="my_input_box">
                         <div class="my_chat_option">
@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import { keepLastIndex, isReqSuccessful } from '@/util/jskit'
-// import { baseUrl } from '@/util/fetch'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
-import { getExpert } from '@/util/getdata'
+import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
+import { getExpert, getUserById } from '@/util/getdata'
+import { wsUrl, baseUrl } from '@/util/fetch'
 
 export default {
     components: {
@@ -82,149 +82,51 @@ export default {
 
     data () {
         return {
+            expert: {},
+            user: {},
+
             showEmoji: false,
-            user: {
-                id: 10,
-                agentid: 3
-            },
-            items: [
-                {html: '我是客户？'},
-                {html: '请说出你的问题', self: 1}
-            ],
+            items: [],
             activeIndex: '1',
-            options: [{
-                value: '选项1',
-                label: '在线'
-            }, {
-                value: '选项2',
-                label: '隐身'
-            }, {
-                value: '选项3',
-                label: '忙碌'
-            }],
+
+            options: [],
             filterText: '',
-            data2: [{
-                id: 1,
-                label: '我的访客',
-                children: [{
-                    id: 4,
-                    label: '排队中',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                },
-                {
-                    id: 4,
-                    label: '对话中',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                },
-                {
-                    id: 4,
-                    label: '离开客人',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '我的同事',
-                children: [{
-                    id: 5,
-                    label: '总公司',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }, {
-                    id: 6,
-                    label: '某县级',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }]
-            }],
+            data2: [],
             defaultProps: {
                 children: 'children',
                 label: 'label'
             },
             filterText3: '',
-            data3: [{
-                id: 1,
-                label: '问候',
-                children: [{
-                    id: 4,
-                    label: '早安',
-                    children: [{
-                        id: 9,
-                        label: '三级 1-1-1'
-                    }, {
-                        id: 10,
-                        label: '三级 1-1-2'
-                    }]
-                }]
-            }, {
-                id: 2,
-                label: '一级 2',
-                children: [{
-                    id: 5,
-                    label: '二级 2-1'
-                }, {
-                    id: 6,
-                    label: '二级 2-2'
-                }]
-            }, {
-                id: 3,
-                label: '一级 3',
-                children: [{
-                    id: 7,
-                    label: '二级 3-1'
-                }, {
-                    id: 8,
-                    label: '二级 3-2'
-                }]
-            }],
-
+            data3: [],
             defaultProps3: {
                 children: 'children',
                 label: 'label'
             },
-            count: 1
+
+            msgCount: 0
         }
     },
 
     mounted () {
+        let id = 17
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                let { userRealname } = res.data.model
+                this.expert = {
+                    id,
+                    name: userRealname
+                }
+            }
+        })
+
         this.$refs.emoji.appendTo({
             area: this.$refs.edit,
             btn: this.$refs.btn,
             position: 'top left'
         })
 
-        let wsUri = 'ws://192.168.1.112:8080/websocket/' + this.user.id
-        this.websocket = new WebSocket(wsUri)
-        this.websocket.onopen = evt => {
-            // console.log(evt)
-        }
+        let ws = wsUrl + '/' + this.$route.query.id
+        this.websocket = new WebSocket(ws)
         this.websocket.onclose = evt => {
             this.$notify.error({
                 duration: 5000,
@@ -236,24 +138,25 @@ export default {
             console.log(evt)
             let data = JSON.parse(evt.data)
             let html = ''
+            this.msgCount++
+            if (this.msgCount === 1) {
+                this.user = {
+                    id: data.talk_id,
+                    name: data.name
+                }
+                console.log(this.user)
+            }
             if (data.order === 'link') {
                 html = `<i class="el-icon-document"></i><a href="${data.message}"></a>`
             } else {
                 html = data.message
             }
-            this.items.push({html})
-            this.$nextTick(_ => {
-                let dialog = this.$refs.dialog
-                dialog.scrollTop = dialog.scrollHeight
-            })
-        }
-        this.websocket.onerror = evt => {
-
+            this.pushChatMessage(html, data.order === 'self')
         }
 
-        window.onbeforeunload = function () {
-            return false
-        }
+        // window.onbeforeunload = function () {
+        //     return false
+        // }
     },
 
     destroyed () {
@@ -266,31 +169,36 @@ export default {
             return data.label.indexOf(value) !== -1
         },
 
-        filterNode3 (value, data) {
-            if (!value) return true
-            return data.label.indexOf(value) !== -1
-        },
-
         handleEmojiSelect (img) {
             let edit = this.$refs.edit
             img.src = img.src.replace('/images', '/static/images')
             edit.appendChild(img)
-            // 保持上次的光标位置
             keepLastIndex(edit)
         },
 
         send (e) {
             e && e.preventDefault()
+
             let edit = this.$refs.edit
+            if (edit.innerHTML === '') {
+                this.$message.warning('请输入内容')
+                return
+            }
             let data = {
                 message: edit.innerHTML,
-                to: [3],
-                user_id: 2,
-                role: 'common',
-                mode: 0,
-                name: 'zym'
+                isExpert: true,
+                user_id: this.expert.id,
+                name: this.user.name,
+                talk_id: this.user.id,
+                mode: 0
             }
-            this.websocket.send(JSON.stringify(data))
+            console.log(data)
+            try {
+                this.websocket.send(JSON.stringify(data))
+            } catch (e) {
+                this.$message.error('消息发送失败')
+                return
+            }
             edit.innerHTML = ''
         },
 
@@ -308,7 +216,7 @@ export default {
             form.append('talk_id', 3)
             form.append('mode', 0)
 
-            window.fetch('http://192.168.1.112:8080/talk/upload', {
+            window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
                 body: form
             }).then(res => {
@@ -324,17 +232,25 @@ export default {
                     message: '文件发送失败'
                 })
             })
-            file.value = null
+            resetFile(this.$refs.file)
         },
 
         invite () {
-            getExpert(this.user.agentid).then(res => {
+            getExpert(this.expert.id).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('邀请成功')
                     // to invite another professor
                 }
-            }, res => {
-                this.$message.error(res.meta.errorMsg || '邀请成功')
+            }, _ => {
+                this.$message.error('邀请失败')
+            })
+        },
+
+        pushChatMessage (html, isSelf) {
+            this.items.push({html, self: isSelf})
+            this.$nextTick(_ => {
+                let dialog = this.$refs.dialog
+                dialog.scrollTop = dialog.scrollHeight
             })
         }
     },
@@ -392,6 +308,7 @@ export default {
             color color-main
     .el-main
         .pro-dialog_box
+            overflow-y auto
             height 250px
             border 1px solid #e4e7ed
             .pro-dialog-item

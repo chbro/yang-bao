@@ -3,7 +3,6 @@
         <admin-table
             modpath="review"
             find-by="aid"
-            :is-review="true"
             :get-data="getAllDisinfects"
             :headers="headers">
         </admin-table>

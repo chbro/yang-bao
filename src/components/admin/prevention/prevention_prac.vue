@@ -3,6 +3,7 @@
         <data-cur
             title="疫病防治实施档案"
             modpath="prevention"
+            @update:models="v => models = v"
             :models.sync="models"
             :items="items"
             :has-remark="false"
