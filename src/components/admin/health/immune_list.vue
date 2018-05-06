@@ -32,7 +32,8 @@ export default {
                 {prop: 'immuneWay', label: '接种方法'},
                 {prop: 'immuneKind', label: '疫苗种类'},
                 {prop: 'dose', label: '接种剂量'},
-                {prop: 'immuneDuring', label: '免疫期', width: '160'}
+                {prop: 'immuneDuring', label: '免疫期', width: '160'},
+                {prop: 'remark', label: '备注', width: '200'}
             ]
         }
     }

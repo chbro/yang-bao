@@ -82,7 +82,7 @@ export default {
                     {label: '角色权限管理', to: 'authrole'},
                     {label: '发布系统', to: 'release'},
                     {label: '专家课堂视频发布', to: 'test5'},
-                    {label: '短信平台', to: 'test6'},
+                    {label: '短信平台', to: 'message'},
                     {label: '留言统计', to: 'test10'},
                     {label: '专家客户评价结果', to: 'test7'}
                 ]},
@@ -97,7 +97,7 @@ export default {
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                        {label: '卫生与动物福利操作档案', to: 'welfare'},
+                        {label: '卫生与动物福利操作档案', to: 'welfareList'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},

@@ -57,6 +57,7 @@ const ProductionVisual = () => import('@/components/admin/visual/production')
 const TraceCharts = () => import('@/components/admin/trace/index')
 // 动物福利
 const Welfare = () => import('@/components/admin/welfare/index')
+const WelfareList = () => import('@/components/admin/welfare/list')
 // 有机监管
 const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
@@ -71,6 +72,9 @@ const AgentList = () => import('@/components/admin/agent/list')
 // 发布系统
 const Release = () => import('@/components/admin/release/index')
 const ReleaseList = () => import('@/components/admin/release/list')
+
+// 短信平台
+const Message = () => import('@/components/admin/message/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -112,9 +116,11 @@ export default new Router({
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
+            {path: 'welfare/list', name: 'welfareList', component: WelfareList},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
+            {path: 'message', name: 'message', component: Message},
             // 卫生疫控
             {path: 'health/disinfect/prac', name: 'disinfectprac', component: DisinfectPrac},
             {path: 'health/disinfect/list', name: 'disinfectlist', component: DisinfectList},

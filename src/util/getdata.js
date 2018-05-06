@@ -209,3 +209,10 @@ export const getAgents = (id, data) => fetch(`/agent/${id}`, data)
 export const getAgent = id => fetch('/agent/find' + id)
 
 export const deleteAgent = id => fetch(`/agent/${id}`, null, 'DELETE')
+
+/**
+ * 短信平台
+ */
+export const postMessage = data => fetch('/psend', data, 'GET')
+
+export const postWarningInfo = data => fetch('/gedit', data, 'GET')

@@ -333,7 +333,7 @@ export default {
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '是否做到人员安全防护是否合格', name: 'safetyProtection' },
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '实验室垃圾与排水是否无害化处理', name: 'rubbishWater' },
                     { type: 'radio', fieldNameWidth: '60%', fieldValue: 0, fieldName: '是否遵守操作规范', name: 'operationSpecification' },
-                    { fieldName: 'remark', fieldNameWidth: '60%', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldNameWidth: '60%', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 disinfect: [ // 消毒实施档案
                     { fieldName: '免疫耳牌号', fieldValue: '', name: 'disinfectEartagFile' },
@@ -341,7 +341,7 @@ export default {
                     { fieldName: '用药剂量', fieldValue: '', name: 'dose' },
                     { fieldName: '消毒场所', fieldValue: '', name: 'place' },
                     { fieldName: '消毒时间', fieldValue: '', name: 'disinfectTime', size: 'large' },
-                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 immune: [ // 免疫实施档案
                     { fieldName: '接种时间', fieldValue: '', name: 'immuneTime' },
@@ -350,7 +350,7 @@ export default {
                     { fieldName: '接种方法', fieldValue: '', name: 'immuneWay' },
                     { fieldName: '接种剂量', fieldValue: '', name: 'dose' },
                     { fieldName: '免疫期', fieldValue: '', name: 'immuneDuring' },
-                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 expelling: [ // 驱虫实施档案
                     { fieldName: '免疫耳牌号', fieldValue: '', name: 'repellentEartagFile' },
@@ -359,7 +359,7 @@ export default {
                     { fieldName: '药物名称', fieldValue: '', name: 'repellentfieldName' },
                     { fieldName: '给药途径', fieldValue: '', name: 'repellentWay' },
                     { fieldName: '给药剂量', fieldValue: '', name: 'dose' },
-                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ]
             },
             nutData: {
@@ -369,7 +369,7 @@ export default {
                     { fieldName: '羊数', fieldValue: '', name: 'quantity' },
                     { fieldName: '阶段', fieldValue: '', name: 'period' },
                     { fieldName: '饮水', fieldValue: '', name: 'water', size: 'large' },
-                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
                 ],
                 hybrid: [ // 配种产子实施档案
                     { fieldName: '栏/栋', fieldValue: '', name: 'building' },
@@ -382,7 +382,7 @@ export default {
                     { fieldName: '产羔时间', fieldValue: '', name: 'cubT' },
                     { fieldName: '产前免疫（三联四防）接种时间', fieldValue: '', name: 'prenatalIT' },
                     { fieldName: '产羔', fieldValue: '', name: 'quantity' },
-                    { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                    { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
 
                 ]
             },
@@ -395,7 +395,7 @@ export default {
                 { fieldName: '监督确认时间', fieldValue: '', name: 'gmtSup' },
                 { fieldName: '诊疗时间', fieldValue: '', name: 'diagnosisTime' },
                 { fieldName: '剂量', fieldValue: '', name: 'dose'},
-                { fieldName: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
+                { name: 'remark', fieldName: '备注', fieldValue: '', size: 'large' }
             ],
             item: {
                 name: '商品羊',

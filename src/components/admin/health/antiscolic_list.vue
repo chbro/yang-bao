@@ -29,7 +29,8 @@ export default {
                 {prop: 'repellentTime', label: '驱虫时间', width: '160'},
                 {prop: 'repellentName', label: '药物名称'},
                 {prop: 'dose', label: '给药剂量'},
-                {prop: 'repellentWay', label: '给药方式', width: '160'}
+                {prop: 'repellentWay', label: '给药方式', width: '160'},
+                {prop: 'remark', label: '备注', width: '200'}
             ]
         }
     }
