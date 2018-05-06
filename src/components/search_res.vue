@@ -625,10 +625,10 @@ export default {
     .block-intro
         display inline-block
         width 20%
-        i
-            display inline-block
-            margin-right 10px
-            font-size 30px
+        // i
+        //     display inline-block
+        //     margin-right 10px
+        //     font-size 30px
         >div
             display inline-block
             vertical-align top

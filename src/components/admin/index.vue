@@ -276,6 +276,7 @@ export default {
 .fl-l
     float left
 .pad
+    height calc(100% - 30px)
     padding-left 8px
 .bg-blue
     background-color color-main
@@ -369,6 +370,8 @@ export default {
     .main-content
         min-height 400px
         margin-top 20px
+        box-sizing border-box
+        height calc(100% - 67px)
         padding 10px
         background-color #fff
         color color-main
