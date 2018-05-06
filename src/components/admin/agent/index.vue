@@ -62,13 +62,15 @@ export default {
                 {label: '代理等级', model: 'agentRank', type: 'select', fetchSuggestions: getRegion},
                 {label: '代理名称', model: 'agentName'},
                 {label: '代理负责人', model: 'responsibleName', mr: 1},
-                {label: '代理所属地域', model: 'agentArea', type: 'address', level: 1}
+                {label: '代理所属地域', model: 'agentArea', type: 'address', level: 1},
+                {label: '上级代理', model: 'agentFather'}
             ],
             models: {
                 agentArea: [],
                 agentRank: null,
                 agentName: null,
-                responsibleName: null
+                responsibleName: null,
+                agentFather: null
             }
         }
     }

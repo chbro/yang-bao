@@ -26,12 +26,12 @@ export default {
             getFarms,
             deleteFarm,
             headers: [
+                {prop: 'agent', label: '上级代理'},
                 {prop: 'pkNumber', label: '羊场编号'},
                 {prop: 'breedName', label: '羊场名称'},
                 {prop: 'breedLocation', label: '羊场地理位置', width: 250},
                 {prop: 'responsiblePersonid', label: '羊场负责人'},
-                {prop: 'disinfectP', label: '消毒场所', width: 180},
-                {prop: 'agent', label: '上级代理'}
+                {prop: 'disinfectP', label: '消毒场所'}
             ]
         }
     }

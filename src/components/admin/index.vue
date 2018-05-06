@@ -90,7 +90,7 @@ export default {
                 ]},
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
-                    {label: '专家在线课堂', to: 'test8'},
+                    {label: '专家在线课堂', to: 'onlineCourse'},
                     {label: '生产档案审核', to: 'review'}
                 ]},
                 {label: '生产管理平台', children: [
@@ -99,7 +99,7 @@ export default {
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                        {label: '卫生与动物福利操作档案', to: 'welfare'},
+                        {label: '卫生与动物福利操作档案', to: 'welfareList'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -328,6 +328,7 @@ export default {
 .fl-l
     float left
 .pad
+    height calc(100% - 30px)
     padding-left 8px
 .bg-blue
     background-color color-main
@@ -421,6 +422,8 @@ export default {
     .main-content
         min-height 400px
         margin-top 20px
+        box-sizing border-box
+        height calc(100% - 67px)
         padding 10px
         background-color #fff
         color color-main

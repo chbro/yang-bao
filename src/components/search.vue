@@ -4,7 +4,7 @@
         <h2>东骏（有机）养殖生产管理追溯系统管理平台</h2>
         <div>
             <el-input placeholder="在此录入溯源码" size="medium" v-model="key"></el-input>
-            <el-button size="medium">搜索</el-button>
+            <el-button size="medium" @click="search">搜索</el-button>
         </div>
     </div>
 </template>
@@ -14,6 +14,18 @@ export default {
     data () {
         return {
             key: null // 搜索关键词
+        }
+    },
+    methods: {
+        search () {
+            if (!this.key) {
+                this.$message({
+                    message: '请先输入溯源码',
+                    type: 'warning'
+                })
+                return
+            }
+            this.$router.push({name: 'search', query: { code: this.key }})
         }
     }
 }

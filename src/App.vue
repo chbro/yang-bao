@@ -69,6 +69,7 @@ ul
     padding 0
     margin 0
 a
+    display inline-block
     text-decoration none
     color color-main
     &:hover
@@ -83,4 +84,9 @@ img
 
 .cursor-p
     cursor pointer
+@media screen and (max-width 600px)
+    body, html
+        background-color color-main
+    .app-footer
+        display none
 </style>

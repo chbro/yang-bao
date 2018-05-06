@@ -313,8 +313,9 @@ export default {
 
 .footer-bottom
     margin 0
-    height h=50px
-    line-height h
+    padding 10px 0
+    // height h=50px
+    line-height 30px
     text-align center
     color #C9C9C9
     background-color color-main
@@ -325,4 +326,6 @@ export default {
         .el-col-6
             width 100%
             margin-bottom 15px
+    .footer-bottom
+        display none
 </style>

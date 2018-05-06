@@ -149,8 +149,18 @@ export default {
         margin-right 38%
         cursor pointer
     .link
+        padding 15px 0
         text-align center
         color #ffffff
     .link a
         color #ffffff
+
+@media screen and (max-width 600px)
+    h3
+        font-size 16px
+@media screen and (max-width 320px)
+    .login-main .code
+        margin-right 33%
+    h3
+        font-size 15px
 </style>

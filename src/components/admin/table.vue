@@ -48,6 +48,8 @@
                 :width="th.width || '120'">
             </el-table-column>
             <el-table-column
+                class="action"
+                fixed="right"
                 label="操作"
                 width="160">
                 <template slot-scope="scope">
@@ -248,3 +250,11 @@ export default {
     }
 }
 </script>
+
+<style lang="stylus">
+@import '~@/assets/css/color'
+.el-table th
+    border-left 2px solid #98c9e6
+    color #fff
+    background-color color-main
+</style>

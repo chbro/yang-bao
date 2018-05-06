@@ -1,33 +1,177 @@
 <template>
-    <div>
-        <admin-table
-            modpath="welfare"
-            :getData="getAllWelfare"
-            :deleteData="deleteWelfare"
-            :headers="headers">
-        </admin-table>
-    </div>
+  <div class="mod_welfareList">
+    <el-table
+      ref="table"
+      tooltip-effect="light"
+      :data="tableData3"
+      style="width: 100%">
+      <el-table-column
+        prop="date"
+        label="自检、主管上级检查时间"
+        width="200">
+      </el-table-column>
+      <el-table-column label="场内外环境卫生" align="center">
+        <el-table-column
+          prop="name"
+          label="圈舍内外">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="饲料库房及加工车间">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="杀虫灭鼠">
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="操作人员卫生与安全" align="center">
+        <el-table-column
+          prop="name"
+          label="消毒室制度执行">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否赤手操作">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否一羊一针头">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="疫苗及针头的消毒处理">
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="实验室卫生与安全" align="center">
+        <el-table-column
+          prop="name"
+          label="是否做到人员安全防护">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="实验室垃圾与排水是否无害化处理">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否遵守操作规范">
+        </el-table-column>
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="羊舍空气与温度">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="羊只运动与采光">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="车辆进出消毒">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="操作人员">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="技术监督">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="备注">
+      </el-table-column>
+      <el-table-column
+        class="action"
+        fixed="right"
+        label="操作"
+        width="160">
+        <template slot-scope="scope">
+          <div class="opr">
+            <span>查看</span>
+            <template>
+              <span>编辑</span>
+              <span>删除</span>
+            </template>
+            </div>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      layout="prev, pager, next"
+      :total="total"
+      @current-change="fetchData"
+      :current-page.sync="page">
+    </el-pagination>
+  </div>
 </template>
 
 <script>
-import AdminTable from '@/components/admin/table'
-import { getAllWelfare, deleteWelfare } from '@/util/getdata'
-
-export default {
-    components: {
-        AdminTable
-    },
-
-    data () {
-        return {
-            getAllWelfare,
-            deleteWelfare,
-            headers: [
-                {prop: 'ispassCheck', label: '审核状态'},
-                {prop: 'factoryName', label: '工厂名', width: 150},
-                {prop: 'building', label: '自检/主管上级检查时间', width: 300}
-            ]
-        }
+  export default {
+    data() {
+      return {
+        load: true,
+        tableData3: [{
+          date: '2016-05-03',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-02',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-08',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-06',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }, {
+          date: '2016-05-07',
+          name: '王小虎',
+          province: '上海',
+          city: '普陀区',
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        }]
+      }
     }
-}
+  }
 </script>
+
+<style lang="stylus">
+@import '~@/assets/css/color'
+.mod_welfareList
+  .el-table th
+    border-left none
+    color #fff
+    background-color color-main
+  .el-table thead.is-group th
+    background color-main
+</style>

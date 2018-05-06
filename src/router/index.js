@@ -12,10 +12,10 @@ import Course from '@/components/course'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
 const SearchRes = () => import('@/components/search_res')
+const ReleaseIndex = () => import('@/components/release')
 
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
-const Message = () => import('@/components/admin/message/index')
 // 个人信息
 const UserInfo = () => import('@/components/admin/user/user')
 const PasswordModify = () => import('@/components/admin/user/pass')
@@ -72,6 +72,8 @@ const AgentList = () => import('@/components/admin/agent/list')
 // 发布系统
 const Release = () => import('@/components/admin/release/index')
 const ReleaseList = () => import('@/components/admin/release/list')
+// 短信平台
+const Message = () => import('@/components/admin/message/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -91,6 +93,20 @@ export default new Router({
         {path: '/chat', name: 'chat', component: Chat},
         {path: '/prochat', name: 'prochat', component: ProChat},
         {path: '/search', name: 'search', component: SearchRes},
+        // 集团
+        {path: '/company', name: 'company', component: ReleaseIndex},
+        // 产品
+        {path: '/product', name: 'product', component: ReleaseIndex},
+        // 有机
+        {path: '/organic', name: 'organic', component: ReleaseIndex},
+        // 效益
+        {path: '/benefit', name: 'benefit', component: ReleaseIndex},
+        // 加盟
+        {path: '/league', name: 'league', component: ReleaseIndex},
+        // 新闻
+        {path: '/news', name: 'news', component: ReleaseIndex},
+        // 联系我们
+        {path: '/contact', name: 'contact', component: ReleaseIndex},
 
         // 管理员模块
         {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
