@@ -1,95 +1,80 @@
 <template>
-  <div class="mod_stageList">
+  <div class="mod_welfareList">
     <el-table
       ref="table"
       tooltip-effect="light"
       :data="tableData3"
       style="width: 100%">
       <el-table-column
-        prop="name"
-        label="栋号">
+        prop="date"
+        label="自检、主管上级检查时间"
+        width="200">
+      </el-table-column>
+      <el-table-column label="场内外环境卫生" align="center">
+        <el-table-column
+          prop="name"
+          label="圈舍内外">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="饲料库房及加工车间">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="杀虫灭鼠">
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="操作人员卫生与安全" align="center">
+        <el-table-column
+          prop="name"
+          label="消毒室制度执行">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否赤手操作">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否一羊一针头">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="疫苗及针头的消毒处理">
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="实验室卫生与安全" align="center">
+        <el-table-column
+          prop="name"
+          label="是否做到人员安全防护">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="实验室垃圾与排水是否无害化处理">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="是否遵守操作规范">
+        </el-table-column>
       </el-table-column>
       <el-table-column
         prop="name"
-        label="使用日期">
+        label="羊舍空气与温度">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="羊数">
+        label="羊只运动与采光">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="阶段">
+        label="车辆进出消毒">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="饮水">
+        label="操作人员">
       </el-table-column>
-      <el-table-column label="精料配方" align="center">
-        <el-table-column
-          prop="name"
-          label="预混料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="精料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="其他">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="精料用量" align="center">
-        <el-table-column
-          prop="name"
-          label="精料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="其他">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="粗饲料配方(%)" align="center">
-        <el-table-column
-          prop="name"
-          label="青料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="干料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="其他">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="粗饲料用量(体重%)" align="center">
-        <el-table-column
-          prop="name"
-          label="青料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="干料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="其他">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="领料总量" align="center">
-        <el-table-column
-          prop="name"
-          label="精料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="粗料">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="其他">
-        </el-table-column>
+      <el-table-column
+        prop="name"
+        label="技术监督">
       </el-table-column>
       <el-table-column
         prop="name"
@@ -182,7 +167,7 @@
 
 <style lang="stylus">
 @import '~@/assets/css/color'
-.mod_stageList
+.mod_welfareList
   .el-table th
     border-left none
     color #fff

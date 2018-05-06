@@ -1,7 +1,6 @@
 <template>
     <div>
         <admin-table
-            name="疾病防治"
             modpath="prevention"
             :getData="getAllPrevention"
             :deleteData="deletePrevention"

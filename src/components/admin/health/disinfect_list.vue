@@ -30,7 +30,8 @@ export default {
                 {prop: 'disinfectTime', label: '消毒时间', width: 180},
                 {prop: 'disinfectName', label: '消毒药品名称', width: 180},
                 {prop: 'dose', label: '用药剂量'},
-                {prop: 'disinfectWay', label: '消毒方法', width: 200}
+                {prop: 'disinfectWay', label: '消毒方法', width: '160'},
+                {prop: 'remark', label: '备注', width: '200'},
             ]
         }
     }

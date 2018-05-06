@@ -3,6 +3,7 @@
         <data-cur
             title="系谱档案"
             modpath="genealogic"
+            :radio-sex="true"
             :models.sync="models"
             :items="items"
             :get-data="getGeneaRec"

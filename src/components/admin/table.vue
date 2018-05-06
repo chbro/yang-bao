@@ -48,6 +48,8 @@
                 :width="th.width || '120'">
             </el-table-column>
             <el-table-column
+                class="action"
+                fixed="right"
                 label="操作"
                 width="160">
                 <template slot-scope="scope">
@@ -73,7 +75,6 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveAid, retrieveFacNum, retrieveUid } from '@/util/store'
 
 export default {
     props: {
@@ -169,13 +170,14 @@ export default {
             }
 
             let id
-            let findBy = this.findBy
-            if (findBy === 'aid') {
-                id = retrieveAid()
-            } else if (findBy === 'factoryNum') {
-                id = retrieveFacNum()
-            } else if (findBy === 'uid') {
-                id = retrieveUid()
+            let { factoryId, agentId } = this.$store.state.user
+            // let findBy = this.findBy
+            if (this.$store.state.user.id !== undefined) {
+                id = this.$store.state.user.id
+            } else if (factoryId !== undefined) {
+                id = factoryId
+            } else if (agentId !== undefined) {
+                id = agentId
             }
 
             if (id === null || id === undefined) {
@@ -248,3 +250,11 @@ export default {
     }
 }
 </script>
+
+<style lang="stylus">
+@import '~@/assets/css/color'
+.el-table th
+    border-left 2px solid #98c9e6
+    color #fff
+    background-color color-main
+</style>

@@ -3,6 +3,7 @@
         <data-cur
             title="配种产子实施档案"
             modpath="nutrition/breed"
+            @update:models="v => models = v"
             :models.sync="models"
             :items="items"
             :has-remark="false"

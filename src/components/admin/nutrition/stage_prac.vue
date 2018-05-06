@@ -9,16 +9,17 @@
             <div class="border-main">
                 <div v-for="(item, i) in card.items" :key="i" class="card-item">
                     <template v-for="(input, j) in item.inputs">
-                        <el-input placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
+                        <el-input :value="input" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
                             <template slot="prepend">{{ item.label }}:</template>
                         </el-input>
                         <div :key="j" v-else-if="item.type === 'select'" class="time el-input-group select">
                             <span class="time-span" v-text="item.label + ':'"></span>
+                            <!-- v-model="models[item.model]" -->
                             <el-autocomplete
+                                :value="input"
                                 :ref="item.model + '-' + j"
                                 placeholder="名称和百分比"
                                 size="small"
-                                v-model="models[item.model]"
                                 @select="() => {}"
                                 :fetch-suggestions="item.fetchSuggestions">
                             </el-autocomplete>
@@ -32,9 +33,15 @@
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
         </div>
-        <div class="admin-send">
-            <el-button :disabled="disableBtn" type="primary" @click="submit()">提交/更新</el-button>
+        <div class="admin-send" v-if="canModify">
+            <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
+            <template v-else-if="!view">
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(true)">通过</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv()">拒绝</el-button>
+            </template>
+            <el-button type="primary" v-else :disabled="disableBtn" @click="$router.back()">返回</el-button>
         </div>
+        <div class="admin-send" v-else>已审核</div>
     </div>
 </template>
 
@@ -88,32 +95,37 @@ export default {
                 // 原材料，%
                 // 临时添加，%
                 {title: '精料配方（%）', items: [
-                    {label: '预混料', model: 'materialA', inputs: [1]},
-                    {label: '精料', model: 'materialM', inputs: [1]},
-                    {label: '其他', model: 'materialO', inputs: [1]}
+                    {label: '预混料', model: 'materialA', inputs: ['']},
+                    {label: '精料', model: 'materialM', inputs: ['']},
+                    {label: '其他', model: 'materialO', inputs: ['']}
                 ]},
                 {title: '精料用量（体重%）', items: [
-                    {label: '精料', model: 'materialWM', type: 'select', fetchSuggestions: getConFeed, inputs: [1]},
-                    {label: '其他', model: 'materialWO', inputs: [1]}
+                    {label: '精料', model: 'materialWM', type: 'select', fetchSuggestions: getConFeed, inputs: ['']},
+                    {label: '其他', model: 'materialWO', inputs: ['']}
                 ]},
                 {title: '粗饲料配方（%）', items: [
-                    {label: '青料', model: 'roughageP', inputs: [1]},
-                    {label: '干料', model: 'roughageD', type: 'select', fetchSuggestions: getDryFeed, inputs: [1]},
-                    {label: '其他', model: 'roughageO', inputs: [1]}
+                    {label: '青料', model: 'roughageP', inputs: ['']},
+                    {label: '干料', model: 'roughageD', type: 'select', fetchSuggestions: getDryFeed, inputs: ['']},
+                    {label: '其他', model: 'roughageO', inputs: ['']}
                 ]},
                 {title: '粗饲料用量（体重%）', items: [
-                    {label: '青料', model: 'roughageWP', inputs: [1]},
-                    {label: '干料', model: 'roughageWD', type: 'select', fetchSuggestions: getDryFeed, inputs: [1]},
-                    {label: '其他', model: 'roughageWO', inputs: [1]}
+                    {label: '青料', model: 'roughageWP', inputs: ['']},
+                    {label: '干料', model: 'roughageWD', type: 'select', fetchSuggestions: getDryFeed, inputs: ['']},
+                    {label: '其他', model: 'roughageWO', inputs: ['']}
                 ]},
                 {title: '领料总量', items: [
-                    {label: '精料', model: 'pickingM', inputs: [1]},
-                    {label: '粗料', model: 'pickingR', inputs: [1]},
-                    {label: '其他', model: 'pickingO', inputs: [1]}
+                    {label: '精料', model: 'pickingM', inputs: ['']},
+                    {label: '粗料', model: 'pickingR', inputs: ['']},
+                    {label: '其他', model: 'pickingO', inputs: ['']}
                 ]}
             ],
             disableBtn: false,
-            edit: false
+            canModify: true,
+
+            edit: false,
+            check: false,
+            supervise: false,
+            view: false
         }
     },
 
@@ -127,7 +139,7 @@ export default {
     },
 
     mounted () {
-        this.edit = this.$route.query.edit
+        this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
         if (this.edit) {
             getStage(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
@@ -141,19 +153,13 @@ export default {
                         for (let v2 of this.cards) {
                             let card = v2.items.find(v3 => v3.model === v)
                             if (card) {
-                                card.inputs = JSON.parse(data[v])
-
-                                this.$nextTick(() => {
-                                    card.inputs.forEach((v4, j) => {
-                                        this.$refs[v + '-' + j][0].$el.querySelector('input').value = v4
-                                    })
-                                })
+                                card.inputs = data[v] && JSON.parse(data[v])
                                 break
                             }
                         }
-                        // obj[v] = JSON.parse(data[v])
                     })
                     this.models = obj
+                    console.log(this.models, this.cards)
                 }
             })
         }
@@ -161,7 +167,7 @@ export default {
 
     methods: {
         addItem (cardIndex, itemIndex) {
-            this.cards[cardIndex].items[itemIndex].inputs.push(1)
+            this.cards[cardIndex].items[itemIndex].inputs.push('')
         },
 
         submit () {
@@ -182,11 +188,10 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
-
-            this.models.operatorName = '嫖'
-            this.models.operatorId = 1
-            this.models.factoryNum = 1
-            this.models.factoryName = '老嫖猪场'
+            this.models.factoryNum = this.$store.state.user.factoryId
+            this.models.factoryName = this.$store.state.user.departmentName
+            this.models.operatorId = this.$store.state.user.id
+            this.models.operatorName = this.$store.state.user.username
 
             this.disableBtn = true
             if (this.edit) {
@@ -195,7 +200,7 @@ export default {
                         patchJump('nutrition/stage')
                     }
                     this.disableBtn = false
-                }).catch(_ => {
+                }, _ => {
                     this.disableBtn = false
                     this.$message.error('修改失败')
                 })
@@ -204,9 +209,8 @@ export default {
                     if (isReqSuccessful(res)) {
                         postJump('nutrition/stage')
                     }
-
                     this.disableBtn = false
-                }).catch(_ => {
+                }, _ => {
                     this.disableBtn = false
                     this.$message.error('录入失败')
                 })

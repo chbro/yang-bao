@@ -1,6 +1,6 @@
 <template>
     <div class="app-home">
-        <admin-head :user.sync="user"></admin-head>
+        <admin-head></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
                 <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
@@ -45,7 +45,9 @@
 <script>
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
-import { retrieveName, retrieveFacName } from '@/util/store'
+import { getUserById } from '@/util/getdata'
+import { isReqSuccessful, getLocalUid } from '@/util/jskit'
+// import { tokenStr } from '@/util/fetch'
 
 /* eslint-disable object-property-newline */
 export default {
@@ -88,7 +90,7 @@ export default {
                 ]},
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
-                    {label: '专家在线课堂', to: 'test8'},
+                    {label: '专家在线课堂', to: 'onlineCourse'},
                     {label: '生产档案审核', to: 'review'}
                 ]},
                 {label: '生产管理平台', children: [
@@ -97,7 +99,7 @@ export default {
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                        {label: '卫生与动物福利操作档案', to: 'welfare'},
+                        {label: '卫生与动物福利操作档案', to: 'welfareList'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -150,19 +152,60 @@ export default {
                 {label: '配种产子', mod: 'breed'},
                 {label: '疫病防治', mod: 'prevention'}
             ],
-
-            user: {
-                pkUserid: '',
-                userFactory: ''
-            }
+            // local map for content header tabs
+            map: [
+                {label: '个人信息修改', to: 'userinfo'},
+                {label: '密码修改', to: 'passmod'},
+                {label: '代理管理', to: 'agent'},
+                {label: '羊场管理', to: 'farm'},
+                {label: '用户管理', to: 'account'},
+                {label: '角色权限管理', to: 'authrole'},
+                {label: '发布系统', to: 'release'},
+                {label: '专家课堂视频发布', to: 'test5'},
+                {label: '短信平台', to: 'message'},
+                {label: '留言统计', to: 'test10'},
+                {label: '专家客户评价结果', to: 'test7'},
+                {label: '客户评价', to: 'test3'},
+                {label: '专家在线课堂', to: 'test8'},
+                {label: '生产档案审核', to: 'review'},
+                {label: '专家课堂', to: 'course'},
+                {label: '系谱档案', to: 'genealogic'},
+                {label: '专家咨询', to: 'chat'},
+                {label: '卫生与动物福利管理方案', to: 'welfareplan'},
+                {label: '卫生与动物福利操作档案', to: 'welfare'},
+                // {label: '卫生消毒方案', to: 'disinfectplan'},
+                {label: '消毒实施档案', to: 'disinfectprac'},
+                {label: '免疫方案', to: 'immuneplan'},
+                {label: '免疫实施档案', to: 'immuneprac'},
+                {label: '驱虫方案', to: 'antiscolicplan'},
+                {label: '驱虫实施档案', to: 'antiscolicprac'},
+                {label: '阶段营养方案', to: 'stageplan'},
+                {label: '阶段营养实施档案', to: 'stageprac'},
+                {label: '配种产子管理方案', to: 'breedplan'},
+                {label: '配种产子实施档案', to: 'breedprac'},
+                {label: '疫病防治方案', to: 'preventionplan'},
+                {label: '疫病防治实施档案', to: 'preventionprac'},
+                {label: '诊断可视', to: 'diagnose'},
+                {label: '生产环节可视', to: 'production'},
+                {label: '有机养殖环境追溯', to: 'trace'},
+                {label: '国家认证', to: 'nation'},
+                {label: '生产可视截图', to: 'capture'},
+                {label: '操作流程审核', to: 'audit'},
+                {label: '回收化验指标', to: 'recovery_index'}
+            ]
         }
     },
 
     mounted () {
-        this.user = {
-            pkUserid: retrieveName(),
-            userFactory: retrieveFacName()
-        }
+        getUserById(getLocalUid()).then(res => {
+            if (isReqSuccessful(res)) {
+                this.$store.commit('storeUserInfo', res.data.model)
+                console.log(this.$store.state, this.$store.state.user)
+            }
+        }, _ => {
+            this.$message.error('获取用户信息失败')
+        })
+
         this.isProCheck = this.$route.name === 'review'
 
         // rid '/admin/'
@@ -184,7 +227,7 @@ export default {
         // if (!m) {
         //     m = this.treedata[3].children
         // }
-        console.log(mod, submod)
+        // console.log(mod, submod)
         if (mod && submod) {
             // open left tree
             if (postfix === 'list') {
@@ -248,7 +291,11 @@ export default {
 
         clickTree (node, data) {
             if (data.isLeaf) {
-                if (node.to.startsWith('test') || node.to === 'app-delivery') {
+                if (node.to.startsWith('test')) {
+                    return
+                }
+                if (node.to === 'app-delivery') {
+                    window.open('http://www.nubiangoat.biz/')
                     return
                 }
                 // if chat open another page
@@ -281,6 +328,7 @@ export default {
 .fl-l
     float left
 .pad
+    height calc(100% - 30px)
     padding-left 8px
 .bg-blue
     background-color color-main
@@ -374,6 +422,8 @@ export default {
     .main-content
         min-height 400px
         margin-top 20px
+        box-sizing border-box
+        height calc(100% - 67px)
         padding 10px
         background-color #fff
         color color-main

@@ -12,10 +12,10 @@ import Course from '@/components/course'
 import Chat from '@/components/chat/chat'
 import ProChat from '@/components/chat/prochat'
 const SearchRes = () => import('@/components/search_res')
+const ReleaseIndex = () => import('@/components/release')
 
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
-const Message = () => import('@/components/admin/message/index')
 // 个人信息
 const UserInfo = () => import('@/components/admin/user/user')
 const PasswordModify = () => import('@/components/admin/user/pass')
@@ -24,7 +24,6 @@ const Review = () => import('@/components/admin/review/index')
 // 留言管理
 const Comment = () => import('@/components/admin/comment/index')
 // 用户权限
-const Auth = () => import('@/components/admin/auth/auth')
 const AuthRole = () => import('@/components/admin/auth/role')
 const Account = () => import('@/components/admin/account/index')
 // 系谱档案
@@ -58,6 +57,7 @@ const ProductionVisual = () => import('@/components/admin/visual/production')
 const TraceCharts = () => import('@/components/admin/trace/index')
 // 动物福利
 const Welfare = () => import('@/components/admin/welfare/index')
+const WelfareList = () => import('@/components/admin/welfare/list')
 // 有机监管
 const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
@@ -72,6 +72,8 @@ const AgentList = () => import('@/components/admin/agent/list')
 // 发布系统
 const Release = () => import('@/components/admin/release/index')
 const ReleaseList = () => import('@/components/admin/release/list')
+// 短信平台
+const Message = () => import('@/components/admin/message/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -91,15 +93,29 @@ export default new Router({
         {path: '/chat', name: 'chat', component: Chat},
         {path: '/prochat', name: 'prochat', component: ProChat},
         {path: '/search', name: 'search', component: SearchRes},
+        // 集团
+        {path: '/company', name: 'company', component: ReleaseIndex},
+        // 产品
+        {path: '/product', name: 'product', component: ReleaseIndex},
+        // 有机
+        {path: '/organic', name: 'organic', component: ReleaseIndex},
+        // 效益
+        {path: '/benefit', name: 'benefit', component: ReleaseIndex},
+        // 加盟
+        {path: '/league', name: 'league', component: ReleaseIndex},
+        // 新闻
+        {path: '/news', name: 'news', component: ReleaseIndex},
+        // 联系我们
+        {path: '/contact', name: 'contact', component: ReleaseIndex},
 
         // 管理员模块
         {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'userinfo', component: UserInfo},
-            {path: 'auth', name: 'auth', component: Auth},
             {path: 'message', name: 'message', component: Message},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
+            {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
