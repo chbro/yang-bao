@@ -115,6 +115,7 @@ export default new Router({
             {path: 'message', name: 'message', component: Message},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
+            // 动物福利
             {path: 'welfare/prac', name: 'welfareprac', component: Welfare},
             {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
             {path: 'welfare/plan', name: 'welfareplan', component: WelfarePlan},

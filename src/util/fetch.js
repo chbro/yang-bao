@@ -3,7 +3,6 @@
 import { jumpToLogin } from './jskit'
 import Vue from 'vue'
 import md5 from 'md5'
-
 // export const wsUrl = 'ws://180.76.180.95:9010/websocket'
 export const wsUrl = 'ws://192.168.1.108:9010/websocket'
 const baseUrl = 'http://180.76.180.95:9010'

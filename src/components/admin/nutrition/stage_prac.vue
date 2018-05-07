@@ -60,17 +60,19 @@ export default {
     data () {
         return {
             items: [
-                {label: '栋号', model: 'building'},
+                {label: '栏/栋', model: 'building'},
                 {label: '使用日期', model: 'nutritionT', type: 'time'},
                 {label: '羊数', model: 'quantity', type: 'number', mr: true},
+                {label: '羊只均重/斤',model: 'average',type: 'number'},
                 {label: '阶段', model: 'period', type: 'select', fetchSuggestions: getStages},
-                {label: '饮水', model: 'water'}
+                {label: '饮水', model: 'water',mr: 1}
             ],
             models: {
                 building: null,
                 nutritionT: null,
                 quantity: 1,
                 period: null,
+                average:null,
                 water: null,
                 remark: null
             },
@@ -96,7 +98,7 @@ export default {
                 // 原材料，%
                 // 临时添加，%
                 {title: '精料配方（%）', items: [
-                    {label: '预混料', model: 'materialA', inputs: ['']},
+                    {label: '添加剂', model: 'materialA', inputs: ['']},
                     {label: '精料', model: 'materialM', inputs: ['']},
                     {label: '其他', model: 'materialO', inputs: ['']}
                 ]},

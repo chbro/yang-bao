@@ -27,8 +27,9 @@ export default {
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: 100},
                 {prop: 'factoryName', label: '工厂名'},
-                {prop: 'disinfectTime', label: '消毒时间', width: 180},
-                {prop: 'disinfectName', label: '消毒药品名称', width: 180},
+                {prop: 'disinfectTime', label: '消毒日期', width: 180},
+                {prop: 'place', label: '消毒场所', width: 180},
+                {prop: 'disinfectName', label: '消毒药名称', width: 180},
                 {prop: 'dose', label: '用药剂量'},
                 {prop: 'disinfectWay', label: '消毒方法', width: '160'},
                 {prop: 'remark', label: '备注', width: '200'},
