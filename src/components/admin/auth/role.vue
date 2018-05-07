@@ -98,6 +98,7 @@
 <script>
 import { isReqSuccessful } from '@/util/jskit'
 import { getRoles, getUsers, getRoleDetail, getFactoryUsers } from '@/util/getdata'
+import { retrieveFacNum } from '@/util/store'
 
 export default {
     data () {
@@ -162,7 +163,7 @@ export default {
                 this.options = res.data.List
             }
         })
-        getFactoryUsers(this.$store.state.factoryId).then(res => {
+        getFactoryUsers(retrieveFacNum()).then(res => {
             if (isReqSuccessful(res)) {
                 for (let v of res.data.List) {
                     this.empOptions.push({

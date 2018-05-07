@@ -72,7 +72,7 @@
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-import { getExpert, getUserById } from '@/util/getdata'
+import { getExpert, getUserById, getExpressions } from '@/util/getdata'
 import { wsUrl, baseUrl } from '@/util/fetch'
 
 export default {
@@ -109,6 +109,16 @@ export default {
 
     mounted () {
         let id = 17
+        getExpressions(id).then(res => {
+            if (isReqSuccessful(res)) {
+                let arr = []
+                res.data.List.forEach(v => {
+                    arr.push({label: v.expression})
+                })
+                this.data3 = arr
+            }
+        })
+
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 let { userRealname } = res.data.model
@@ -125,15 +135,18 @@ export default {
             position: 'top left'
         })
 
-        let ws = wsUrl + '/' + this.$route.query.id
+        let ws = wsUrl + '/' + id
         this.websocket = new WebSocket(ws)
-        this.websocket.onclose = evt => {
+        let cb = evt => {
             this.$notify.error({
                 duration: 5000,
                 title: '错误',
-                message: '连接已关闭'
+                message: evt.message || '连接已关闭'
             })
         }
+        this.websocket.onerror = cb 
+        this.websocket.onclose = cb
+
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
@@ -147,7 +160,11 @@ export default {
                 console.log(this.user)
             }
             if (data.order === 'link') {
-                html = `<i class="el-icon-document"></i><a href="${data.message}"></a>`
+                let msg = data.message
+                let idx = msg.lastIndexOf(':')
+                let name = msg.substr(idx + 1)
+                let addr = msg.substr(0, idx)
+                html = `<a href="${addr}"><i class="el-icon-document"></i>${name}</a>`
             } else {
                 html = data.message
             }
@@ -236,10 +253,17 @@ export default {
         },
 
         invite () {
-            getExpert(this.expert.id).then(res => {
+            // agent id
+            getExpert(2).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('邀请成功')
-                    // to invite another professor
+                    let data = {
+                        mode: 1,
+                        to: [+this.user.id, this.expert.id, res.data.expert_id],
+                        user_id: this.expert.id
+                    }
+                    console.log(data)
+                    this.websocket.send(JSON.stringify(data))
                 }
             }, _ => {
                 this.$message.error('邀请失败')
@@ -250,7 +274,9 @@ export default {
             this.items.push({html, self: isSelf})
             this.$nextTick(_ => {
                 let dialog = this.$refs.dialog
-                dialog.scrollTop = dialog.scrollHeight
+                if (dialog) { 
+                    dialog.scrollTop = dialog.scrollHeight
+                }
             })
         }
     },

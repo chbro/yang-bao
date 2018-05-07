@@ -63,6 +63,14 @@ export default {
                     {label: '加盟', value: 'join'},
                     {label: '新闻', value: 'news'},
                     {label: '联系我们', value: 'contact'}
+                ]},
+                {label: '生产方案', value: 'record', children: [
+                    {label: '卫生与动物福利管理', value: 'company'},
+                    {label: '免疫', value: 'company'},
+                    {label: '驱虫', value: 'company'},
+                    {label: '阶段营养', value: 'company'},
+                    {label: '配种产子管理', value: 'company'},
+                    {label: '疫病防治', value: 'company'}
                 ]}
             ],
             type: null,

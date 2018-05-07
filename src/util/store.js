@@ -1,17 +1,13 @@
 // 登陆成功后保存用户信息
-import md5 from 'md5'
+import { userStr } from '@/util/fetch'
 
-let token = md5('user')
-let user = JSON.parse(localStorage.getItem(token))
+let user = JSON.parse(localStorage.getItem(userStr))
 
 export const storeUserInfo = data => {
     localStorage.setItem(token, JSON.stringify(data))
 }
 
-export const retrieveUid = _ => {
-    console.log(this, this.$store)
-    return user.id
-}
+export const retrieveUid = _ => user.id
 
 export const retrieveAid = _ => user.agentId
 
