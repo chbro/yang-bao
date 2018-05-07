@@ -25,16 +25,12 @@ export default {
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},
-                {label: '栏/栋', prop: 'building'},
-                {label: '母羊免疫耳牌', prop: 'mEtI'},
+                {label: '配种后移至栏/栋', prop: 'building'},
                 {label: '母羊商标耳牌', prop: 'mEtB'},
-                {label: '种公羊免疫耳牌', prop: 'fEtI'},
                 {label: '种公羊商标耳牌', prop: 'fEtB'},
                 {label: '配种时间', prop: 'breedingT'},
                 {label: '妊娠时间', prop: 'gestationT'},
-                {label: '产羔时间', prop: 'cubT'},
-                {label: '产前免疫（三联四防）接种时间', prop: 'prenatalIT'},
-                {label: '产羔', prop: 'quantity'},
+                {label: '产前免疫种类及时间', prop: 'prenatalIT'},
                 {prop: 'remark', label: '备注'}
             ]
         }

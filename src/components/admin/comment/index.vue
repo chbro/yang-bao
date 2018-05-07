@@ -2,7 +2,7 @@
     <div class="admin-form">
         <div class="comment-manage">
             <span>留言关键词</span>
-            <el-input v-model="input" placeholder="请输入内容" class="search-input"></el-input>
+            <el-input v-model="comment.message" placeholder="请输入内容" class="search-input"></el-input>
             <el-button type="primary" @click="onSubmit()">搜索</el-button>
         </div>
         <div class="comment-manage">
@@ -14,7 +14,7 @@
         </div>
         <div class="comment-manage">
             <span>用户态度:</span>
-            <el-radio-group v-model="attitude">
+            <el-radio-group v-model="comment.attitude">
                 <el-radio label="1">非常不满意</el-radio>
                 <el-radio label="2">不满意</el-radio>
                 <el-radio label="3">一般</el-radio>
@@ -37,7 +37,7 @@
                 <p>联系方式:  {{ item.contact}}</p>
             </div>
             <div class="comment-detail">
-                <p>留言内容：{{ item.content}}</p>
+                <p>留言内容：{{ item.inserttime}}</p>
                 <p>留言时间: {{ item.time}}</p>
                 <p>有无购买意向: {{ item.check}}</p>
                 <p>用户态度: {{ map[item.attitude]}}</p>
@@ -45,7 +45,9 @@
         </div>
         <el-pagination
           layout="prev, pager, next"
-          :total="1000">
+          :total="limit"
+          @current-change="fetchData"
+          :current-page.sync="pageNumb">
         </el-pagination>
     </div>
 </template>
@@ -58,10 +60,10 @@ export default {
     data () {
         return {
             comment: {
+                message: '',
                 buy: '',
-                altitude: '',
-                time: '',
-                items: ''
+                attitude: '',
+                time: ''
             },
 
             buy: [
@@ -88,15 +90,17 @@ export default {
                 3: '一般',
                 4: '满意',
                 5: '非常满意'
-            }
+            },
+            pageNumb: 1,
+            limit: 10
         }
     },
 
     methods: {
         onSubmit () {
-            Comment({ attitude: this.attitude }).then(res => {
+            Comment(this.comment).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.items = res.data.searchByAttitude
+                    this.items = res.data.data
                     this.$router.push({name: 'comment'})
                 }
             }).catch(_ => {
@@ -104,15 +108,6 @@ export default {
             })
         }
     }
-    // mounted () {
-    //     Comment(this.buy).then(res => {
-    //     if (isReqSuccessful(res)) {
-    //             this.$router.push({name: 'comment'})
-    //         }
-    //     }, _ => {
-    //         this.$message.error('查询失败')
-    //     })
-    // }
 }
 </script>
 
@@ -128,7 +123,9 @@ export default {
     width 80%
     margin 20px auto
     display flex
-    flex-direction row
-    justify-content space-around
-
+    .comment-message
+        width 35%
+        margin-left 8%
+    .comment-detail
+        margin-right 8%
 </style>
