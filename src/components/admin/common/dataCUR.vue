@@ -2,7 +2,7 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models"></basic-info>
+        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models" :update-submitter="updateSubmitter && edit"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
@@ -22,6 +22,7 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
+import { retrieveFacNum, retrieveName, retrieveUid, retrieveFacName } from '@/util/store'
 
 export default {
     props: {
@@ -70,6 +71,10 @@ export default {
         },
 
         radioSex: {
+            type: Boolean,
+            default: false
+        },
+        updateSubmitter: {
             type: Boolean,
             default: false
         }
@@ -152,17 +157,16 @@ export default {
         },
 
         submit () {
-            console.log(this.models, this.$store.state.user)
             if (!checkForm(this.models)) {
                 return
             }
 
             let data = Object.assign({}, this.models)
-            data.factoryNum = this.$store.state.user.factoryId
+            data.factoryNum = retrieveFacName()
             if (!this.isAgent) {
-                data.operatorName = this.$store.state.user.username
-                data.operatorId = this.$store.state.user.id
-                data.factoryName = this.$store.state.user.departmentName
+                data.operatorName = retrieveName()
+                data.operatorId = retrieveUid()
+                data.factoryName = retrieveFacName()
             } else {
                 let area = data.agentArea || data.breedLocation
                 if (Array.isArray(area)) {
@@ -183,7 +187,7 @@ export default {
                     }
                 }
                 data.responsibleId = -1
-                data.agent = this.$store.state.user.id
+                data.agent = retrieveUid()
             }
             this.disableBtn = true
             if (this.edit) {

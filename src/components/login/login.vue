@@ -9,7 +9,7 @@
             <p>登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input autofocus :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
+                    <el-input :autofocus="true" :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="pass">
@@ -39,6 +39,7 @@
 <script>
 import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
+import { userStr } from '@/util/fetch'
 import { validateName, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
 
@@ -87,8 +88,7 @@ export default {
             },
             // identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
             identifyCodes: '1234567890',
-            identifyCode: ''
-        }
+            identifyCode: ''        }
     },
 
     mounted () {
@@ -103,9 +103,11 @@ export default {
                         username: this.ruleForm.username,
                         password: md5(this.ruleForm.pass)
                     }
+                    this.loading = true
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
                             delete res.data.successMessage
+                            window.localStorage.setItem(userStr, JSON.stringify(res.data))
                             this.$message.success('登录成功')
                             this.$store.commit('storeUserInfo', res.data)
                             this.$router.push('/admin')

@@ -26,7 +26,8 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
-import { baseUrl } from '@/util/fetch'
+import { baseUrl, authStr, tokenStr } from '@/util/fetch'
+import { retrieveUid, retrieveName, retrieveFacName, retrieveFacNum } from '@/util/store'
 
 export default {
     props: {
@@ -119,10 +120,13 @@ export default {
 
     methods: {
         Spv (isPass) {
+            let headers = {}
+            headers[authStr] = window.localStorage.getItem(tokenStr)
             if (this.supervise) {
                 window.fetch(baseUrl + '/' + this.apiurl + '/s/' + this.supervise, {
                     method: 'PATCH',
-                    body: JSON.stringify({ispassSup: isPass, supervisor: this.$store.state.user.id()})
+                    headers,
+                    body: JSON.stringify({ispassSup: isPass, supervisor: retrieveUid()})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
@@ -134,7 +138,8 @@ export default {
             } else if (this.check) {
                 window.fetch(baseUrl + '/' + this.apiurl + '/p/' + this.check, {
                     method: 'PATCH',
-                    body: JSON.stringify({ispassCheck: isPass, professor: this.$store.state.user.id()})
+                    headers,
+                    body: JSON.stringify({ispassCheck: isPass, professor: retrieveUid()})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
@@ -152,10 +157,12 @@ export default {
                 return
             }
 
-            this.models.operatorName = this.$store.state.user.username
-            this.models.operatorId = this.$store.state.user.id
-            this.models.factoryNum = this.$store.state.user.factoryId
-            this.models.factoryName = this.$store.state.user.departmentName
+            let headers = {}
+            headers[authStr] = window.localStorage.getItem(tokenStr)
+            this.models.operatorName = retrieveName()
+            this.models.operatorId = retrieveUid()
+            this.models.factoryNum = retrieveFacNum()
+            this.models.factoryName = retrieveFacName()
             console.log(this.models)
 
             let form = new FormData()
@@ -167,7 +174,8 @@ export default {
                 form.append('id', this.edit)
                 window.fetch(baseUrl + '/' + this.apiurl + '/' + this.edit, {
                     method: 'POST',
-                    body: form
+                    body: form,
+                    headers
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
@@ -177,7 +185,8 @@ export default {
             } else {
                 window.fetch(baseUrl + '/' + this.apiurl, {
                     method: 'POST',
-                    body: form
+                    body: form,
+                    headers
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {

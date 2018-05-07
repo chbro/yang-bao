@@ -58,7 +58,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit } from '@/util/getdata'
+import { getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
 import { checkForm, isReqSuccessful } from '@/util/jskit'
 
 export default {

@@ -10,7 +10,7 @@
 
             <el-form :model="form" ref="form" status-icon :rules="rules" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input autofocus type="text" v-model="form.username" auto-complete="off" placeholder="用户名"></el-input>
+                    <el-input :autofocus="true" type="text" v-model="form.username" auto-complete="off" placeholder="用户名"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="bywhich">

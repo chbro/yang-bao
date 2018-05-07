@@ -46,8 +46,8 @@
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
 import { getUserById } from '@/util/getdata'
+import { retrieveRank } from '@/util/store'
 import { isReqSuccessful, getLocalUid } from '@/util/jskit'
-// import { tokenStr } from '@/util/fetch'
 
 /* eslint-disable object-property-newline */
 export default {
@@ -91,15 +91,19 @@ export default {
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
                     {label: '专家在线课堂', to: 'onlineCourse'},
-                    {label: '生产档案审核', to: 'review'}
-                ]},
-                {label: '生产管理平台', children: [
+                    {label: '生产档案审核', to: 'review'},
+                    {label: '在线诊断', to: 'prochat'}
+                ]}
+            ],
+            productionTree: {
+                label: '生产管理平台',
+                children: [
                     {label: '专家课堂', to: 'course'},
                     {label: '系谱档案', to: 'genealogic'},
                     {label: '卫生·疫控', name: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                        {label: '卫生与动物福利操作档案', to: 'welfareList'},
+                        {label: '卫生与动物福利操作档案', to: 'welfareprac'},
                         // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
@@ -133,8 +137,8 @@ export default {
                             {label: '回收化验指标', to: 'recovery_index'}
                         ]}
                     ]}
-                ]}
-            ],
+                ]
+            },
             options: [],
             search_key: null,
             showTree: true,
@@ -193,6 +197,13 @@ export default {
                 {label: '操作流程审核', to: 'audit'},
                 {label: '回收化验指标', to: 'recovery_index'}
             ]
+        }
+    },
+
+    created () {        
+        // 工厂用户才可以录入信息
+        if (this.$store.state.user.agentRank === -1 || retrieveRank() === -1) {
+            this.treedata.push(this.productionTree)
         }
     },
 

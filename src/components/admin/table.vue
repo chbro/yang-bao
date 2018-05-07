@@ -1,9 +1,6 @@
 <template>
     <div>
         <div class="admin-list-pass" v-if="!hideFilter">
-            <el-input class="pick-erpai" size="small" v-model="factoryName">
-                <template slot="prepend">单位名:</template>
-            </el-input>
             <el-select width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
@@ -12,25 +9,23 @@
                     :value="val">
                 </el-option>
             </el-select>
-<!--             <el-input class="pick-erpai" size="small" v-model="eartag">
+            <el-input class="pick-erpai" size="small" v-model="factoryName">
+                <template slot="prepend">单位名:</template>
+            </el-input>
+            <el-input class="pick-erpai" size="small" v-model="eartag">
                 <template slot="prepend">耳牌号:</template>
             </el-input>
             <el-date-picker
                 size="small"
+                v-model="gmtCreate"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                format="yyyy-MM-dd HH:mm:ss"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
                 align="right">
             </el-date-picker>
-            <el-date-picker
-                v-if="isDisinfect"
-                placeholder="消毒时间:"
-                size="small"
-                type="datetime">
-            </el-date-picker> -->
             <el-button @click="fetchData()" size="small" type="primary">查询</el-button>
         </div>
         <el-table
@@ -75,6 +70,7 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
+import { retrieveUid, retrieveAid, retrieveFacNum } from '@/util/store'
 
 export default {
     props: {
@@ -152,7 +148,10 @@ export default {
                 未通过: 0,
                 已通过: 1,
                 未审核: 2
-            }
+            },
+
+            eartag: null,
+            gmtCreate: null
         }
     },
 
@@ -168,16 +167,20 @@ export default {
             if (this.factoryName) {
                 param.factoryName = this.factoryName
             }
+            if (this.gmtCreate) {
+                console.log(this.gmtCreate)
+                param.gmtStart = this.gmtCreate[0]
+                param.gmtEnd = this.gmtCreate[1]
+            }
 
             let id
-            let { factoryId, agentId } = this.$store.state.user
             // let findBy = this.findBy
-            if (this.$store.state.user.id !== undefined) {
-                id = this.$store.state.user.id
-            } else if (factoryId !== undefined) {
-                id = factoryId
-            } else if (agentId !== undefined) {
-                id = agentId
+            if (retrieveFacNum() !== undefined) {
+                id = retrieveFacNum()
+            } else if (retrieveAid() !== undefined) {
+                id = retrieveAid()
+            } else if (retrieveUid() !== undefined) {
+                id = retrieveUid()
             }
 
             if (id === null || id === undefined) {

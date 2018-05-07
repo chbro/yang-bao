@@ -3,19 +3,20 @@
 import { jumpToLogin } from './jskit'
 import Vue from 'vue'
 import md5 from 'md5'
-// export const wsUrl = 'ws://180.76.180.95:9010/websocket'
-export const wsUrl = 'ws://192.168.1.112:9010/websocket'
-// const baseUrl = 'http://180.76.180.95:9010'
 
+export const wsUrl = 'ws://192.168.1.108:9010/websocket'
+// const baseUrl = 'http://180.76.180.95:9010'
+// export const wsUrl = 'ws://180.76.180.95:9010/websocket'
 // const baseUrl = 'http://218.199.68.33:9010' // 钟睿
 // const baseUrl = 'http://192.168.1.108:9010' // 老猪
-// const baseUrl = 'http://192.168.1.112:8080' // 农文华
-// const baseUrl = 'http://192.168.1.110:9010' // 文嫖
+// const baseUrl = 'http://192.168.1.112:9010' // 农文华
+const baseUrl = 'http://192.168.1.110:9010' // 文嫖
 const tokenStr = md5('sheep-token')
+const userStr = md5('52rx')
 const authStr = 'Authorization'
 let app = new Vue()
 
-export { baseUrl, tokenStr }
+export { baseUrl, tokenStr, userStr, authStr }
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     type = type.toUpperCase();
@@ -47,7 +48,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
         }
 
         // 带上登录token
-        let token = localStorage.getItem(tokenStr)
+        let token = sessionStorage.getItem(tokenStr) || localStorage.getItem(tokenStr)
         if (token) {
             requestConfig.headers[authStr] = token
         }
@@ -73,6 +74,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             let token = response.headers.get(authStr)
             if (token) {
                 window.localStorage.setItem(tokenStr, token)
+                window.sessionStorage.setItem(tokenStr, token)
             }
 
             const responseJson = await response.json();

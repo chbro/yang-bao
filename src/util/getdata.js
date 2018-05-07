@@ -50,34 +50,29 @@ export const getPermission = _ => fetch('/user/')
 export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
 
 /**
- * 专家匹配, 邀请专家
+ * 聊天模块
  */
+
+// 专家匹配, 邀请专家
 export const getExpert = agentid => fetch('/getExpert/' + agentid)
 
-/**
- * 文件下载
- */
-export const downloadFile = path => fetch('/downloadFile' + path)
-
-/**
- * 客户评价
- */
-export const evaluateChat = data => fetch('/evaluation', data, 'POST')
-
-/**
- * 获取聊天记录概述
- */
+// 获取所有聊天记录
 export const getTalkRecords = _ => fetch('/getTalkRecord')
 
-/**
- * 获取聊天记录详情
- */
-export const getTalkRecordDetail = id => fetch('/getTalkRecord/' + id)
+// 获取聊天记录详情
+export const getTalkRecordDetail = talkid => fetch('/getTalkRecord/' + talkid)
 
-/**
- * 退出聊天评价专家
- */
+// 获取常用语
+export const getExpressions = expertid => fetch('/getExpression?expert_id=' + expertid)
+
+// 获取好友
+// export const getFellows = id => fetch('//' + id)
+
+// 退出聊天评价专家
 export const evalulateExpert = data => fetch('/evaluation', data, 'POST')
+
+// 客户评价
+export const evaluateChat = data => fetch('/evaluation', data, 'POST')
 
 /**
  * 配种产子

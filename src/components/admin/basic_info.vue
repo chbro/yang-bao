@@ -55,6 +55,10 @@
                     <area-select type='text' :level='0' v-model="models[item.model]" :data="pcaa"></area-select>
                 </div>
             </template>
+
+            <el-input v-if="updateSubmitter" size="small" v-model="models.agentFather">
+                <template slot="prepend">上级代理:</template>
+            </el-input>
         </div>
     </div>
 </template>
@@ -81,6 +85,10 @@ export default {
             }
         },
         radioSex: {
+            type: Boolean,
+            default: false
+        },
+        updateSubmitter: {
             type: Boolean,
             default: false
         }

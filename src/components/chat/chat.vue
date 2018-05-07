@@ -20,7 +20,7 @@
                                 @hide="showEmoji = false"
                             ></vue-emoji>
                             <div class="chat-input">
-                                <div @keypress.enter="send($event)" contenteditable ref='edit' class="chat_area"></div>
+                                <div @keypress.enter="send($event)" autofocus contenteditable ref='edit' class="chat_area"></div>
                             </div>
                             <div class="opr-btns">
                                 <el-button size="small" @click="dialogFormVisible = true">关闭</el-button>
@@ -30,12 +30,12 @@
                     </el-main>
                     <el-aside width="25%">
                         <ul>
-                            <li>类型：</li>
-                            <li>姓名：</li>
-                            <li>邮件：</li>
-                            <li>电话：</li>
+                            <li>类型：{{ expert.type }}</li>
+                            <li>姓名：{{ expert.realName || expert.name }}</li>
+                            <li>邮件：{{ expert.email }}</li>
+                            <li>电话：{{ expert.phone }}</li>
                         </ul>
-                        <div class="id1"></div>
+                        <div class="flybar"></div>
                     </el-aside>
                 </el-container>
             </el-tab-pane>
@@ -92,7 +92,8 @@ import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 import { getExpert, evalulateExpert, getUserById } from '@/util/getdata'
-import { wsUrl } from '@/util/fetch'
+import { wsUrl, baseUrl } from '@/util/fetch'
+import { retrieveAid, retrieveUid, retrieveRid } from '@/util/store'
 
 export default {
     components: {
@@ -100,28 +101,40 @@ export default {
     },
 
     mounted () {
-        let id = 17
-        getUserById(id).then(res => {
+        let aid = retrieveAid()
+        let uid = retrieveUid()
+        getUserById(uid).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = {
-                    id,
+                    id: uid,
                     name: res.data.model.userRealname
                 }
             }
         })
 
-        getExpert(1).then(res => {
+        getExpert(aid).then(res => {
             if (isReqSuccessful(res)) {
+                let { phone, name, realName, expert_id, type, email } = res.data
                 this.expert = {
                     id: res.data.expert_id,
-                    name: res.data.expert
+                    realName,
+                    name,
+                    phone,
+                    email,
+                    type
                 }
+            } else {
+                this.$notify.error({
+                    duration: 5000,
+                    title: '错误',
+                    message: '当前没有专家在线'
+                })    
             }
         }, _ => {
             this.$notify.error({
                 duration: 5000,
                 title: '错误',
-                message: '当前没有专家在线'
+                message: '匹配专家失败'
             })
         })
 
@@ -132,18 +145,27 @@ export default {
             position: 'top left'
         })
 
-        let ws = wsUrl + '/' + this.$route.query.id
+        let ws = wsUrl + '/' + uid
         this.websocket = new WebSocket(ws)
-        this.websocket.onclose = evt => {
+        let cb = evt => {
             this.$notify.error({
                 duration: 5000,
                 title: '错误',
-                message: '连接已关闭'
+                message: evt.message || '连接已关闭'
             })
         }
+        this.websocket.onerror = cb 
+        this.websocket.onclose = cb
+
         this.websocket.onmessage = evt => {
             console.log(evt)
             let data = JSON.parse(evt.data)
+            if (data.order === 'fresh') {
+                // 开启群聊
+                this.talkid = data.talk_id
+                return
+            }
+
             let html = ''
             if (data.order === 'link') {
                 let msg = data.message
@@ -227,13 +249,17 @@ export default {
                 this.$message.warning('请输入内容')
                 return
             }
-            let data = {
+            let data = {              
                 message: edit.innerHTML,
                 isExpert: false,
                 user_id: this.user.id,
                 name: this.user.name,
                 talk_id: this.expert.id,
                 mode: 0
+            }
+            if (this.talk_id) {
+                data.mode = 2
+                data.talk_id = this.talk_to
             }
             console.log(data)
             try {
@@ -264,11 +290,11 @@ export default {
             form.append('user_id', this.user.id)
             form.append('user_name', this.user.name)
             form.append('talk_id', this.expert.id)
-            form.append('role_id', this.user.role_id)
+            form.append('role_id', retrieveRid())
             form.append('mode', 0)
 
             // post文件使用原生fetch,未写入总接口
-            window.fetch('http://192.168.1.112:8080/talk/upload', {
+            window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
                 body: form
             }).then(async res => {
@@ -391,7 +417,10 @@ export default {
         height 429px
         li
             padding 5%
-        .id1
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
+        .flybar
             background: url("http://www.looyu.com/images/yiduiyi.png") no-repeat
             cursor pointer
             height 220px

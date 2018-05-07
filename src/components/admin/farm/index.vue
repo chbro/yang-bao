@@ -3,8 +3,8 @@
         <data-cur
             title="羊场管理"
             modpath="farm"
-            find-by="aid"
-            :is-agent="true"
+            update-submitter
+            is-agent
             :models.sync="models"
             :items="items"
             :get-data="getFarmById"
@@ -17,31 +17,31 @@
 <script>
 import dataCur from '@/components/admin/common/dataCUR'
 import { postFarm, updateFarm, getFarmById } from '@/util/getdata'
-import { addressToArray, isReqSuccessful } from '@/util/jskit'
+// import { addressToArray, isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
         dataCur
     },
 
-    mounted () {
-        this.edit = this.$route.query.edit
-        if (this.edit) {
-            getFarmById(this.edit).then(res => {
-                if (isReqSuccessful(res)) {
-                    let data = res.data.model
-                    let obj = {}
-                    Object.keys(this.models).forEach(v => {
-                        obj[v] = data[v]
-                    })
-                    obj.breedLocation = addressToArray(obj.breedLocation)
-                    this.models = obj
-                }
-            }).catch(_ => {
-                this.$message.error('获取羊场失败')
-            })
-        }
-    },
+    // mounted () {
+    //     this.edit = this.$route.query.edit
+    //     if (this.edit) {
+    //         getFarmById(this.edit).then(res => {
+    //             if (isReqSuccessful(res)) {
+    //                 let data = res.data.model
+    //                 let obj = {}
+    //                 Object.keys(this.models).forEach(v => {
+    //                     obj[v] = data[v]
+    //                 })
+    //                 obj.breedLocation = addressToArray(obj.breedLocation)
+    //                 this.models = obj
+    //             }
+    //         }, _ => {
+    //             this.$message.error('获取羊场失败')
+    //         })
+    //     }
+    // },
 
     data () {
         return {

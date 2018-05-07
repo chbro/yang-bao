@@ -9,7 +9,7 @@
             <p>会员注册</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="用户名" prop="username">
-                    <el-input autofocus :minlength="4" :maxlength="20" type="test" v-model="ruleForm.username" auto-complete="off"></el-input>
+                    <el-input :autofocus="true" :minlength="4" :maxlength="20" type="test" v-model="ruleForm.username" auto-complete="off"></el-input>
                     <p class="note"><span>*</span>账户名是您以后登录所用的账号，由字母a-z或数字组成</p>
                 </el-form-item>
                 <el-form-item label="email" prop="userEmail">

@@ -50,6 +50,7 @@ import BasicInfo from '@/components/admin/basic_info'
 import { isReqSuccessful, checkForm, postJump, patchJump } from '@/util/jskit'
 import { getStages, getDryFeed, getConFeed } from '@/util/dataselect'
 import { postStage, getStage, updateStage } from '@/util/getdata'
+import { retrieveUid, retrieveName, retrieveFacName, retrieveFacNum } from '@/util/store'
 
 export default {
     components: {
@@ -188,10 +189,10 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
-            this.models.factoryNum = this.$store.state.user.factoryId
-            this.models.factoryName = this.$store.state.user.departmentName
-            this.models.operatorId = this.$store.state.user.id
-            this.models.operatorName = this.$store.state.user.username
+            this.models.factoryNum = retrieveFacNum()
+            this.models.factoryName = retrieveFacName()
+            this.models.operatorId = retrieveUid()
+            this.models.operatorName = retrieveName()
 
             this.disableBtn = true
             if (this.edit) {
