@@ -3,14 +3,14 @@
     <h3 class="table_title">{{ title }}</h3>
     <ul v-if="type === 'table'" class="table_body">
       <li class="item" :class="{'item_large': item.size === 'large'}" v-for="item in data">
-        <span class="item_name" :style="{width: getNameWidth(item.fieldNameWidth, item.size)}">{{ item.fieldName }}：</span>
-        <span v-if="item.type === 'radio'" class="item_value" :style="{width: `calc(100% - ${getNameWidth(item.fieldNameWidth, item.size)})`}">
+        <span class="item_name" :class="{item_name_bold: !!item.noValue}" :style="{width: getNameWidth(item.fieldNameWidth, item.size, item.noValue)}">{{ item.fieldName }}：</span>
+        <span v-if="item.type === 'radio'" class="item_value" :class="{item_hide: !!item.noValue}" :style="{width: `calc(100% - ${getNameWidth(item.fieldNameWidth, item.size, item.noValue)})`}">
           <el-radio-group v-model="item.fieldValue" disabled>
             <el-radio :label="1">{{ item.label ? item.label[0] : '是' }}</el-radio>
             <el-radio :label="0">{{ item.label ? item.label[1] : '否' }}</el-radio>
           </el-radio-group>
         </span>
-        <span v-else class="item_value" :style="{width: `calc(100% - ${getNameWidth(item.fieldNameWidth, item.size)})`}">{{ item.fieldValue }}</span>
+        <span v-else class="item_value" :class="{item_hide: !!item.noValue}" :style="{width: `calc(100% - ${getNameWidth(item.fieldNameWidth, item.size, item.noValue)})`}">{{ item.fieldValue }}</span>
       </li>
     </ul>
     <ul v-else-if="type === 'grid'" class="table_grid">
@@ -57,7 +57,8 @@ export default {
     return {}
   },
   methods: {
-    getNameWidth (width, size) {
+    getNameWidth (width, size, noValue) {
+      if(noValue) { return '100%' }
       if(width) {
         return size && size === 'large' ? (parseInt(width)/2) + '%' : width
       } else {
@@ -96,12 +97,16 @@ export default {
       box-sizing border-box
       width 50%
       line-height 23px
+      .item_hide
+        display none
       .item_name
         box-sizing border-box
         padding 8px 15px
         // width 30%
         border-right 1px solid #ddd
         border-bottom 1px solid #ddd
+      .item_name_bold
+        font-weight bold
       .item_value
         box-sizing border-box
         padding 8px 15px
