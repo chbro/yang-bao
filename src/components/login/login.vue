@@ -93,7 +93,6 @@ export default {
 
     mounted () {
         this.makeCode(this.identifyCodes, 4)
-        // console.log(this.$store)
     },
 
     methods: {

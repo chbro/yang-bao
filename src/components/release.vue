@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getReleaseById } from '@/util/getData'
+import { getReleaseById } from '@/util/getdata'
 
 export default {
   data () {

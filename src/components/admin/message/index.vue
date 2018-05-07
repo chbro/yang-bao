@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { postMessage, postWarningInfo } from '@/util/GetData'
+import { postMessage, postWarningInfo } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {

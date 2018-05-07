@@ -230,7 +230,7 @@ export default {
                 &:hover
                     background-color color-green
             .ico-center
-                padding 16px
+                padding 8px 16px
                 margin-top -8px
 
     .quick-links

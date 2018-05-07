@@ -38,7 +38,7 @@ export default {
             datestr: '',
             user: {
                 pkUserid: this.$store.state.user.username,
-                userFactor: this.$store.state.user.username || '无'
+                userFactor: this.$store.state.user.departmentName || '无'
             }
         }
     },
