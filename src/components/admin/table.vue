@@ -43,14 +43,16 @@
                 show-overflow-tooltip
                 v-for="(th, i) in headers"
                 :key="i"
+                align='center'
                 :prop="th.prop"
                 :label="th.label"
-                :width="th.width || '120'">
+                :width="th.width || 'auto'">
             </el-table-column>
             <el-table-column
                 class="action"
                 fixed="right"
                 label="操作"
+                align='center'
                 width="160">
                 <template slot-scope="scope">
                     <div class="opr">
