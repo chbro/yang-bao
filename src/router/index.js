@@ -115,7 +115,7 @@ export default new Router({
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare', name: 'welfare', component: Welfare},
-            {path: 'welfare/list', name: 'welfareList', component: WelfareList},
+            {path: 'welfare/list', name: 'welfareprac', component: WelfareList},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
