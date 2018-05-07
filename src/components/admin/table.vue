@@ -48,12 +48,15 @@
                 label="操作"
                 width="160">
                 <template slot-scope="scope">
-                    <div class="opr">
+                    <div class="opr" v-if="!isPlan">
                         <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
                         <template v-if="!checkData.length">
                             <span @click="edit(scope.$index)">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
                         </template>
+                    </div>
+                    <div class="opr" v-else>
+                        <span @click="viewPlan(scope.$index)">查看</span>
                     </div>
                 </template>
             </el-table-column>
@@ -127,6 +130,11 @@ export default {
         isAgent: {
             type: Boolean,
             default: false
+        },
+        // 方案表
+        isPlan: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -156,6 +164,12 @@ export default {
     },
 
     methods: {
+        viewPlan (index) {
+            let id = this.tableData[index].id
+            console.log(id)
+            this.$router.push('admin/' + this.modpath + '/plan?view=' + id)
+        },
+
         fetchData () {
             let param = {
                 page: this.page - 1,

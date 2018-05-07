@@ -202,7 +202,8 @@ export default {
 
     created () {        
         // 工厂用户才可以录入信息
-        if (this.$store.state.user.agentRank === -1 || retrieveRank() === -1) {
+        let user = this.$store.state.user
+        if (retrieveRank() === -1 || (user && user.agentRank === -1)) {
             this.treedata.push(this.productionTree)
         }
     },

@@ -58,6 +58,7 @@ const TraceCharts = () => import('@/components/admin/trace/index')
 // 动物福利
 const Welfare = () => import('@/components/admin/welfare/index')
 const WelfareList = () => import('@/components/admin/welfare/list')
+const WelfarePlan = () => import('@/components/admin/welfare/plan')
 // 有机监管
 const Nation = () => import('@/components/admin/supervise/nation')
 const Audit = () => import('@/components/admin/supervise/audit')
@@ -116,6 +117,7 @@ export default new Router({
             {path: 'review', name: 'review', component: Review},
             {path: 'welfare/prac', name: 'welfareprac', component: Welfare},
             {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
+            {path: 'welfare/plan', name: 'welfareplan', component: WelfarePlan},
             {path: 'auth/role', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},

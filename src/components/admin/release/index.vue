@@ -23,7 +23,7 @@
 import '@/../static/ckeditor/ckeditor.js'
 import { postRelease, getReleaseById, updateRelease } from '@/util/getdata'
 import { isReqSuccessful, postJump, patchJump, resetFile } from '@/util/jskit'
-import { baseUrl } from '@/util/fetch'
+import { baseUrl, tokenStr } from '@/util/fetch'
 
 export default {
     mounted () {
@@ -66,11 +66,11 @@ export default {
                 ]},
                 {label: '生产方案', value: 'record', children: [
                     {label: '卫生与动物福利管理', value: 'company'},
-                    {label: '免疫', value: 'company'},
-                    {label: '驱虫', value: 'company'},
-                    {label: '阶段营养', value: 'company'},
-                    {label: '配种产子管理', value: 'company'},
-                    {label: '疫病防治', value: 'company'}
+                    {label: '免疫', value: 'immune'},
+                    {label: '驱虫', value: 'antiscolic'},
+                    {label: '阶段营养', value: 'stage'},
+                    {label: '配种产子管理', value: 'breed'},
+                    {label: '疫病防治', value: 'prevention'}
                 ]}
             ],
             type: null,
@@ -90,9 +90,12 @@ export default {
             let formdata = new FormData()
             formdata.append('file', file)
             this.sendingImage = true
+            let headers = {}
+            headers[authStr] = window.localStorage.getItem(tokenStr)
             window.fetch(baseUrl + '/notice/upload', {
                 body: formdata,
-                method: 'POST'
+                method: 'POST',
+                headers
             }).then(async res => {
                 let body = await res.json()
                 if (isReqSuccessful(body)) {

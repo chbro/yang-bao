@@ -74,6 +74,7 @@ import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 import { getExpert, getUserById, getExpressions } from '@/util/getdata'
 import { wsUrl, baseUrl } from '@/util/fetch'
+import { tokenStr } from '@/util/fetch'
 
 export default {
     components: {
@@ -228,14 +229,18 @@ export default {
             }
             let form = new FormData()
             form.append('file', file)
-            form.append('user_id', 11)
-            form.append('user_name', 'zym2')
-            form.append('talk_id', 3)
+            form.append('user_id', this.user.id)
+            form.append('user_name', this.user.name)
+            form.append('talk_id', this.expert.id)
             form.append('mode', 0)
+
+            let headers = {}
+            headers[tokenStr] = window.localStorage.getItem(tokenStr)
 
             window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
-                body: form
+                body: form,
+                headers
             }).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('文件发送成功')

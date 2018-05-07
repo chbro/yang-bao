@@ -4,11 +4,12 @@
  */
 
 import Vue from 'vue'
-import { tokenStr } from './fetch'
+import { tokenStr, userStr } from './fetch'
 
 let app = new Vue()
 export const jumpToLogin = r => {
     window.localStorage.removeItem(tokenStr)
+    window.localStorage.removeItem(userStr)
     if (r) {
         r.push('/login')
     } else {

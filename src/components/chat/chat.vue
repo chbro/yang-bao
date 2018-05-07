@@ -92,7 +92,7 @@ import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 import { getExpert, evalulateExpert, getUserById } from '@/util/getdata'
-import { wsUrl, baseUrl } from '@/util/fetch'
+import { wsUrl, baseUrl, tokenStr } from '@/util/fetch'
 import { retrieveAid, retrieveUid, retrieveRid } from '@/util/store'
 
 export default {
@@ -291,12 +291,14 @@ export default {
             form.append('user_name', this.user.name)
             form.append('talk_id', this.expert.id)
             form.append('role_id', retrieveRid())
-            form.append('mode', 0)
+            let headers = {}
+            headers[authStr] = window.localStorage.getItem(tokenStr)
 
             // post文件使用原生fetch,未写入总接口
             window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
-                body: form
+                body: form,
+                headers
             }).then(async res => {
                 res = await res.json()
                 if (isReqSuccessful(res)) {
