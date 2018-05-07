@@ -50,7 +50,7 @@ export default {
     }
   },
   methods: {
-    // TODO: 提交数
+    // TODO: 提交
     // 发送短信
     postMessage () {
       postMessage({

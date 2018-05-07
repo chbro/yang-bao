@@ -7,7 +7,7 @@
       style="width: 100%">
       <el-table-column
         prop="name"
-        label="栋号">
+        label="栏/栋">
       </el-table-column>
       <el-table-column
         prop="name"

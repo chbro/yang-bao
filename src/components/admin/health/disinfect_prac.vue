@@ -26,11 +26,12 @@ export default {
         return {
             getDisinfect,
             items: [
-                {model: 'eartagFile', type: 'file'},
-                {label: '消毒药名称', model: 'disinfectName'},
-                {label: '用药剂量', model: 'dose', mr: 1, placeholder: '请注明单位'},
+                {label: '消毒日期', model: 'disinfectTime', type: 'time'},
                 {label: '消毒场所', model: 'place'},
-                {label: '消毒时间', model: 'disinfectTime', type: 'time'}
+                {label: '消毒药名称', model: 'disinfectName',mr: 1},
+                {label: '用药剂量', model: 'dose', placeholder: '请注明单位'},
+                
+                
             ],
             models: {
                 eartagFile: null,
@@ -39,6 +40,7 @@ export default {
                 place: null,
                 disinfectTime: null,
                 disinfectWay: null,
+                
                 remark: null
             }
         }

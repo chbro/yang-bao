@@ -23,12 +23,17 @@ export default {
             getAllPrevention,
             deletePrevention,
             headers: [
+                {label: '日期', prop: 'diagnosisTime'},
+                {label: '栏号/栋数',prop: 'buildingNum'},
+                {label: '商标耳牌号', prop: 'earTag'},
+                {label: '观察检测分析症状',prop: 'symptom'},
                 {label: '诊断结果', prop: 'diagnosisResult'},
-                {label: '诊断方法', prop: 'diagnosisMethod'},
-                {label: '监督确认时间', type: 'time', prop: 'gmtSup'},
-                {label: '诊疗时间', type: 'time', prop: 'diagnosisTime'},
-                {label: '种公羊商标耳牌', prop: 'buildingNum'},
-                {label: '商标耳牌号', prop: 'earTag'}
+
+                {label: '治疗方案及用药剂量', prop: 'diagnosisMethod'},
+                {label: '总用药量',prop: 'dose'},
+                {label: '治疗效果',prop: 'treatEffect'}
+                
+                
             ]
         }
     }

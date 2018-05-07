@@ -27,12 +27,13 @@ export default {
         return {
             getAntiscolic,
             items: [
-                {label: '免疫耳牌号', model: 'eartagFile', type: 'file', block: true},
-                {label: '接种羊（群）', model: 'crowdNum'},
-                {label: '驱虫时间', model: 'repellentTime', type: 'time'},
-                {label: '药物名称', model: 'repellentName', type: 'select', fetchSuggestions: getMedicines, mr: true},
+                {label: '驱虫羊（群）', model: 'crowdNum'},
+                {label: '耳牌附件号', model: 'eartagFile', type: 'file'},
+                
+                {label: '驱虫时间', model: 'repellentTime', type: 'time',mr: 1},
+                {label: '药物名称', model: 'repellentName', type: 'select', fetchSuggestions: getMedicines},
                 {label: '给药途径', model: 'repellentWay', type: 'select', fetchSuggestions: getWays},
-                {label: '给药剂量', model: 'dose', type: 'select', fetchSuggestions: getDoses}
+                {label: '给药剂量（ml）', model: 'dose', type: 'select', fetchSuggestions: getDoses,mr: 1}
             ],
             models: {
                 eartagFile: null,
