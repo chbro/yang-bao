@@ -1,11 +1,6 @@
 <template>
     <div class="app-video">
-        <div id="app-video"
-            element-loading-text="拼命加载中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-            v-loading="load">
-        </div>
+        <div id="app-video"></div>
         <div class="video-list">
             <ul>
                 <li v-for="(item, i) in this.videos_left" :key="i">
@@ -37,7 +32,6 @@ import '@/assets/TcPlayer-2.2.1.js'
 export default {
     mounted () {
         // console.log(window.TcPlayer)
-        this.load = true
         getVideoUrl(1, 1).then(res => {
         /* eslint-disable no-unused-vars, no-undef */
             if (isReqSuccessful(res)) {
@@ -56,16 +50,13 @@ export default {
                     'height': '320'
                 })
             }
-            this.load = false
-        }).catch(_ => {
+        }, _ => {
             this.$message.error('获取直播信息失败')
-            this.load = false
         })
     },
 
     data () {
         return {
-            load: false,
             page: 1,
             total: 1,
             videos_left: [

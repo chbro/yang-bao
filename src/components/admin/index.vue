@@ -90,7 +90,7 @@ export default {
                 ]},
                 {label: '专家工作', children: [
                     {label: '客户评价', to: 'test3'},
-                    {label: '专家在线课堂', to: 'onlineCourse'},
+                    {label: '专家在线课堂', to: 'course'},
                     {label: '生产档案审核', to: 'review'},
                     {label: '在线诊断', to: 'prochat'}
                 ]}
@@ -104,7 +104,6 @@ export default {
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
                         {label: '卫生与动物福利操作档案', to: 'welfareprac'},
-                        // {label: '卫生消毒方案', to: 'disinfectplan'},
                         {label: '消毒实施档案', to: 'disinfectprac'},
                         {label: '免疫方案', to: 'immuneplan'},
                         {label: '免疫实施档案', to: 'immuneprac'},
@@ -146,7 +145,7 @@ export default {
                 {text: '溯源管理', to: 'auth'}
             ],
             isProCheck: false,
-            // 7大生产环节
+            // 审核7大生产环节
             production: [
                 {label: '卫生与动物福利', mod: 'welfare'},
                 {label: '消毒', mod: 'disinfect'},
@@ -155,47 +154,6 @@ export default {
                 {label: '阶段营养', mod: 'stage'},
                 {label: '配种产子', mod: 'breed'},
                 {label: '疫病防治', mod: 'prevention'}
-            ],
-            // local map for content header tabs
-            map: [
-                {label: '个人信息修改', to: 'userinfo'},
-                {label: '密码修改', to: 'passmod'},
-                {label: '代理管理', to: 'agent'},
-                {label: '羊场管理', to: 'farm'},
-                {label: '用户管理', to: 'account'},
-                {label: '角色权限管理', to: 'authrole'},
-                {label: '发布系统', to: 'release'},
-                {label: '专家课堂视频发布', to: 'test5'},
-                {label: '短信平台', to: 'message'},
-                {label: '留言统计', to: 'test10'},
-                {label: '专家客户评价结果', to: 'test7'},
-                {label: '客户评价', to: 'test3'},
-                {label: '专家在线课堂', to: 'test8'},
-                {label: '生产档案审核', to: 'review'},
-                {label: '专家课堂', to: 'course'},
-                {label: '系谱档案', to: 'genealogic'},
-                {label: '专家咨询', to: 'chat'},
-                {label: '卫生与动物福利管理方案', to: 'welfareplan'},
-                {label: '卫生与动物福利操作档案', to: 'welfare'},
-                // {label: '卫生消毒方案', to: 'disinfectplan'},
-                {label: '消毒实施档案', to: 'disinfectprac'},
-                {label: '免疫方案', to: 'immuneplan'},
-                {label: '免疫实施档案', to: 'immuneprac'},
-                {label: '驱虫方案', to: 'antiscolicplan'},
-                {label: '驱虫实施档案', to: 'antiscolicprac'},
-                {label: '阶段营养方案', to: 'stageplan'},
-                {label: '阶段营养实施档案', to: 'stageprac'},
-                {label: '配种产子管理方案', to: 'breedplan'},
-                {label: '配种产子实施档案', to: 'breedprac'},
-                {label: '疫病防治方案', to: 'preventionplan'},
-                {label: '疫病防治实施档案', to: 'preventionprac'},
-                {label: '诊断可视', to: 'diagnose'},
-                {label: '生产环节可视', to: 'production'},
-                {label: '有机养殖环境追溯', to: 'trace'},
-                {label: '国家认证', to: 'nation'},
-                {label: '生产可视截图', to: 'capture'},
-                {label: '操作流程审核', to: 'audit'},
-                {label: '回收化验指标', to: 'recovery_index'}
             ]
         }
     },
