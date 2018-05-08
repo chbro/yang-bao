@@ -77,6 +77,8 @@ const Release = () => import('@/components/admin/release/index')
 const ReleaseList = () => import('@/components/admin/release/list')
 // 短信平台
 const Message = () => import('@/components/admin/message/index')
+// 专家课堂视频发布
+const ProfessorCourseVideo = () => import('@/components/admin/professorCourseVideo/index')
 
 const NotFound = () => import('@/components/not_found')
 
@@ -167,7 +169,9 @@ export default new Router({
             {path: 'farm', name: 'farm', component: Farm},
             {path: 'farm/list', name: 'farmlist', component: FarmList},
             {path: 'release', name: 'release', component: Release},
-            {path: 'release/list', name: 'releaselist', component: ReleaseList}
+            {path: 'release/list', name: 'releaselist', component: ReleaseList},
+            // 专家课堂视频发布
+            {path: 'professorCourseVideo', name: 'professorCourseVideo', component: ProfessorCourseVideo}
         ]},
         {path: '*', name: 'notfound', component: NotFound}
     ]

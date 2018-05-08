@@ -90,7 +90,7 @@ export default {
                     {label: '用户管理', to: 'account'},
                     {label: '角色权限管理', to: 'authrole'},
                     {label: '发布系统', to: 'release'},
-                    {label: '专家课堂视频发布', to: 'test5'},
+                    {label: '专家课堂视频发布', to: 'professorCourseVideo'},
                     {label: '短信平台', to: 'message'},
                     {label: '留言统计', to: 'commentsum'},
                     {label: '专家客户评价结果', to: 'commentres'}

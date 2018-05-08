@@ -3,24 +3,20 @@
         <div id="app-video"></div>
         <div class="video-list">
             <ul>
-                <li v-for="(item, i) in this.videos_left" :key="i">
+                <li v-for="(item, i) in this.videoList" :key="i">
+                    <i class="list-item-icon iconfont icon-video"></i>
                     <span v-text="item.name"></span>
                     <span v-text="item.time"></span>
-                    <a :href="item.link">下载</a>
-                </li>
-            </ul><ul>
-                <li v-for="(item, i) in this.videos_right" :key="i">
-                    <span v-text="item.name"></span>
-                    <span v-text="item.time"></span>
-                    <a :href="item.link">下载</a>
+                    <a class="list-item-download" :href="item.link">下载</a>
                 </li>
             </ul>
+            <el-pagination
+                class="video-list-page"
+                layout="prev, pager, next"
+                :total="total"
+                :current-page.sync="page">
+            </el-pagination>
         </div>
-        <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :current-page.sync="page">
-        </el-pagination>
     </div>
 </template>
 
@@ -33,7 +29,6 @@ export default {
     mounted () {
         // console.log(window.TcPlayer)
         getVideoUrl(1, 1).then(res => {
-        /* eslint-disable no-unused-vars, no-undef */
             if (isReqSuccessful(res)) {
                 let url = res.data.liveBroadcastResp.data.pushUrl
 
@@ -45,9 +40,10 @@ export default {
                     // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
                     // 'coverpic': 'http://www.test.com/myimage.jpg',
                     // 视频的显示宽度，请尽量使用视频分辨率宽度
-                    'width': '480',
+                    'width': '100%',
                     // 视频的显示高度，请尽量使用视频分辨率高度
-                    'height': '320'
+                    'height': '100%',
+                    coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'}
                 })
             }
         }, _ => {
@@ -59,14 +55,12 @@ export default {
         return {
             page: 1,
             total: 1,
-            videos_left: [
+            videoList: [
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'}
-            ],
-            videos_right: [
+                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
@@ -79,28 +73,57 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '../assets/css/color'
 .app-video
+    display flex
+    flex-wrap wrap
     #app-video
-        width 480px
-        height 320px
-        margin 20px auto
+        box-sizing border-box
+        padding-left 5%
+        width 60%
+        min-width 600px
+        height 400px
+        margin 20px 0
         .vcp-player
-            margin 0 auto
-
+            margin 0
+        .vcp-error-tips // 视频播放失败样式
+            top 0
+            height 100%
+            line-height 400px
+            margin-top 0
+            background-color rgba(0, 0, 0, 0.7)
+            font-size 16px
+            color #fff
     .video-list
-        width 80%
-        margin 0 auto
-        padding
+        box-sizing border-box
+        padding 10px 5% 0 50px
+        width 40%
+        margin 0
         >ul
             box-sizing border-box
             display inline-block
             vertical-align middle
-            width 50%
-            padding 0 10px
+            width 100%
+            padding 20px 0 0 0
             li
-                line-height 30px
-                border-bottom 1px solid #ddd
+                box-sizing border-box
+                height 35px
+                line-height 35px
+                border-bottom 1px solid #eee
+                font-size 14px
+                color color-main
+                .list-item-icon
+                    position relative
+                    top 2px
+                    margin-right 5px
+                    font-size 17px
+                .list-item-download
+                    color color-main
+                    float right
+                    &:hover
+                        color #014F9D
+        .video-list-page
+            margin 10px 0 0
     .el-pagination
         text-align right
-        margin-right 10%
 </style>

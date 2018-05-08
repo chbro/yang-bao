@@ -9,21 +9,22 @@
             <div class="border-main">
                 <div v-for="(item, i) in card.items" :key="i" class="card-item">
                     <template v-for="(input, j) in item.inputs">
-                        <el-input :value="input" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
+                        <el-input :value="input" @change="change($event, index, i, j)" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
                             <template slot="prepend">{{ item.label }}:</template>
                         </el-input>
                         <div :key="j" v-else-if="item.type === 'select'" class="time el-input-group select">
                             <span class="time-span" v-text="item.label + ':'"></span>
                             <!-- v-model="models[item.model]" -->
                             <el-autocomplete
+                                @select="change($event, index, i, j)"
                                 :value="input"
                                 :ref="item.model + '-' + j"
                                 placeholder="名称和百分比"
                                 size="small"
-                                @select="item => $message.info(item)"
                                 :fetch-suggestions="item.fetchSuggestions">
                             </el-autocomplete>
                         </div>
+                        <el-button v-if="j" @click="deleteItem(index, i, j)" :key="i + '-' + j" type="primary" size="small">删除</el-button>
                     </template>
                     <span class="cursor-p" @click="addItem(index, i)"><i class="el-icon-caret-right"></i>增加{{ item.label }}设置</span>
                 </div>
@@ -181,6 +182,13 @@ export default {
             this.cards[cardIndex].items[itemIndex].inputs.push('')
         },
 
+        deleteItem (cardIndex, itemIndex, j) {
+            this.cards[cardIndex].items[itemIndex].inputs.splice(j, 1)
+        },
+
+        change (e, cardIndex, itemIndex, index) {
+            this.cards[cardIndex].items[itemIndex].inputs.splice(index, 1, e.value)
+        },
         submit () {
             Object.keys(this.$refs).forEach(v => {
                 let key = v.substr(0, v.indexOf('-'))
