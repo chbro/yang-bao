@@ -239,6 +239,10 @@ export default {
             color #fff
             &:hover
                 text-decoration underline
+            &:first-of-type
+                margin-right 3px
+            &:last-of-type
+                margin-left 3px
 
 @media screen and (max-width 600px)
     .app-header

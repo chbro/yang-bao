@@ -1,15 +1,16 @@
 <template>
     <div>
-        <admin-table name="驱虫" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
+        <plan release-type="antiscolic">
+        </plan>
     </div>
 </template>
 
 <script>
-import AdminTable from '@/components/admin/table'
+import Plan from '@/components/admin/plan'
 
 export default {
     components: {
-        AdminTable
+        Plan
     }
 }
 </script>

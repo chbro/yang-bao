@@ -106,14 +106,9 @@ export default {
                     this.loading = true
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
-                            delete res.data.successMessage
-                            window.localStorage.setItem(userStr, JSON.stringify(res.data))
                             this.$message.success('登录成功')
-                            this.$store.commit('storeUserInfo', res.data)
-                            this.$router.push('/admin')
+                            this.$router.push('/admin/' + res.data.id)
                         }
-                    }, _ => {
-                        this.$message.error('登录失败')
                     })
                 } else {
                     return false

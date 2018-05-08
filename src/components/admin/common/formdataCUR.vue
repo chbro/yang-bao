@@ -133,7 +133,7 @@ export default {
                         patchJump(this.modpath)
                     }
                 }).catch(_ => {
-                    this.$message.suucess('修改监督状态失败')
+                    this.$message.success('修改监督状态失败')
                 })
             } else if (this.check) {
                 window.fetch(baseUrl + '/' + this.apiurl + '/p/' + this.check, {
@@ -146,7 +146,7 @@ export default {
                         patchJump(this.modpath)
                     }
                 }).catch(_ => {
-                    this.$message.suucess('审核失败')
+                    this.$message.error('审核失败')
                 })
             }
         },

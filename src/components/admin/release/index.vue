@@ -14,26 +14,37 @@
         <input type="file" ref="image" hidden @change="postReleaseFile()">
         <textarea v-loading="sendingImage" name="myeditor" id="myeditor"></textarea>
         <div class="admin-send">
-            <el-button type="primary" @click="submit()">提交/更新</el-button>
+            <el-button v-if="!view" type="primary" @click="submit()">提交/更新</el-button>
+            <el-button v-else type="primary" @click="$router.back()">返回</el-button>
         </div>
     </div>
 </template>
 
 <script>
 import '@/../static/ckeditor/ckeditor.js'
-import { postRelease, getReleaseById, updateRelease } from '@/util/getdata'
+import { postRelease, getReleaseById, updateRelease, getUserById } from '@/util/getdata'
 import { isReqSuccessful, postJump, patchJump, resetFile } from '@/util/jskit'
-import { baseUrl, tokenStr } from '@/util/fetch'
+import { baseUrl, authStr, tokenStr } from '@/util/fetch'
 
 export default {
+    created () {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        })
+    },
+
     mounted () {
         window.CKEDITOR.replace('myeditor')
 
-        this.edit = this.$route.query.edit
+        this.edit = this.$route.query.edit || this.$route.query.view
+        this.view = this.$route.query.view
         if (this.edit) {
             getReleaseById(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
-                    let data = res.data.List
+                    let data = res.data.model
                     this.title = data.title
                     window.CKEDITOR.instances.myeditor.setData(data.content)
                     console.log(this.options.find(v => v.children.find(v2 => v2.value === data.type)))
@@ -65,7 +76,7 @@ export default {
                     {label: '联系我们', value: 'contact'}
                 ]},
                 {label: '生产方案', value: 'record', children: [
-                    {label: '卫生与动物福利管理', value: 'company'},
+                    {label: '卫生与动物福利管理', value: 'welfare'},
                     {label: '免疫', value: 'immune'},
                     {label: '驱虫', value: 'antiscolic'},
                     {label: '阶段营养', value: 'stage'},
@@ -77,7 +88,8 @@ export default {
             config: {},
             title: '',
 
-            edit: false
+            edit: false,
+            view: false
 
         }
     },
@@ -128,7 +140,9 @@ export default {
                 let data = {
                     type,
                     title: this.title,
-                    content: html
+                    content: html,
+                    operatorId: this.user.id,
+                    operatorName: this.user.pkUserid
                 }
                 if (this.edit) {
                     updateRelease(this.edit, data).then(res => {

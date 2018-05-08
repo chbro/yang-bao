@@ -213,7 +213,7 @@ export default {
                         } else {
                             this.disableReg = false
                         }
-                    }).catch(_ => {
+                    }, _ => {
                         this.$message.error('注册失败')
                         this.disableReg = false
                     })

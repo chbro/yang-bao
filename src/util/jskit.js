@@ -4,12 +4,11 @@
  */
 
 import Vue from 'vue'
-import { tokenStr, userStr } from './fetch'
+import { tokenStr } from './fetch'
 
 let app = new Vue()
 export const jumpToLogin = r => {
     window.localStorage.removeItem(tokenStr)
-    window.localStorage.removeItem(userStr)
     if (r) {
         r.push('/login')
     } else {
@@ -175,8 +174,10 @@ export const resetFile = dom => {
 let jump = (msg, name) => {
     app.$message.success(msg)
     // here app.$router is undefined
+
+    let id = window.location.hash.substr(8).split('/')[0]
     setTimeout(() => {
-        window.location.assign(window.location.origin + '/#/admin/' + name + '/list')
+        window.location.assign(window.location.origin + '/#/admin/' + id + '/' + name + '/list')
     }, 800)
 }
 export const postJump = routename => {

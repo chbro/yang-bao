@@ -3,9 +3,10 @@
         <el-button @click="addUser">添加用户</el-button>
 
         <admin-table
+            hide-filter
             :getData="getFactoryUsers"
             :deleteData="deleteUser"
-            :headers.sync="headers">
+            :headers="headers">
         </admin-table>
 
         <el-dialog title="添加用户" :visible.sync="dialogVisible">
@@ -31,16 +32,16 @@
                     </el-radio-group><br/>
                     <el-select v-if="form.flag === 0" size="small" v-model="form.factoryId" filterable placeholder="选择代理单位">
                         <el-option
-                            v-for="item in agentOptions"
-                            :key="item.value"
+                            v-for="(item, i) in agentOptions"
+                            :key="i + 'factory'"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
                      </el-select>
                      <el-select v-if="form.flag === 1" size="small" v-model="form.factoryId" filterable placeholder="选择羊场单位">
                         <el-option
-                            v-for="item in factoryOptions"
-                            :key="item.value"
+                            v-for="(item, i) in factoryOptions"
+                            :key="i + 'farm'"
                             :label="item.label"
                             :value="item.value">
                         </el-option>
@@ -49,8 +50,8 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-                <el-button size="small" type="primary" @click="confirm()">确 定</el-button>
+                <el-button size="small" @click="dialogVisible = false">取消</el-button>
+                <el-button size="small" type="primary" @click="confirm()">确定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -82,13 +83,13 @@ export default {
             getFactoryUsers,
             deleteUser,
             headers: [
-                {label: '单位', prop: ''},
-                {label: '用户名', prop: ''},
-                {label: '用户角色', prop: ''},
-                {label: '手机号', prop: ''},
-                {label: '办公电话', prop: ''},
-                {label: 'qq', prop: ''},
-                {label: '微信', prop: ''}
+                {label: '单位', prop: 'factoryName'},
+                {label: '用户名', prop: 'pkUserid'},
+                {label: '用户角色', prop: 'userRole'},
+                {label: '手机号', prop: 'userTelephone'},
+                {label: '办公电话', prop: 'officialPhone'},
+                {label: 'qq', prop: 'qq'},
+                {label: '微信', prop: 'msn'}
             ],
             // 代理单位
             agentOptions: [],
@@ -118,7 +119,7 @@ export default {
                         this.agentOptions.push(option)
                     })
                 }
-            }).catch(_ => {
+            }, _ => {
                 this.$message.error('获取代理单位失败')
             })
             // 获取羊场单位
@@ -136,7 +137,7 @@ export default {
                         this.factoryOptions.push(option)
                     })
                 }
-            }).catch(_ => {
+            }, _ => {
                 this.$message.error('获取羊场单位失败')
             })
         },

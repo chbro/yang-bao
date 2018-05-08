@@ -18,8 +18,8 @@
             </div>
 
             <div class="tab-right">
-                <span>用户：{{user.pkUserid || 'user'}}</span>
-                <span class="dept">部门：{{user.userFactory || '无'}}</span>
+                <span>用户：{{user.userRealname}}</span>
+                <span class="dept">部门：{{user.factoryName}}</span>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
                 <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
                 <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span>
@@ -29,18 +29,23 @@
 </template>
 
 <script>
-import { LogOut } from '@/util/getdata'
+import { getUserById, LogOut } from '@/util/getdata'
 import { isReqSuccessful, jumpToLogin } from '@/util/jskit'
-import { retrieveFacName, retrieveName } from '@/util/store'
 
 export default {
+    created () {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        })
+    },
+
     data () {
         return {
             datestr: '',
-            user: {
-                pkUserid: retrieveName(),
-                userFactor: retrieveFacName()
-            }
+            user: {}
         }
     },
 
@@ -68,7 +73,7 @@ export default {
             this.$confirm('确定要注销吗?', '提示', {
                 type: 'warning'
             }).then(() => {
-                LogOut(this.$store.state.user.id).then(res => {
+                LogOut(this.user.id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('注销成功')
                         jumpToLogin(this.$router)
@@ -131,7 +136,6 @@ export default {
             border-color #fff
             border-bottom 0
 .tab-right
-    margin-left 100px
     span
         margin-right 15px
         i
@@ -141,5 +145,5 @@ export default {
                 color #bdbd34
     .dept
         display inline-block
-        width 180px
+        width 235px
 </style>

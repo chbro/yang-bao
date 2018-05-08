@@ -21,8 +21,10 @@ const UserInfo = () => import('@/components/admin/user/user')
 const PasswordModify = () => import('@/components/admin/user/pass')
 // 审核
 const Review = () => import('@/components/admin/review/index')
-// 留言管理
-const Comment = () => import('@/components/admin/comment/index')
+// 留言
+const CommentSummary = () => import('@/components/admin/comment/index')
+const AcountComment = () => import('@/components/admin/comment/accountComment')
+const CommentResult = () => import('@/components/admin/comment/commentResults')
 // 用户权限
 const AuthRole = () => import('@/components/admin/auth/role')
 const Account = () => import('@/components/admin/account/index')
@@ -110,9 +112,13 @@ export default new Router({
         {path: '/contact', name: 'contact', component: ReleaseIndex},
 
         // 管理员模块
-        {path: '/admin', component: Admin, meta: {requireAuth: true}, children: [
+        {path: '/admin/:id', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'userinfo', component: UserInfo},
+            // 留言
             {path: 'message', name: 'message', component: Message},
+            {path: 'comment', name: 'comment', component: AcountComment},
+            {path: 'comment/result', name: 'commentres', component: CommentResult},
+            {path: 'comment/summary', name: 'commentsum', component: CommentSummary},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
             {path: 'review', name: 'review', component: Review},
             // 动物福利
@@ -139,7 +145,6 @@ export default new Router({
             {path: 'nutrition/stage/prac', name: 'stageprac', component: StagePrac},
             {path: 'nutrition/stage/list', name: 'stagelist', component: StageList},
             // auth, comment, account
-            {path: 'comment', name: 'comment', component: Comment},
             {path: 'account', name: 'account', component: Account},
             // 疾病防治
             {path: 'prevention/plan', name: 'preventionplan', component: PreventionPlan},

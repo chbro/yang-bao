@@ -1,15 +1,16 @@
 <template>
     <div>
-        <admin-table name="配种产自管理" api="api/disinfectplan" editurl="/admin/health/disinfectprac?edit="></admin-table>
+        <plan release-type="breed">
+        </plan>
     </div>
 </template>
 
 <script>
-import AdminTable from '@/components/admin/table'
+import Plan from '@/components/admin/plan'
 
 export default {
     components: {
-        AdminTable
+        Plan
     }
 }
 </script>

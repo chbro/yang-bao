@@ -77,7 +77,7 @@
         <h3>员工角色</h3>
         <div class="employee">
             员工
-            <el-select size="small" v-model="user" placeholder="请选择">
+            <el-select size="small" v-model="userid" placeholder="请选择">
                 <el-option
                     v-for="(item, i) in empOptions"
                     :key="'emo' + i"
@@ -101,16 +101,21 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { getRoles, getUsers, getRoleDetail, getFactoryUsers, postRole, deleteRole, updateRole } from '@/util/getdata'
-import { retrieveFacNum, retrieveRank } from '@/util/store'
+import { getUserById, getRoles, getUsers, getRoleDetail, getFactoryUsers, postRole, deleteRole, updateRole, updateUserRole } from '@/util/getdata'
 
 export default {
+    watch: {
+        userid (newId) {
+            this.userrole = this.empOptions.find(v => v.value === newId).role
+        }
+    },
+
     data () {
         return {
             page: 1,
             total: 1,
 
-            user: null,
+            userid: null,
             userrole: null,
             empOptions: [],
             roleOptions: [],
@@ -149,17 +154,35 @@ export default {
     },
 
     mounted () {
-        this.fetchRoles()
-        getFactoryUsers(retrieveFacNum()).then(res => {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
-                for (let v of res.data.List) {
-                    this.empOptions.push({
-                        label: v.userRealname,
-                        value: v.id
-                    })
-                }
+                this.user = res.data.model
             }
-        })
+        }).then(_ => {        
+            getRoles(this.user.agentRank, {size: 100}).then(res => {
+                if (isReqSuccessful(res)) {
+                    for (let v of res.data.List) {
+                        this.roleOptions.push({
+                            label: v.typeName,
+                            value: v.id
+                        })
+                    }
+                }
+            })
+        }).then(_ => {        
+            getFactoryUsers(this.user.userFactory).then(res => {
+                if (isReqSuccessful(res)) {
+                    for (let v of res.data.List) {
+                        this.empOptions.push({
+                            label: v.pkUserid,
+                            value: v.id,
+                            role: v.userRole
+                        })
+                    }
+                }
+            })
+        }).then(this.fetchRoles)
     },
 
     methods: {
@@ -192,20 +215,20 @@ export default {
         },
 
         updateEmployee () {
-            // TODO: 更新员工权限
+            updateUserRole(this.userid, this.userrole).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('修改员工角色成功')
+                }
+            }, _ => {
+                this.$message.success('修改员工角色失败')
+            })
         },
 
         fetchRoles () {
-            getRoles(retrieveRank(), {page: this.page - 1}).then(res => {
+            getRoles(this.user.agentRank, {page: this.page - 1}).then(res => {
                 if (isReqSuccessful(res)) {
                     this.tableData = res.data.List
                     this.total = res.data.size
-                    for (let v of res.data.List) {
-                        this.roleOptions.push({
-                            label: v.typeName,
-                            value: v.id
-                        })
-                    }
                 }
             })
         },
@@ -268,7 +291,6 @@ export default {
         },
 
         preEdit (idx) {
-            console.log(idx)
             let data = this.tableData[idx]
             let { id, typeName, roleDescription } = data
             this.editId = id
@@ -279,7 +301,6 @@ export default {
         },
 
         handleCheckAllChange (item, idx) {
-            console.log(this.rules)
             let len = 4
             if (item.supervise) {
                 len += 2
@@ -297,7 +318,6 @@ export default {
                     this.rules.splice(this.rules.indexOf(str), 1)
                 }
             }
-            console.log(this.rules)
         }
     }
 }

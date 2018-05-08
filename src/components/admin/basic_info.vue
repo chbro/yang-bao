@@ -56,15 +56,25 @@
                 </div>
             </template>
 
-            <el-input v-if="updateSubmitter" size="small" v-model="models.agentFather">
-                <template slot="prepend">上级代理:</template>
-            </el-input>
+            <div v-if="updateSubmitter" class="time el-input-group select">
+                <span class="time-span ellipse">上级代理</span>
+                <el-select size="small" v-model="models.agentFather">
+                    <el-option
+                        v-for="(item, i) in options"
+                        :label="item.label"
+                        :value="item.value"
+                        :key="i">
+                    </el-option>
+                </el-select>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import pcaa from 'area-data/pcaa'
+import { getAgents, getUserById } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     props: {
@@ -97,7 +107,29 @@ export default {
     data () {
         return {
             holder: '上传耳牌号文件',
-            pcaa
+            pcaa,
+            options: []
+        }
+    },
+
+    mounted () {
+        if (this.updateSubmitter) {
+            let id = this.$route.params.id
+            getUserById(id).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.user = res.data.model
+                }
+            }).then(_ => {
+                getAgents(this.user.userFactory).then(res => {
+                    if (isReqSuccessful(res)) {
+                        let arr = []
+                        res.data.List.forEach(v => {
+                            arr.push({label: v.agentName, value: v.id})
+                        })
+                        this.options = arr
+                    }
+                })
+            })
         }
     },
 

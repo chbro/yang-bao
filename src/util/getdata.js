@@ -121,9 +121,9 @@ export const postRelease = data => fetch('/notice', data, 'POST')
 
 export const updateRelease = (id, data) => fetch(`/notice/${id}`, data, 'PATCH')
 
-export const getReleaseById = id => fetch(`/notice/${id}`)
+export const getReleaseById = id => fetch(`/notice/find/${id}`)
 
-export const getReleaseByName = name => fetch(`/notice/name/${name}`)
+export const getReleaseByName = name => fetch(`/notice/type/${name}`)
 
 export const getAllRelease = (id, data) => fetch(`/notice`, data)
 
@@ -208,7 +208,7 @@ export const updateFarm = (id, data) => fetch(`/factory/${id}`, data, 'PUT')
 
 export const getFarms = (id, data) => fetch(`/factory/agent/${id}`, data)
 
-export const getFarmById = id => fetch(`/factory/${id}`)
+export const getFarmById = id => fetch(`/factory/find/${id}`)
 
 export const getFarmByLocation = loc => fetch(`/factory/location`, {location: loc})
 
@@ -237,11 +237,13 @@ export const getRoles = (rank, data) => fetch('/role/' + rank, data)
 
 export const getRoleDetail = roleid => fetch('/role/find/' + roleid)
 
-export const getFactoryUsers = facid => fetch('/user/' + facid)
-
 export const deleteRole = roleid => fetch('/role/' + roleid, null, 'DELETE')
 
 export const updateRole = (roleid, data) => fetch('/role/' + roleid, data, 'PUT')
+
+export const getFactoryUsers = facid => fetch('/user/' + facid)
+
+export const updateUserRole = (uid, roleid) => fetch('/user/role/' + uid, {role: roleid}, 'PATCH')
 
 /**
  * 短信平台

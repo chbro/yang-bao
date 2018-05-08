@@ -22,7 +22,7 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
-import { retrieveFacNum, retrieveName, retrieveUid, retrieveFacName } from '@/util/store'
+import { getUserById } from '@/util/getdata'
 
 export default {
     props: {
@@ -101,16 +101,23 @@ export default {
         this.supervise = this.$route.query.supervise
         this.view = this.$route.query.view
         this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
+
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        })
+
         if (this.edit) {
             this.getData(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
                     let obj = {}
+                    console.log(res.data.model, this.models)
                     Object.keys(this.models).forEach(v => {
                         obj[v] = res.data.model[v]
                     })
-                    // if ('agentArea' in obj) {
-                    //     obj.agentArea = addressToArray(obj.agentArea)
-                    // }
+
                     if ('breedLocation' in obj) {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
@@ -140,18 +147,18 @@ export default {
             if (this.supervise) {
                 this.superviseData({ispassSup: isPass}).then(res => {
                     if (isReqSuccessful(res)) {
-                        this.$message.suucess('审核成功')
+                        this.$message.success('审核成功')
                     }
                 }, _ => {
-                    this.$message.suucess('审核失败')
+                    this.$message.error('审核失败')
                 })
             } else if (this.check) {
                 this.checkData({ispassCheck: isPass}).then(res => {
                     if (isReqSuccessful(res)) {
-                        this.$message.suucess('修改监督状态成功')
+                        this.$message.success('修改监督状态成功')
                     }
                 }, _ => {
-                    this.$message.suucess('修改监督状态失败')
+                    this.$message.error('修改监督状态失败')
                 })
             }
         },
@@ -162,33 +169,26 @@ export default {
             }
 
             let data = Object.assign({}, this.models)
-            data.factoryNum = retrieveFacNum()
+            let { userFactory, userRealname, id, factoryName } = this.user
+            data.factoryNum = userFactory
             if (!this.isAgent) {
-                data.operatorName = retrieveName()
-                data.operatorId = retrieveUid()
-                data.factoryName = retrieveFacName()
+                data.operatorName = userRealname
+                data.operatorId = id
+                data.factoryName = factoryName
             } else {
-                let area = data.agentArea || data.breedLocation
+                let area = data.breedLocation
                 if (Array.isArray(area)) {
-                    if (data.agentArea) {
-                        if (!area.length) {
-                            this.$message.warning('请选择代理所属地域')
-                            return
-                        } else {
-                            data.agentArea = area.join('')
-                        }
+                    if (!area.length) {
+                        this.$message.warning('请选择羊场地理位置')
+                        return
                     } else {
-                        if (!area.length) {
-                            this.$message.warning('请选择羊场地理位置')
-                            return
-                        } else {
-                            data.breedLocation = area.join('')
-                        }
+                        data.breedLocation = area.join('')
                     }
                 }
                 data.responsibleId = -1
-                data.agent = retrieveUid()
+                data.agent = id
             }
+
             this.disableBtn = true
             if (this.edit) {
                 this.updateData(this.edit, data).then(res => {

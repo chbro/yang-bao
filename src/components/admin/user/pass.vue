@@ -13,7 +13,6 @@ import BasicInfo from '@/components/admin/basic_info'
 import { updatePassword } from '@/util/getdata'
 import { jumpToLogin, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
-import { retrieveUid } from '@/util/store'
 
 export default {
     components: {
@@ -55,7 +54,7 @@ export default {
                 oldPassword: md5(oldpass),
                 newPassword: md5(newpass)
             }
-            updatePassword(retrieveUid(), data).then(res => {
+            updatePassword(this.$route.params.id, data).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功，请重新登录')
                     jumpToLogin(this.$router)

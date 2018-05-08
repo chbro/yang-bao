@@ -3,29 +3,29 @@
     <el-table
       ref="table"
       tooltip-effect="light"
-      :data="tableData3"
+      :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="date"
+        prop="checkTime"
         label="自检、主管上级检查时间"
         align='center'
         width="200">
       </el-table-column>
       <el-table-column label="场内外环境卫生" align="center">
         <el-table-column
-          prop="name"
+          prop="colonyHouse"
           width="150"
           align='center'
           label="圈舍内外">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="warehouseWorkshop"
           width="150"
           align='center'
           label="饲料库房及加工车间">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="killWormDeratization"
           width="150"
           align='center'
           label="杀虫灭鼠">
@@ -33,25 +33,25 @@
       </el-table-column>
       <el-table-column label="操作人员卫生与安全" align="center">
         <el-table-column
-          prop="name"
+          prop="sterilizingRoom"
           width="150"
           align='center'
           label="消毒室制度执行">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="operation"
           width="150"
           align='center'
           label="是否赤手操作">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="needleSheep"
           width="150"
           align='center'
           label="是否一羊一针头">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="vaccine"
           width="150"
           align='center'
           label="疫苗及针头的消毒处理">
@@ -59,44 +59,44 @@
       </el-table-column>
       <el-table-column label="实验室卫生与安全" align="center">
         <el-table-column
-          prop="name"
+          prop="safetyProtection"
           width="150"
           align='center'
           label="是否做到人员安全防护">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="rubbishWater"
           width="150"
           align='center'
           label="实验室垃圾与排水是否无害化处理">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="operationSpecification"
           width="150"
           align='center'
           label="是否遵守操作规范">
         </el-table-column>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="airTemperature"
         width="150"
         align='center'
         label="羊舍空气与温度">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="exerciseDaylighting"
         width="150"
         align='center'
         label="羊只运动与采光">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="carDisinfect"
         width="150"
         align='center'
         label="车辆进出消毒">
       </el-table-column>
-      <el-table-column
-        prop="name"
+<!--       <el-table-column
+        prop="operatorName"
         width="150"
         align='center'
         label="操作人员">
@@ -108,16 +108,16 @@
         label="技术审核">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="supervisor"
         width="150"
         align='center'
         label="监督执行">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="remark"
         width="150"
         align='center'
-        label="备注">
+        label="备注"> -->
       </el-table-column>
       <el-table-column
         class="action"
@@ -126,80 +126,95 @@
         align='center'
         width="160">
         <template slot-scope="scope">
-          <!-- <div class="opr">
-            <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
-            <template v-if="!checkData.length">
+          <div class="opr">
               <span @click="edit(scope.$index)">编辑</span>
               <span @click="deleteItem(scope.$index)">删除</span>
-            </template>
-          </div> -->
+          </div>
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-pagination
+    <el-pagination
       layout="prev, pager, next"
       :total="total"
       @current-change="fetchData"
       :current-page.sync="page">
-    </el-pagination> -->
+    </el-pagination>
   </div>
 </template>
 
 <script>
+  import { getAllWelfare, deleteWelfare, getUserById } from '@/util/getdata'
+  import { isReqSuccessful } from '@/util/jskit'
+
   export default {
+    props: {
+      user: {
+        type: Object
+      }
+    },
+
+    watch: {
+      user: {
+        deep: true,
+        handler (newV) {
+          this.user = newV
+          if (Object.keys(newV).length) {
+            this.fetchData()
+          }
+        }
+      }
+    },
+
+    mounted () {
+      if (Object.keys(this.user).length) {
+        this.fetchData()
+      }
+    },
+
     data() {
       return {
         load: true,
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+
+        page: 1,
+        total: 1,
+        tableData: []
+      }
+    },
+
+    methods: {
+      async fetchData () {
+        let res = await getAllWelfare(this.user.userFactory, {page: this.page - 1})
+        res.data.List.forEach(v => {
+          Object.keys(v).forEach(v2 => {
+            if (v[v2] === false) {
+              v[v2] = '否'
+            } else if (v[v2] === true) {
+              v[v2] = '是'
+            }
+          })
+        })
+        this.tableData = res.data.List
+      },
+
+      edit (idx) {
+        let id = this.tableData[idx].id
+        this.$router.push({name: 'welfareprac', query: {edit: id}})
+      },
+
+      deleteItem (idx) {
+        this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          let id = this.tableData[idx].id
+          deleteWelfare(id).then(res => {
+            if (isReqSuccessful(res)) {
+              this.fetchData()
+              this.$message.success('删除成功!')
+            }
+          })
+        }).catch(() => {
+          return false
+        })
       }
     }
   }

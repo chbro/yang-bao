@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="admin-list-pass" v-if="!hideFilter">
+        <div class="admin-list-pass" v-if="!hideFilter && !isPlan ">
             <el-select @change="fetchData()" width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
@@ -75,7 +75,7 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveUid, retrieveAid, retrieveFacNum } from '@/util/store'
+import { getUserById } from '@/util/getdata'
 
 export default {
     props: {
@@ -123,11 +123,6 @@ export default {
             type: Boolean,
             default: false
         },
-        // id字段含义
-        findBy: {
-            type: String,
-            default: 'factoryNum'
-        },
         // 代理表头需要转换
         isAgent: {
             type: Boolean,
@@ -141,7 +136,12 @@ export default {
     },
 
     mounted () {
-        this.fetchData()
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        }).then(this.fetchData)
     },
 
     data () {
@@ -169,7 +169,7 @@ export default {
         viewPlan (index) {
             let id = this.tableData[index].id
             console.log(id)
-            this.$router.push('admin/' + this.modpath + '/plan?view=' + id)
+            this.$router.push({name: this.modpath, query: {view: id}})
         },
 
         fetchData () {
@@ -189,18 +189,17 @@ export default {
                 param.gmtEnd = this.gmtCreate[1]
             }
 
-            let id
-            // let findBy = this.findBy
-            if (retrieveFacNum() !== undefined) {
-                id = retrieveFacNum()
-            } else if (retrieveAid() !== undefined) {
-                id = retrieveAid()
-            } else if (retrieveUid() !== undefined) {
-                id = retrieveUid()
+            let pathid
+            let { userFactory, userRealname, id, factoryName } = this.user
+            // 代理 工厂 游客
+            if (userFactory !== undefined) {
+                pathid = userFactory
+            } else if (id !== undefined) {
+                pathid = id
             }
 
             this.load = true
-            this.getData(id, param).then(res => {
+            this.getData(pathid, param).then(res => {
                 if (isReqSuccessful(res)) {
                     let data = res.data
 
@@ -232,15 +231,15 @@ export default {
             let path
             if (this.noPrac) {
                 if (isView) {
-                    path = `/admin/${this.modpath}?view=${id}`
+                    path = `/admin/${this.user.id}/${this.modpath}?view=${id}`
                 } else {
-                    path = `/admin/${this.modpath}?edit=${id}`
+                    path = `/admin/${this.user.id}/${this.modpath}?edit=${id}`
                 }
             } else {
                 if (isView) {
-                    path = `/admin/${this.modpath}/prac?view=${id}`
+                    path = `/admin/${this.user.id}/${this.modpath}/prac?view=${id}`
                 } else {
-                    path = `/admin/${this.modpath}/prac?edit=${id}`
+                    path = `/admin/${this.user.id}/${this.modpath}/prac?edit=${id}`
                 }
             }
             this.$router.push(path)
@@ -250,7 +249,7 @@ export default {
             this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
                 type: 'warning'
             }).then(() => {
-                let { id } = this.tableData[index]
+                let id = this.tableData[index].id
                 this.deleteData(id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.fetchData()

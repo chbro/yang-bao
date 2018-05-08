@@ -1,10 +1,11 @@
 // 登陆成功后保存用户信息
-import { userStr } from '@/util/fetch'
+/*
+import { tokenStr } from '@/util/fetch'
 
-let user = JSON.parse(localStorage.getItem(userStr))
+let user = JSON.parse(localStorage.getItem(tokenStr))
 
 export const storeUserInfo = data => {
-    localStorage.setItem(userStr, JSON.stringify(data))
+    localStorage.setItem(tokenStr, JSON.stringify(data))
 }
 
 export const retrieveUid = _ => user.id
@@ -22,3 +23,4 @@ export const retrieveName = _ => user.username
 export const retrieveFlag = _ => user.flag
 
 export const retrieveRank = _ => user.agentRank
+*/

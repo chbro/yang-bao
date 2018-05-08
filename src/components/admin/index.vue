@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="main-content">
-                            <router-view></router-view>
+                            <router-view :user="user"></router-view>
                         </div>
                     </div>
                 </el-main>
@@ -57,12 +57,7 @@ export default {
 
     watch: {
         '$route' (newV, oldV) {
-            // console.log(newV)
-            if (newV.name !== 'review') {
-                this.isProCheck = false
-            } else {
-                this.isProCheck = true
-            }
+            this.isProCheck = newV.name === 'review'
         }
     },
 
@@ -76,8 +71,20 @@ export default {
                 {label: '会员中心', children: [
                     {label: '个人信息修改', to: 'userinfo'},
                     {label: '密码修改', to: 'passmod'}
-                ]},
-                {label: '系统管理员平台', children: [
+                ]}    
+            ],
+            professorTree: {
+                label: '专家工作',
+                children: [
+                    {label: '客户评价', to: 'comment'},
+                    {label: '专家在线课堂', to: 'course'},
+                    {label: '生产档案审核', to: 'review'},
+                    {label: '在线诊断', to: 'prochat'}
+                ]
+            },
+            adminTree: {
+                label: '系统管理员平台',
+                children: [
                     {label: '代理管理', to: 'agent'},
                     {label: '羊场管理', to: 'farm'},
                     {label: '用户管理', to: 'account'},
@@ -85,22 +92,16 @@ export default {
                     {label: '发布系统', to: 'release'},
                     {label: '专家课堂视频发布', to: 'test5'},
                     {label: '短信平台', to: 'message'},
-                    {label: '留言统计', to: 'test10'},
-                    {label: '专家客户评价结果', to: 'test7'}
-                ]},
-                {label: '专家工作', children: [
-                    {label: '客户评价', to: 'test3'},
-                    {label: '专家在线课堂', to: 'course'},
-                    {label: '生产档案审核', to: 'review'},
-                    {label: '在线诊断', to: 'prochat'}
-                ]}
-            ],
+                    {label: '留言统计', to: 'commentsum'},
+                    {label: '专家客户评价结果', to: 'commentres'}
+                ]
+            },
             productionTree: {
                 label: '生产管理平台',
                 children: [
                     {label: '专家课堂', to: 'course'},
                     {label: '系谱档案', to: 'genealogic'},
-                    {label: '卫生·疫控', name: 'health', children: [
+                    {label: '卫生·疫控', to: 'health', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '卫生与动物福利管理方案', to: 'welfareplan'},
                         {label: '卫生与动物福利操作档案', to: 'welfareprac'},
@@ -110,7 +111,7 @@ export default {
                         {label: '驱虫方案', to: 'antiscolicplan'},
                         {label: '驱虫实施档案', to: 'antiscolicprac'}
                     ]},
-                    {label: '营养·生产', name: 'nutrition', children: [
+                    {label: '营养·生产', to: 'nutrition', children: [
                         {label: '专家咨询', to: 'chat'},
                         {label: '阶段营养方案', to: 'stageplan'},
                         {label: '阶段营养实施档案', to: 'stageprac'},
@@ -123,12 +124,12 @@ export default {
                         {label: '疫病防治实施档案', to: 'preventionprac'}
                     ]},
                     {label: '生产物资平台', to: 'app-delivery'},
-                    {label: '可视系统', name: 'visual', children: [
+                    {label: '可视系统', to: 'visual', children: [
                         {label: '诊断可视', to: 'diagnose'},
                         {label: '生产环节可视', to: 'production'}
                     ]},
                     {label: '有机养殖环境追溯', to: 'trace'},
-                    {label: '有机·监管', name: 'supervise', children: [
+                    {label: '有机·监管', to: 'supervise', children: [
                         {label: '国家认证', to: 'nation'},
                         {label: '企业监控认证', children: [
                             {label: '生产可视截图', to: 'capture'},
@@ -142,7 +143,7 @@ export default {
             search_key: null,
             showTree: true,
             bread: [
-                {text: '溯源管理', to: 'auth'}
+                {text: '溯源管理', to: 'authrole'}
             ],
             isProCheck: false,
             // 审核7大生产环节
@@ -154,50 +155,55 @@ export default {
                 {label: '阶段营养', mod: 'stage'},
                 {label: '配种产子', mod: 'breed'},
                 {label: '疫病防治', mod: 'prevention'}
-            ]
+            ],
+
+            user: {}
         }
     },
 
     created () {        
         // 工厂用户才可以录入信息
-        let user = this.$store.state.user
-        if (retrieveRank() === -1 || (user && user.agentRank === -1)) {
-            this.treedata.push(this.productionTree)
-        }
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+                // let { agentRank } = res.data.model
+                // if (agentRank === -1 || agentRank === null || agentRank === undefined) {
+                //     this.treedata.push(this.productionTree)
+                // }
+                this.treedata.push(this.professorTree, this.adminTree, this.productionTree)
+            }
+        })
     },
 
     mounted () {
-        getUserById(retrieveUid()).then(res => {
-            if (isReqSuccessful(res)) {
-                this.$store.commit('storeUserInfo', res.data.model)
-                console.log(this.$store.state, this.$store.state.user)
-            }
-        }, _ => {
-            this.$message.error('获取用户信息失败')
-        })
-
         this.isProCheck = this.$route.name === 'review'
 
-        // rid '/admin/'
-        let path = this.$route.path.substr(7)
-        let [parent, child, postfix] = path.split('/')
-
+        let path = this.$route.path.substr(7) // rid of '/admin/id/'
+        let [id, parent, child, postfix] = path.split('/')
         let arr = [{text: '溯源管理'}]
         let mod
         let submod
-        this.treedata.forEach(v => {
-            let m = v.children.find(v => v.to === parent || v.name === parent)
+        let treeArr = [this.treedata[0], this.professorTree, this.adminTree, this.productionTree]
+
+        treeArr.forEach(v => {
+            let m
+            v.children.forEach(val => {
+                if (Array.isArray(val.children)) {
+                    m = v.children.find(v => v.to === parent || v.to === parent + 'plan')
+                } else if (val.to === parent || val.to === parent + 'plan') {
+                    m = val
+                }
+            })
             if (m) {
                 mod = m
                 if (mod.children) {
-                    submod = mod.children.find(v => v.to === child + postfix || v.name === child + postfix || v.to === child + 'prac' || v.name === child + 'prac')
+                    submod = mod.children.find(v => v.to === child + postfix || v.to === child + 'prac')
                 }
             }
         })
-        // if (!m) {
-        //     m = this.treedata[3].children
-        // }
-        // console.log(mod, submod)
+
+        console.log(mod, submod)
         if (mod && submod) {
             // open left tree
             if (postfix === 'list') {
@@ -205,7 +211,6 @@ export default {
             } else {
                 this.expanded_key = [child]
             }
-            // console.log(this.expanded_key)
 
             arr.push({text: mod.label}, {text: submod.label})
             this.module = submod
@@ -217,8 +222,8 @@ export default {
             this.module = mod
         } else {
             // default index of admin
-            arr.push({text: '用户权限'})
-            this.module = {label: '用户权限', to: 'auth'}
+            arr.push({text: '个人信息修改'})
+            this.module = {label: '个人信息修改', to: 'userinfo'}
         }
         this.bread = arr
     },
@@ -261,9 +266,6 @@ export default {
 
         clickTree (node, data) {
             if (data.isLeaf) {
-                if (node.to.startsWith('test')) {
-                    return
-                }
                 if (node.to === 'app-delivery') {
                     window.open('http://www.nubiangoat.biz/')
                     return

@@ -18,7 +18,6 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { getUserById, updateUser } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
-import { retrieveUid } from '@/util/store'
 
 export default {
     components: {
@@ -84,11 +83,12 @@ export default {
                 answer_3: null,
                 userRemark: null
             },
-            id: retrieveUid()
+            id: null
         }
     },
 
     mounted () {
+        this.id = this.$route.params.id
         getUserById(this.id).then(res => {
             if (isReqSuccessful(res)) {
                 this.models = res.data.model

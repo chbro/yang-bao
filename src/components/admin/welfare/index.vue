@@ -4,6 +4,7 @@
             title="卫生与动物福利"
             modpath="welfare"
             @update:models="v => models = v"
+            :has-remark="false"
             :models.sync="models"
             :items="items"
             :get-data="getWelfare"
@@ -57,8 +58,7 @@ export default {
                 vaccine: 0,
                 safetyProtection: 0,
                 rubbishWater: 0,
-                operationSpecification: 0,
-                remark: ''
+                operationSpecification: 0
             }
         }
     }

@@ -20,7 +20,7 @@
                                 :ref="item.model + '-' + j"
                                 placeholder="名称和百分比"
                                 size="small"
-                                @select="() => {}"
+                                @select="item => $message.info(item)"
                                 :fetch-suggestions="item.fetchSuggestions">
                             </el-autocomplete>
                         </div>
@@ -50,7 +50,6 @@ import BasicInfo from '@/components/admin/basic_info'
 import { isReqSuccessful, checkForm, postJump, patchJump } from '@/util/jskit'
 import { getStages, getDryFeed, getConFeed } from '@/util/dataselect'
 import { postStage, getStage, updateStage } from '@/util/getdata'
-import { retrieveUid, retrieveName, retrieveFacName, retrieveFacNum } from '@/util/store'
 
 export default {
     components: {
@@ -141,6 +140,15 @@ export default {
         }
     },
 
+    created () {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        })
+    },
+
     mounted () {
         this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
         if (this.edit) {
@@ -191,10 +199,12 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
-            this.models.factoryNum = retrieveFacNum()
-            this.models.factoryName = retrieveFacName()
-            this.models.operatorId = retrieveUid()
-            this.models.operatorName = retrieveName()
+            let { userFactory, userRealname, id, factoryName } = this.user
+
+            this.models.factoryNum = userFactory
+            this.models.factoryName = factoryName
+            this.models.operatorId = id
+            this.models.operatorName = userRealname
 
             this.disableBtn = true
             if (this.edit) {
