@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="admin-list-pass" v-if="!hideFilter">
-            <el-select width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
+            <el-select @change="fetchData()" width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
                     :key="val"
@@ -247,7 +247,7 @@ export default {
         },
 
         deleteItem (index) {
-            this.$confirm('将永久此条记录, 是否继续?', '提示', {
+            this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
                 type: 'warning'
             }).then(() => {
                 let { id } = this.tableData[index]

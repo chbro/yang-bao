@@ -105,7 +105,13 @@
         prop="name"
         width="150"
         align='center'
-        label="技术监督">
+        label="技术审核">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="150"
+        align='center'
+        label="监督执行">
       </el-table-column>
       <el-table-column
         prop="name"
@@ -120,22 +126,22 @@
         align='center'
         width="160">
         <template slot-scope="scope">
-          <div class="opr">
+          <!-- <div class="opr">
             <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
             <template v-if="!checkData.length">
               <span @click="edit(scope.$index)">编辑</span>
               <span @click="deleteItem(scope.$index)">删除</span>
             </template>
-          </div>
+          </div> -->
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       layout="prev, pager, next"
       :total="total"
       @current-change="fetchData"
       :current-page.sync="page">
-    </el-pagination>
+    </el-pagination> -->
   </div>
 </template>
 

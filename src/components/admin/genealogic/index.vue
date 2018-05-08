@@ -15,6 +15,7 @@
 
 <script>
 import dataCur from '@/components/admin/common/dataCUR'
+import { getTypeName } from '@/util/dataselect'
 import { getGeneaRec, postGeneaRec, updateGeneaRec } from '@/util/getdata'
 
 export default {
@@ -42,7 +43,7 @@ export default {
                 {label: '父母号', model: 'eartagOfFathersMother', mr: true},
                 {label: '母父号', model: 'eartagOfMothersFather'},
                 {label: '母母号', model: 'eartagOfMothersMother'},
-                {label: '品种名', model: 'typeName', mr: true},
+                {label: '品种名', model: 'typeName', mr: true, type: 'select', fetchSuggestions: getTypeName},
                 // {label: '品种名', model: 'typeName', type: 'select', fetchSuggestions: getType},
                 
             ],

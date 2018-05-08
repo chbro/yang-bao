@@ -7,97 +7,156 @@
       style="width: 100%">
       <el-table-column
         prop="name"
+        width="150"
+        align="center"
         label="栏/栋">
       </el-table-column>
       <el-table-column
         prop="name"
-        label="使用日期">
+        label="使用日期"
+        width="200"
+        align="center">
       </el-table-column>
       <el-table-column
         prop="name"
+        width="150"
+        align="center"
         label="羊数">
       </el-table-column>
       <el-table-column
         prop="name"
+        width="150"
+        align="center"
         label="阶段">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="饮水">
       </el-table-column>
       <el-table-column label="精料配方" align="center">
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="预混料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="精料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column label="精料用量" align="center">
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="精料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column label="粗饲料配方(%)" align="center">
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="青料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="干料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column label="粗饲料用量(体重%)" align="center">
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="青料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="干料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column label="领料总量" align="center">
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="精料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="粗料">
         </el-table-column>
         <el-table-column
           prop="name"
+          width="150"
+          align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column
         prop="name"
+        width="150"
+        align="center"
+        label="饮水">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="150"
+        align='center'
+        label="操作人员">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="150"
+        align='center'
+        label="技术审核">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="150"
+        align='center'
+        label="监督执行">
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        width="200"
+        align="center"
         label="备注">
       </el-table-column>
       <el-table-column
         class="action"
         fixed="right"
+        align="center"
         label="操作"
         width="160">
         <template slot-scope="scope">
