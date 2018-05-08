@@ -4,12 +4,14 @@
         <div class="video-list">
             <ul>
                 <li v-for="(item, i) in this.videoList" :key="i">
+                    <i class="list-item-icon iconfont icon-video"></i>
                     <span v-text="item.name"></span>
                     <span v-text="item.time"></span>
                     <a class="list-item-download" :href="item.link">下载</a>
                 </li>
             </ul>
             <el-pagination
+                class="video-list-page"
                 layout="prev, pager, next"
                 :total="total"
                 :current-page.sync="page">
@@ -27,7 +29,6 @@ export default {
     mounted () {
         // console.log(window.TcPlayer)
         getVideoUrl(1, 1).then(res => {
-        /* eslint-disable no-unused-vars, no-undef */
             if (isReqSuccessful(res)) {
                 let url = res.data.liveBroadcastResp.data.pushUrl
 
@@ -41,7 +42,8 @@ export default {
                     // 视频的显示宽度，请尽量使用视频分辨率宽度
                     'width': '100%',
                     // 视频的显示高度，请尽量使用视频分辨率高度
-                    'height': '100%'
+                    'height': '100%',
+                    coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'}
                 })
             }
         }, _ => {
@@ -71,6 +73,7 @@ export default {
 </script>
 
 <style lang="stylus">
+@import '../assets/css/color'
 .app-video
     display flex
     flex-wrap wrap
@@ -83,10 +86,17 @@ export default {
         margin 20px 0
         .vcp-player
             margin 0
+        .vcp-error-tips // 视频播放失败样式
+            top 0
+            height 100%
+            line-height 400px
+            margin-top 0
+            background-color rgba(0, 0, 0, 0.7)
+            font-size 16px
+            color #fff
     .video-list
         box-sizing border-box
-        padding-left 50px
-        padding-right 5%
+        padding 10px 5% 0 50px
         width 40%
         margin 0
         >ul
@@ -94,13 +104,26 @@ export default {
             display inline-block
             vertical-align middle
             width 100%
-            padding 20px 0
+            padding 20px 0 0 0
             li
-                line-height 38px
-                border-bottom 1px solid #ddd
-                font-size 15px
+                box-sizing border-box
+                height 35px
+                line-height 35px
+                border-bottom 1px solid #eee
+                font-size 14px
+                color color-main
+                .list-item-icon
+                    position relative
+                    top 2px
+                    margin-right 5px
+                    font-size 17px
                 .list-item-download
+                    color color-main
                     float right
+                    &:hover
+                        color #014F9D
+        .video-list-page
+            margin 10px 0 0
     .el-pagination
         text-align right
 </style>
