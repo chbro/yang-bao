@@ -2,7 +2,7 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models" :update-submitter="updateSubmitter && edit"></basic-info>
+        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models" :update-submitter="edit && updateSubmitter"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
@@ -108,9 +108,9 @@ export default {
                     Object.keys(this.models).forEach(v => {
                         obj[v] = res.data.model[v]
                     })
-                    if ('agentArea' in obj) {
-                        obj.agentArea = addressToArray(obj.agentArea)
-                    }
+                    // if ('agentArea' in obj) {
+                    //     obj.agentArea = addressToArray(obj.agentArea)
+                    // }
                     if ('breedLocation' in obj) {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
@@ -162,7 +162,7 @@ export default {
             }
 
             let data = Object.assign({}, this.models)
-            data.factoryNum = retrieveFacName()
+            data.factoryNum = retrieveFacNum()
             if (!this.isAgent) {
                 data.operatorName = retrieveName()
                 data.operatorId = retrieveUid()

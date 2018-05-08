@@ -3,7 +3,7 @@
         <data-cur
             title="羊场管理"
             modpath="farm"
-            update-submitter
+            :update-submitter="true"
             is-agent
             :models.sync="models"
             :items="items"

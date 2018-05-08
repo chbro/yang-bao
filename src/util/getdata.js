@@ -42,7 +42,7 @@ export const getGeneas = (id, data) => fetch(`/gf/${id}`, data)
 /**
  * 权限CURD
  */
-export const getPermission = _ => fetch('/user/')
+export const getPermission = _ => fetch('/user')
 
 /**
  * 获取直播或者推流地址
@@ -171,7 +171,7 @@ export const getUserById = id => fetch('/user/detail/' + id)
 
 export const getUserByName = id => fetch('/user/id/' + id)
 
-export const getUsers = data => fetch('/user/subordinate', data)
+export const getUsers = (facid, data) => fetch('/user/' + facid, data)
 
 export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
 
@@ -195,7 +195,7 @@ export const updateAgent = (id, data) => fetch(`/agent/${id}`, data, 'PUT')
 
 export const getAgents = (id, data) => fetch(`/agent/${id}`, data)
 
-export const getAgent = id => fetch('/agent/find' + id)
+export const getAgent = id => fetch('/agent/find/' + id)
 
 export const deleteAgent = id => fetch(`/agent/${id}`, null, 'DELETE')
 
@@ -230,11 +230,18 @@ export const deleteWelfare = id => fetch(`/of/${id}`, null, 'DELETE')
 /**
  * 角色权限管理
  */
-export const getRoles = (facid, data) => fetch('/role/' + facid, data)
 
-export const getRoleDetail = roleid => fetch('/role/find' + roleid)
+export const postRole = data => fetch('/role', data, 'POST')
 
-export const getFactoryUsers = facid => fetch('/user/factory/' + facid)
+export const getRoles = (rank, data) => fetch('/role/' + rank, data)
+
+export const getRoleDetail = roleid => fetch('/role/find/' + roleid)
+
+export const getFactoryUsers = facid => fetch('/user/' + facid)
+
+export const deleteRole = roleid => fetch('/role/' + roleid, null, 'DELETE')
+
+export const updateRole = (roleid, data) => fetch('/role/' + roleid, data, 'PUT')
 
 /**
  * 短信平台

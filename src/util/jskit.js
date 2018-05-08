@@ -207,5 +207,3 @@ export const addressToArray = place => {
     // console.log(arr)
     return arr
 }
-
-export const getLocalUid = _ => localStorage.getItem(tokenStr).substr(0, localStorage.getItem(tokenStr).indexOf(':'))

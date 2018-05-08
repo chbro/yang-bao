@@ -31,14 +31,15 @@
 <script>
 import { LogOut } from '@/util/getdata'
 import { isReqSuccessful, jumpToLogin } from '@/util/jskit'
+import { retrieveFacName, retrieveName } from '@/util/store'
 
 export default {
     data () {
         return {
             datestr: '',
             user: {
-                pkUserid: this.$store.state.user.username,
-                userFactor: this.$store.state.user.departmentName || '无'
+                pkUserid: retrieveName(),
+                userFactor: retrieveFacName()
             }
         }
     },

@@ -180,10 +180,10 @@ export default {
             if (this.isPass !== null) {
                 param.ispassCheck = this.isPass
             }
-            if (this.factoryName) {
+            if (this.factoryName !== null) {
                 param.factoryName = this.factoryName
             }
-            if (this.gmtCreate) {
+            if (this.gmtCreate !== null) {
                 console.log(this.gmtCreate)
                 param.gmtStart = this.gmtCreate[0]
                 param.gmtEnd = this.gmtCreate[1]
@@ -199,37 +199,32 @@ export default {
                 id = retrieveUid()
             }
 
-            if (id === null || id === undefined) {
-                this.tableData = []
-                this.load = false
-            } else {
-                this.load = true
-                this.getData(id, param).then(res => {
-                    if (isReqSuccessful(res)) {
-                        let data = res.data
+            this.load = true
+            this.getData(id, param).then(res => {
+                if (isReqSuccessful(res)) {
+                    let data = res.data
 
-                        if (this.isAgent) {
-                            data.List.forEach(v => {
-                                let map = ['', '省级代理', '市级代理', '县级代理']
-                                v.agentRank = map[v.agentRank]
-                            })
-                        }
-                        let item = data.List[0]
-                        if (item && item.ispassCheck !== null && item.ispassCheck !== undefined) {
-                            data.List.forEach(v => {
-                                let map = ['未通过', '已通过', '未审核']
-                                v.ispassCheck = map[v.ispassCheck]
-                            })
-                        }
-                        this.tableData = data.List
-                        this.total = data.size
+                    if (this.isAgent) {
+                        data.List.forEach(v => {
+                            let map = ['', '省级代理', '市级代理', '县级代理']
+                            v.agentRank = map[v.agentRank]
+                        })
                     }
-                    this.load = false
-                }, _ => {
-                    this.load = false
-                    this.$message.error('获取数据失败')
-                })
-            }
+                    let item = data.List[0]
+                    if (item && item.ispassCheck !== null && item.ispassCheck !== undefined) {
+                        data.List.forEach(v => {
+                            let map = ['未通过', '已通过', '未审核']
+                            v.ispassCheck = map[v.ispassCheck]
+                        })
+                    }
+                    this.tableData = data.List
+                    this.total = data.size
+                }
+                this.load = false
+            }, _ => {
+                this.load = false
+                this.$message.error('获取数据失败')
+            })
         },
 
         edit (index, isView) {

@@ -17,7 +17,8 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { getUserById, updateUser } from '@/util/getdata'
-import { isReqSuccessful, getLocalUid } from '@/util/jskit'
+import { isReqSuccessful } from '@/util/jskit'
+import { retrieveUid } from '@/util/store'
 
 export default {
     components: {
@@ -83,16 +84,16 @@ export default {
                 answer_3: null,
                 userRemark: null
             },
-            id: null
+            id: retrieveUid()
         }
     },
 
     mounted () {
-        getUserById(getLocalUid()).then(res => {
+        getUserById(this.id).then(res => {
             if (isReqSuccessful(res)) {
                 this.models = res.data.model
             }
-        }).catch(_ => {
+        }, _ => {
             this.$message.error('获取用户信息失败')
         })
     },
@@ -132,7 +133,7 @@ export default {
                 }
                 this.disableBtn = false
                 this.disableInput = true
-            }).catch(() => {
+            }, _ => {
                 this.$message.error('修改失败')
                 this.disableBtn = false
             })

@@ -4,7 +4,7 @@ import { userStr } from '@/util/fetch'
 let user = JSON.parse(localStorage.getItem(userStr))
 
 export const storeUserInfo = data => {
-    localStorage.setItem(token, JSON.stringify(data))
+    localStorage.setItem(userStr, JSON.stringify(data))
 }
 
 export const retrieveUid = _ => user.id

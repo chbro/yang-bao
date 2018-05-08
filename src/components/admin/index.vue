@@ -46,8 +46,8 @@
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
 import { getUserById } from '@/util/getdata'
-import { retrieveRank } from '@/util/store'
-import { isReqSuccessful, getLocalUid } from '@/util/jskit'
+import { retrieveRank, retrieveUid } from '@/util/store'
+import { isReqSuccessful } from '@/util/jskit'
 
 /* eslint-disable object-property-newline */
 export default {
@@ -167,7 +167,7 @@ export default {
     },
 
     mounted () {
-        getUserById(getLocalUid()).then(res => {
+        getUserById(retrieveUid()).then(res => {
             if (isReqSuccessful(res)) {
                 this.$store.commit('storeUserInfo', res.data.model)
                 console.log(this.$store.state, this.$store.state.user)

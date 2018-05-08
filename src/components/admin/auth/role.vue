@@ -22,12 +22,12 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button
-                      size="mini"
-                      @click="preEdit(scope.$index)">编辑</el-button>
+                        size="mini"
+                        @click="preEdit(scope.$index)">编辑</el-button>
                     <el-button
-                      size="mini"
-                      type="danger"
-                      @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        size="mini"
+                        type="danger"
+                        @click="hanldeDeleteRole(scope.$index)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -35,12 +35,13 @@
         <el-pagination
             layout="prev, pager, next"
             :total="total"
-            @current-change="getAllRoles"
+            @current-change="fetchRoles"
             :current-page.sync="page">
         </el-pagination>
 
         <el-dialog
             class="role-dialogue"
+            :before-close="handleClose"
             :visible.sync="addUserVisible"
             :model="rules"
             width="50%"
@@ -67,7 +68,10 @@
                     <el-checkbox :label="i + '-' + 6" v-if="item.totalScore">查看总评分</el-checkbox>
                 </el-checkbox-group>
             </div>
-            <el-button type="primary" @click="submit()">提交</el-button>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="cancle()">取消</el-button>
+                <el-button size="small" type="primary" @click="submit()">提交</el-button>
+            </div>
         </el-dialog>
 
         <h3>员工角色</h3>
@@ -75,8 +79,8 @@
             员工
             <el-select size="small" v-model="user" placeholder="请选择">
                 <el-option
-                    v-for="item in empOptions"
-                    :key="item.value"
+                    v-for="(item, i) in empOptions"
+                    :key="'emo' + i"
                     :label="item.label"
                     :value="item.value">
                 </el-option>
@@ -84,21 +88,21 @@
             角色
             <el-select size="small" v-model="userrole" placeholder="请选择">
                 <el-option
-                    v-for="item in roleOptions"
-                    :key="item.value"
+                    v-for="(item, i) in roleOptions"
+                    :key="i"
                     :label="item.label"
                     :value="item.value">
                 </el-option>
             </el-select>
         </div>
-        <el-button size="small" type="primary" @click="submit()">提交/更新</el-button>
+        <el-button size="small" type="primary" @click="updateEmployee()">提交/更新</el-button>
     </div>
 </template>
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { getRoles, getUsers, getRoleDetail, getFactoryUsers } from '@/util/getdata'
-import { retrieveFacNum } from '@/util/store'
+import { getRoles, getUsers, getRoleDetail, getFactoryUsers, postRole, deleteRole, updateRole } from '@/util/getdata'
+import { retrieveFacNum, retrieveRank } from '@/util/store'
 
 export default {
     data () {
@@ -113,6 +117,8 @@ export default {
 
             typeName: '',
             roleDescription: '',
+            rules: [],
+
             tableData: [],
             addUserVisible: false,
             checkAll: [],
@@ -138,31 +144,12 @@ export default {
                 {text: '技术员'},
                 {text: '管理员'},
                 {text: '拓展模块信息查询'}
-            ],
-            rules: [],
-            value: '',
-            isIndeterminate: true
+            ]
         }
     },
 
     mounted () {
-        getRoles().then(res => {
-            if (isReqSuccessful(res)) {
-                this.tableData = res.data.List
-                this.total = res.data.size
-                for (let v of res.data.List) {
-                    this.roleOptions.push({
-                        label: v.typeName,
-                        value: v.id
-                    })
-                }
-            }
-        })
-        getUsers().then(res => {
-            if (isReqSuccessful(res)) {
-                this.options = res.data.List
-            }
-        })
+        this.fetchRoles()
         getFactoryUsers(retrieveFacNum()).then(res => {
             if (isReqSuccessful(res)) {
                 for (let v of res.data.List) {
@@ -176,25 +163,123 @@ export default {
     },
 
     methods: {
-        preEdit (idx) {
-            let data = this.tableData[idx]
-            console.log(idx, data)
-            this.editId = data.id
-            this.typeName = data.typeName
-            this.roleDescription = data.roleDescription
-            this.addUserVisible = true
+        handleClose (done) {
+            this.editId = this.typeName = this.roleDescription = null
+            this.rules = []
+            done()
         },
 
-        getAllRoles () {
-            getRoles({page: this.page - 1}).then(res => {
+        cancle (done) {
+            this.editId = this.typeName = this.roleDescription = null
+            this.rules = []
+            this.addUserVisible = false
+        },
+
+        hanldeDeleteRole (idx) {
+            this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                let id = this.tableData[idx].id
+                deleteRole(id).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('删除成功')
+                        this.fetchRoles()
+                    }
+                })
+            }).catch(() => {
+                return false
+            })
+        },
+
+        updateEmployee () {
+            // TODO: 更新员工权限
+        },
+
+        fetchRoles () {
+            getRoles(retrieveRank(), {page: this.page - 1}).then(res => {
                 if (isReqSuccessful(res)) {
                     this.tableData = res.data.List
                     this.total = res.data.size
+                    for (let v of res.data.List) {
+                        this.roleOptions.push({
+                            label: v.typeName,
+                            value: v.id
+                        })
+                    }
                 }
             })
         },
 
+        submit () {
+            let { typeName, roleDescription } = this
+            if (!typeName) {
+                this.$message.warning('请填写角色名')
+                return
+            }
+            if (!roleDescription) {
+                this.$message.warning('请填写角色说明')
+                return
+            }
+            if (!this.rules.length) {
+                this.$message.warning('请赋予角色权限')
+                return
+            }
+
+            let data = {
+                roleDescription,
+                typeName,
+                rolePermit: this.rules
+            }
+            if (!this.editId) {
+                postRole(data).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('添加角色成功')
+                        this.tableData.unshift({
+                            id: res.data.model,
+                            typeName,
+                            roleDescription,
+                            rolePermit: this.rules
+                        })
+                        if (this.tableData.length > 10) {
+                            this.tableData.pop()
+                        }
+                        this.typeName = this.roleDescription = null
+                        this.rules = []
+                    }
+                    this.addUserVisible = false
+                }, _ => {
+                    this.$message.success('添加角色失败')
+                    this.addUserVisible = false
+                })
+            } else {
+                updateRole(this.editId, data).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('修改角色成功')
+                        this.typeName = this.roleDescription = null
+                        this.rules = []
+                        this.fetchRoles()
+                    }
+                    this.addUserVisible = false
+                }, _ => {
+                    this.$message.success('修改角色失败')
+                    this.addUserVisible = false
+                })
+            }
+        },
+
+        preEdit (idx) {
+            console.log(idx)
+            let data = this.tableData[idx]
+            let { id, typeName, roleDescription } = data
+            this.editId = id
+            this.typeName = typeName
+            this.roleDescription = roleDescription
+            this.rules = data.rolePermit
+            this.addUserVisible = true
+        },
+
         handleCheckAllChange (item, idx) {
+            console.log(this.rules)
             let len = 4
             if (item.supervise) {
                 len += 2
