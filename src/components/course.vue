@@ -3,24 +3,18 @@
         <div id="app-video"></div>
         <div class="video-list">
             <ul>
-                <li v-for="(item, i) in this.videos_left" :key="i">
+                <li v-for="(item, i) in this.videoList" :key="i">
                     <span v-text="item.name"></span>
                     <span v-text="item.time"></span>
-                    <a :href="item.link">下载</a>
-                </li>
-            </ul><ul>
-                <li v-for="(item, i) in this.videos_right" :key="i">
-                    <span v-text="item.name"></span>
-                    <span v-text="item.time"></span>
-                    <a :href="item.link">下载</a>
+                    <a class="list-item-download" :href="item.link">下载</a>
                 </li>
             </ul>
+            <el-pagination
+                layout="prev, pager, next"
+                :total="total"
+                :current-page.sync="page">
+            </el-pagination>
         </div>
-        <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :current-page.sync="page">
-        </el-pagination>
     </div>
 </template>
 
@@ -45,9 +39,9 @@ export default {
                     // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
                     // 'coverpic': 'http://www.test.com/myimage.jpg',
                     // 视频的显示宽度，请尽量使用视频分辨率宽度
-                    'width': '480',
+                    'width': '100%',
                     // 视频的显示高度，请尽量使用视频分辨率高度
-                    'height': '320'
+                    'height': '100%'
                 })
             }
         }, _ => {
@@ -59,14 +53,12 @@ export default {
         return {
             page: 1,
             total: 1,
-            videos_left: [
+            videoList: [
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'}
-            ],
-            videos_right: [
+                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
                 {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
@@ -80,27 +72,35 @@ export default {
 
 <style lang="stylus">
 .app-video
+    display flex
+    flex-wrap wrap
     #app-video
-        width 480px
-        height 320px
-        margin 20px auto
+        box-sizing border-box
+        padding-left 5%
+        width 60%
+        min-width 600px
+        height 400px
+        margin 20px 0
         .vcp-player
-            margin 0 auto
-
+            margin 0
     .video-list
-        width 80%
-        margin 0 auto
-        padding
+        box-sizing border-box
+        padding-left 50px
+        padding-right 5%
+        width 40%
+        margin 0
         >ul
             box-sizing border-box
             display inline-block
             vertical-align middle
-            width 50%
-            padding 0 10px
+            width 100%
+            padding 20px 0
             li
-                line-height 30px
+                line-height 38px
                 border-bottom 1px solid #ddd
+                font-size 15px
+                .list-item-download
+                    float right
     .el-pagination
         text-align right
-        margin-right 10%
 </style>
