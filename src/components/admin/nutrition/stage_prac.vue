@@ -97,21 +97,21 @@ export default {
                 // 商品名， 厂家，%
                 // 原材料，%
                 // 临时添加，%
-                {title: '精料配方（%）', items: [
+                {title: '精料配方(%)', items: [
                     {label: '添加剂', model: 'materialA', inputs: ['']},
                     {label: '精料', model: 'materialM', inputs: ['']},
                     {label: '其他', model: 'materialO', inputs: ['']}
                 ]},
-                {title: '精料用量（体重%）', items: [
+                {title: '精料用量(体重%)', items: [
                     {label: '精料', model: 'materialWM', type: 'select', fetchSuggestions: getConFeed, inputs: ['']},
                     {label: '其他', model: 'materialWO', inputs: ['']}
                 ]},
-                {title: '粗饲料配方（%）', items: [
+                {title: '粗饲料配方(%)', items: [
                     {label: '青料', model: 'roughageP', inputs: ['']},
                     {label: '干料', model: 'roughageD', type: 'select', fetchSuggestions: getDryFeed, inputs: ['']},
                     {label: '其他', model: 'roughageO', inputs: ['']}
                 ]},
-                {title: '粗饲料用量（体重%）', items: [
+                {title: '粗饲料用量(体重%)', items: [
                     {label: '青料', model: 'roughageWP', inputs: ['']},
                     {label: '干料', model: 'roughageWD', type: 'select', fetchSuggestions: getDryFeed, inputs: ['']},
                     {label: '其他', model: 'roughageWO', inputs: ['']}

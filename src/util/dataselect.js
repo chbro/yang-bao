@@ -79,3 +79,13 @@ export const getDryFeed = (q, cb) => {
     ]
     cb(dryFeed)
 }
+
+export const getTypeName = (q, cb) => {
+    let typeName = [
+        {value: '大黑羊'},
+        {value: '努比亚山羊'},
+        {value: '努比亚山羊1号'},
+        {value: '狗哥'}
+    ]
+    cb(typeName)
+}

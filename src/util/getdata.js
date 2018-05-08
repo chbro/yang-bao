@@ -29,7 +29,7 @@ export const updateGeneaRec = (id, data) => fetch(`/gf/${id}`, data, 'PUT')
 
 export const getGeneaRec = id => fetch(`/gf/find/${id}`)
 
-export const deleteGeneaRec = id => fetch('/gf/delete/' + id, null, 'DELETE')
+export const deleteGeneaRec = id => fetch('/gf/' + id, null, 'DELETE')
 
 // 获取羊的种类
 export const getSheepTypes = id => fetch('/gf/types')
@@ -156,7 +156,7 @@ export const postPrevention = data => fetch('/diagnosis', data, 'POST')
 
 export const updatePrevention = (id, data) => fetch('/diagnosis/' + id, data, 'PATCH')
 
-export const getAllPrevention = data => fetch('/diagnosis', data)
+export const getAllPrevention = (id, data) => fetch('/diagnosis/' + id, data)
 
 export const getPrevention = id => fetch('/diagnosis/' + id)
 

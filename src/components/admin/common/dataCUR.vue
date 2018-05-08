@@ -162,7 +162,7 @@ export default {
             }
 
             let data = Object.assign({}, this.models)
-            data.factoryNum = retrieveFacName()
+            data.factoryNum = retrieveFacNum()
             if (!this.isAgent) {
                 data.operatorName = retrieveName()
                 data.operatorId = retrieveUid()

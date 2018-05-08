@@ -31,7 +31,7 @@ export default {
             items: [
                 {label: '配种后移至栏/栋', model: 'building'},
                 {label: '母羊商标耳牌', model: 'mEtB'},
-                {label: '种公羊商标耳牌', model: 'fEtB', mr: 1},
+                {label: '种公商标耳牌', model: 'fEtB', mr: 1},
                 {label: '配种时间', model: 'breedingT', type: 'time'},
                 {label: '妊娠时间', model: 'gestationT', type: 'time'},
                 {label: '产前免疫种类及时间', model: 'prenatalIT', doubleWidth: true, type: 'time'},

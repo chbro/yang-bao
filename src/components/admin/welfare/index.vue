@@ -29,19 +29,19 @@ export default {
             updateWelfare,
             items: [
                 {label: '自检/主管上级检查时间', model: 'checkTime', type: 'time', block: 1},
-                {type: 'radio', label: '羊舍空气与温度是否合格', model: 'airTemperature'},
-                {type: 'radio', label: '羊只运动与采光是否合格', model: 'exerciseDaylighting', mr: 1},
-                {type: 'radio', label: '车辆进出是否消毒', model: 'carDisinfect'},
                 {type: 'radio', label: '圈舍内外是否合格', model: 'colonyHouse'},
                 {type: 'radio', label: '饲料库房及加工车间是否合格', model: 'warehouseWorkshop', mr: 1},
                 {type: 'radio', label: '杀虫灭鼠是否合格', model: 'killWormDeratization'},
-                {type: 'radio', label: '消毒制度是否执行', model: 'sterilizingRoom'},
+                {type: 'radio', label: '消毒室制度是否执行', model: 'sterilizingRoom'},
                 {type: 'radio', label: '是否赤手操作', model: 'operation', mr: 1},
                 {type: 'radio', label: '是否一羊一针头', model: 'needleSheep'},
                 {type: 'radio', label: '疫苗及针头的消毒处理是否合格', model: 'vaccine'},
                 {type: 'radio', label: '是否做到人员安全防护是否合格', model: 'safetyProtection', mr: 1},
                 {type: 'radio', label: '实验室垃圾与排水是否无害化处理', model: 'rubbishWater'},
-                {type: 'radio', label: '是否遵守操作规范', model: 'operationSpecification'}
+                {type: 'radio', label: '是否遵守操作规范', model: 'operationSpecification'},
+                {type: 'radio', label: '羊舍空气与温度是否合格', model: 'airTemperature'},
+                {type: 'radio', label: '羊只运动与采光是否合格', model: 'exerciseDaylighting', mr: 1},
+                {type: 'radio', label: '车辆进出是否消毒', model: 'carDisinfect'}
             ],
             models: {
                 checkTime: null,
