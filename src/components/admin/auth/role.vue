@@ -158,6 +158,7 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
+                this.user.agentRank = res.data.agentRank
             }
         }).then(_ => {        
             getRoles(this.user.agentRank, {size: 100}).then(res => {

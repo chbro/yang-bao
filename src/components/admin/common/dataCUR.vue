@@ -169,7 +169,11 @@ export default {
 
             let data = Object.assign({}, this.models)
             let { userFactory, userRealname, id, factoryName } = this.user
-            data.factoryNum = userFactory
+            if (this.updateSubmitter) {
+                data.factoryNum = this.models.factoryNum
+            } else {
+                data.factoryNum = userFactory
+            }
             if (!this.isAgent) {
                 data.operatorName = userRealname
                 data.operatorId = id

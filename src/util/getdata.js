@@ -209,7 +209,7 @@ export const postFarm = data => fetch('/factory', data, 'POST')
 
 export const updateFarm = (id, data) => fetch(`/factory/${id}`, data, 'PUT')
 
-export const getFarms = (id, data) => fetch(`/factory/agent/${id}`, data)
+export const getFarms = (facid, data) => fetch(`/factory/${facid}`, data)
 
 export const getFarmById = id => fetch(`/factory/find/${id}`)
 

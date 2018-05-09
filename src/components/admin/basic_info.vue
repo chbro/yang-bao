@@ -60,7 +60,7 @@
 
             <div v-if="updateSubmitter" class="time el-input-group select">
                 <span class="time-span ellipse">上级代理</span>
-                <el-select size="small" v-model="models.agentFather">
+                <el-select size="small" v-model="models.factoryNum">
                     <el-option
                         v-for="(item, i) in options"
                         :label="item.label"

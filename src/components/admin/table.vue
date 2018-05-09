@@ -229,6 +229,7 @@ export default {
                 let res = await getReleaseByName(this.releaseType)
                 this.tableData = res.data.List
                 this.total = res.data.size
+                this.load = false
             }
         },
 

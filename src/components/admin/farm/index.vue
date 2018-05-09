@@ -3,7 +3,7 @@
         <data-cur
             title="羊场管理"
             modpath="farm"
-            :update-submitter="true"
+            :update-submitter="$route.query.edit > 0"
             is-agent
             :models.sync="models"
             :items="items"
@@ -34,7 +34,7 @@ export default {
                 {label: '羊场地理位置', model: 'breedLocation', type: 'address'},
                 {label: '羊场详细位置', model: 'breedLocationDetail'},
                 {label: '羊场负责人', model: 'responsiblePersonId', mr: 1},
-                {label: '消毒场所', model: 'disinfectP'},
+                // {label: '消毒场所', model: 'disinfectP'},
                 {label: '加入时间', model: 'createTime', type: 'time'}
             ],
             models: {
@@ -43,7 +43,7 @@ export default {
                 breedLocation: null,
                 breedLocationDetail: null,
                 responsiblePersonId: null,
-                disinfectP: null,
+                // disinfectP: null,
                 createTime: null,
                 remark: null
             }
