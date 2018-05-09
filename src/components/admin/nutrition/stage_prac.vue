@@ -9,14 +9,14 @@
             <div class="border-main">
                 <div v-for="(item, i) in card.items" :key="i" class="card-item">
                     <template v-for="(input, j) in item.inputs">
-                        <el-input :value="input" @change="change($event, index, i, j)" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
+                        <el-input :value="input" @change="change(val, index, i, j)" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
                             <template slot="prepend">{{ item.label }}:</template>
                         </el-input>
                         <div :key="j" v-else-if="item.type === 'select'" class="time el-input-group select">
                             <span class="time-span" v-text="item.label + ':'"></span>
                             <!-- v-model="models[item.model]" -->
                             <el-autocomplete
-                                @select="change($event, index, i, j)"
+                                @select="change(val, index, i, j)"
                                 :value="input"
                                 :ref="item.model + '-' + j"
                                 placeholder="名称和百分比"
@@ -50,7 +50,7 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { isReqSuccessful, checkForm, postJump, patchJump } from '@/util/jskit'
 import { getStages, getDryFeed, getConFeed } from '@/util/dataselect'
-import { postStage, getStage, updateStage } from '@/util/getdata'
+import { postStage, getStage, updateStage, getUserById } from '@/util/getdata'
 
 export default {
     components: {
@@ -186,9 +186,10 @@ export default {
             this.cards[cardIndex].items[itemIndex].inputs.splice(j, 1)
         },
 
-        change (e, cardIndex, itemIndex, index) {
-            this.cards[cardIndex].items[itemIndex].inputs.splice(index, 1, e.value)
+        change (val, cardIndex, itemIndex, index) {
+            this.cards[cardIndex].items[itemIndex].inputs.splice(index, 1, val)
         },
+
         submit () {
             Object.keys(this.$refs).forEach(v => {
                 let key = v.substr(0, v.indexOf('-'))
@@ -207,8 +208,8 @@ export default {
             if (!checkForm(this.models)) {
                 return
             }
-            let { userFactory, userRealname, id, factoryName } = this.user
 
+            let { userFactory, userRealname, id, factoryName } = this.user
             this.models.factoryNum = userFactory
             this.models.factoryName = factoryName
             this.models.operatorId = id

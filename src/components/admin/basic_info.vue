@@ -37,8 +37,10 @@
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
                     <span class="ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <el-radio v-model="models[item.model]" :label="0">{{radioSex ? '公' : '是'}}</el-radio>
-                    <el-radio v-model="models[item.model]" :label="1">{{radioSex ? '母' : '否'}}</el-radio>
+                    <div class="radios-el">
+                        <el-radio v-model="models[item.model]" :label="0">{{radioSex ? '公' : '否'}}</el-radio>
+                        <el-radio v-model="models[item.model]" :label="1">{{radioSex ? '母' : '是'}}</el-radio>
+                    </div>
                     <!-- <el-switch
                         v-model="models[item.model]"
                         active-color="#13ce66"
@@ -115,6 +117,7 @@ export default {
     mounted () {
         if (this.updateSubmitter) {
             let id = this.$route.params.id
+            console.log(id)
             getUserById(id).then(res => {
                 if (isReqSuccessful(res)) {
                     this.user = res.data.model
@@ -142,3 +145,9 @@ export default {
     }
 }
 </script>
+
+<style lang="stylus">
+.radios-el
+    display inline-block
+    vertical-align middle
+</style>

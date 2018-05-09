@@ -3,47 +3,53 @@
     <el-table
       ref="table"
       tooltip-effect="light"
-      :data="tableData3"
+      :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="name"
+        prop="building"
         width="150"
         align="center"
         label="栏/栋">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="nutritionT"
         label="使用日期"
         width="200"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="quantity"
         width="150"
         align="center"
         label="羊数">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="average"
+        width="150"
+        align="center"
+        label="羊只均重/斤">
+      </el-table-column>
+      <el-table-column
+        prop="period"
         width="150"
         align="center"
         label="阶段">
       </el-table-column>
       <el-table-column label="精料配方" align="center">
         <el-table-column
-          prop="name"
+          prop="materialA"
           width="150"
           align="center"
           label="预混料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="materialM"
           width="150"
           align="center"
           label="精料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="materialO"
           width="150"
           align="center"
           label="其他">
@@ -52,12 +58,12 @@
       <el-table-column label="精料用量" align="center">
         <el-table-column
           prop="name"
-          width="150"
+          width="materialWM"
           align="center"
           label="精料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="materialWO"
           width="150"
           align="center"
           label="其他">
@@ -65,19 +71,19 @@
       </el-table-column>
       <el-table-column label="粗饲料配方(%)" align="center">
         <el-table-column
-          prop="name"
+          prop="roughageP"
           width="150"
           align="center"
           label="青料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="roughageD"
           width="150"
           align="center"
           label="干料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="roughageO"
           width="150"
           align="center"
           label="其他">
@@ -85,19 +91,19 @@
       </el-table-column>
       <el-table-column label="粗饲料用量(体重%)" align="center">
         <el-table-column
-          prop="name"
+          prop="roughageWP"
           width="150"
           align="center"
           label="青料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="roughageWD"
           width="150"
           align="center"
           label="干料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="roughageWO"
           width="150"
           align="center"
           label="其他">
@@ -105,50 +111,50 @@
       </el-table-column>
       <el-table-column label="领料总量" align="center">
         <el-table-column
-          prop="name"
+          prop="pickingM"
           width="150"
           align="center"
           label="精料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="pickingR"
           width="150"
           align="center"
           label="粗料">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="pickingO"
           width="150"
           align="center"
           label="其他">
         </el-table-column>
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="water"
         width="150"
         align="center"
         label="饮水">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="operatorName"
         width="150"
         align='center'
         label="操作人员">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="professorName"
         width="150"
         align='center'
         label="技术审核">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="supervisorName"
         width="150"
         align='center'
         label="监督执行">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="remark"
         width="200"
         align="center"
         label="备注">
@@ -161,12 +167,9 @@
         width="160">
         <template slot-scope="scope">
           <div class="opr">
-            <span>查看</span>
-            <template>
-              <span>编辑</span>
-              <span>删除</span>
-            </template>
-            </div>
+            <span @click="edit(scope.$index)">编辑</span>
+            <span @click="deleteItem(scope.$index)">删除</span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -180,60 +183,54 @@
 </template>
 
 <script>
+  import { isReqSuccessful } from '@/util/jskit'
+  import { getUserById, getAllStages, deleteStage } from '@/util/getdata'
+
   export default {
     data() {
       return {
         load: true,
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+        tableData: [],
+        page: 1,
+        total: 1
+      }
+    },
+
+    mounted () {
+      let id = this.$route.params.id
+      getUserById(id).then(res => {
+        if (isReqSuccessful(res)) {
+          this.user = res.data.model
+        }
+      }).then(this.fetchData)
+    },
+
+    methods: {
+      async fetchData () {
+        let res = await getAllStages(this.user.userFactory, {page: this.page - 1})
+        this.tableData = res.data.List
+        this.total = res.data.size
+      },
+
+      edit (index) {
+        let id = this.tableData[index].id
+        this.$router.push({name: 'stageprac', query: {edit: id}})
+      },
+
+      deleteItem (index) {
+        this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          let id = this.tableData[index].id
+          deleteStage(id).then(res => {
+            if (isReqSuccessful(res)) {
+              this.fetchData()
+              this.$message.success('删除成功!')
+            }
+          })
+        }).catch(() => {
+          return false
+        })
       }
     }
   }

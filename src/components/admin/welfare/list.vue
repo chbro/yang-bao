@@ -95,29 +95,23 @@
         align='center'
         label="车辆进出消毒">
       </el-table-column>
-<!--       <el-table-column
+      <el-table-column
         prop="operatorName"
         width="150"
         align='center'
         label="操作人员">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="professorName"
         width="150"
         align='center'
         label="技术审核">
       </el-table-column>
       <el-table-column
-        prop="supervisor"
+        prop="supervisorName"
         width="150"
         align='center'
         label="监督执行">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        width="150"
-        align='center'
-        label="备注"> -->
       </el-table-column>
       <el-table-column
         class="action"
@@ -186,9 +180,9 @@
         let res = await getAllWelfare(this.user.userFactory, {page: this.page - 1})
         res.data.List.forEach(v => {
           Object.keys(v).forEach(v2 => {
-            if (v[v2] === false) {
+            if (v[v2] === 0) {
               v[v2] = '否'
-            } else if (v[v2] === true) {
+            } else if (v[v2] === 1) {
               v[v2] = '是'
             }
           })

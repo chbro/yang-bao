@@ -10,12 +10,13 @@ import Genea from '@/components/genea/genealogic'
 import GeneaDetail from '@/components/genea/genea_detail'
 import Course from '@/components/course'
 import Chat from '@/components/chat/chat'
-import ProChat from '@/components/chat/prochat'
+import ProChat from '@/components/admin/prochat'
 const SearchRes = () => import('@/components/search_res')
 const ReleaseIndex = () => import('@/components/release')
 
 // 管理员模块
 const Admin = () => import('@/components/admin/index')
+const CourseIntro = () => import('@/components/admin/professorCourseVideo/intro')
 // 个人信息
 const UserInfo = () => import('@/components/admin/user/user')
 const PasswordModify = () => import('@/components/admin/user/pass')
@@ -96,7 +97,6 @@ export default new Router({
         {path: '/geneadetail/:id', name: 'geneadetail', component: GeneaDetail},
         {path: '/course', name: 'course', component: Course},
         {path: '/chat', name: 'chat', component: Chat},
-        {path: '/prochat', name: 'prochat', component: ProChat},
         {path: '/search', name: 'search', component: SearchRes},
         // 集团
         {path: '/company', name: 'company', component: ReleaseIndex},
@@ -116,6 +116,7 @@ export default new Router({
         // 管理员模块
         {path: '/admin/:id', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'userinfo', component: UserInfo},
+            {path: 'prochat', name: 'prochat', component: ProChat},
             // 留言
             {path: 'message', name: 'message', component: Message},
             {path: 'comment', name: 'comment', component: AcountComment},
@@ -171,7 +172,8 @@ export default new Router({
             {path: 'release', name: 'release', component: Release},
             {path: 'release/list', name: 'releaselist', component: ReleaseList},
             // 专家课堂视频发布
-            {path: 'professorCourseVideo', name: 'professorCourseVideo', component: ProfessorCourseVideo}
+            {path: 'professorCourseVideo', name: 'professorCourseVideo', component: ProfessorCourseVideo},
+            {path: 'courseintro', name: 'courseintro', component: CourseIntro}
         ]},
         {path: '*', name: 'notfound', component: NotFound}
     ]

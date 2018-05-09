@@ -4,7 +4,7 @@
             v-if="!this.isView"
             :modpath="releaseType + 'plan'"
             is-plan
-            :get-data="getRelease"
+            :release-type="releaseType"
             :delete-data="_ => {}"
             :headers="headers">
         </admin-table>
@@ -14,7 +14,7 @@
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getReleaseByName, getReleaseById } from '@/util/getdata'
+import { getReleaseById } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
@@ -38,9 +38,6 @@ export default {
         return {
             isView: false,
             plantext: '',
-            getRelease () {
-                return getReleaseByName(this.releaseType)
-            },
             headers: [
                 {prop: 'gmtCreate', label: '发布时间', width: 200},
                 {prop: 'operatorName', label: '发布人'},

@@ -18,8 +18,10 @@
             </div>
 
             <div class="tab-right">
-                <span>用户：{{user.userRealname}}</span>
-                <span class="dept">部门：{{user.factoryName}}</span>
+                <div class="u-info">
+                    <span>用户：{{user.userRealname}}</span>
+                    <span>部门：{{user.factoryName}}</span>
+                </div>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
                 <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
                 <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span>
@@ -143,7 +145,7 @@ export default {
             font-weight bold
             &.yellow
                 color #bdbd34
-    .dept
+    .u-info
         display inline-block
-        width 235px
+        width 390px
 </style>

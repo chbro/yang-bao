@@ -17,31 +17,11 @@
 <script>
 import dataCur from '@/components/admin/common/dataCUR'
 import { postFarm, updateFarm, getFarmById } from '@/util/getdata'
-// import { addressToArray, isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
         dataCur
     },
-
-    // mounted () {
-    //     this.edit = this.$route.query.edit
-    //     if (this.edit) {
-    //         getFarmById(this.edit).then(res => {
-    //             if (isReqSuccessful(res)) {
-    //                 let data = res.data.model
-    //                 let obj = {}
-    //                 Object.keys(this.models).forEach(v => {
-    //                     obj[v] = data[v]
-    //                 })
-    //                 obj.breedLocation = addressToArray(obj.breedLocation)
-    //                 this.models = obj
-    //             }
-    //         }, _ => {
-    //             this.$message.error('获取羊场失败')
-    //         })
-    //     }
-    // },
 
     data () {
         return {
@@ -55,7 +35,6 @@ export default {
                 {label: '羊场详细位置', model: 'breedLocationDetail'},
                 {label: '羊场负责人', model: 'responsiblePersonId', mr: 1},
                 {label: '消毒场所', model: 'disinfectP'},
-                // {label: '上级代理', model: 'agent'},
                 {label: '加入时间', model: 'createTime', type: 'time'}
             ],
             models: {
@@ -65,7 +44,6 @@ export default {
                 breedLocationDetail: null,
                 responsiblePersonId: null,
                 disinfectP: null,
-                // agent: null,
                 createTime: null,
                 remark: null
             }

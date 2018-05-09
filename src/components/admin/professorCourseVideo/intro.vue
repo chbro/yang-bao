@@ -1,7 +1,6 @@
 <template>
     <div>
-        <plan release-type="prevention">
-        </plan>
+        <plan releaseType="course"></plan>
     </div>
 </template>
 

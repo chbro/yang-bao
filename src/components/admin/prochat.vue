@@ -1,45 +1,14 @@
 <template>
     <div id="pro_wrapper">
         <el-container>
-            <el-header>
+<!--             <el-header>
                 <router-link to="/"><img src="~@/assets/imgs/header-logo.png" alt="header-logo"></router-link>
                 <el-menu :default-active="activeIndex" class="chat-menu" mode="horizontal" text-color="#fff" active-text-color="#ffd04b">
                     <el-menu-item index="1">生产物资平台</el-menu-item>
                     <el-menu-item index="2">退出</el-menu-item>
                 </el-menu>
-            </el-header>
+            </el-header> -->
             <el-container>
-                <el-aside class="aside1" width="180px">
-                    <el-input
-                        placeholder="过滤关键字"
-                        v-model="filterText">
-                    </el-input>
-
-                    <el-tree
-                        class="filter-tree"
-                        :data="data2"
-                        :props="defaultProps"
-                        default-expand-all
-                        :filter-node-method="filterNode"
-                        ref="tree2">
-                    </el-tree>
-                </el-aside>
-                <el-aside class="aside2">
-                    <p>常 用 语</p>
-                    <el-input
-                        placeholder="输入关键字进行过滤"
-                        v-model="filterText3">
-                    </el-input>
-
-                    <el-tree
-                        class="filter-tree"
-                        :data="data3"
-                        :props="defaultProps3"
-                        default-expand-all
-                        :filter-node-method="filterNode"
-                        ref="tree3">
-                    </el-tree>
-                </el-aside>
                 <el-main>
                     <div class="pro-dialog_box" ref="dialog">
                         <div class="pro-dialog-item" :class="{self: item.self}" v-for="(item, i) in items" :key="i"><span v-text="item.self ? expert.name : user.name"></span><span class="msg" v-html="item.html"></span></div>
@@ -60,9 +29,45 @@
                         <div class="my_chat_input">
                             <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
                         </div>
-                        <el-button @click="send()" class="send">发送</el-button>
+                        <el-button size="small" @click="send()" class="send">发送</el-button>
                     </div>
                 </el-main>
+
+                <el-aside class="aside" width="180px">
+                    <p>聊天</p>
+                    <el-input
+                        size="small"
+                        placeholder="过滤关键字"
+                        v-model="filterText">
+                    </el-input>
+
+                    <el-tree
+                        class="filter-tree"
+                        :data="data2"
+                        :props="defaultProps"
+                        default-expand-all
+                        :filter-node-method="filterNode"
+                        ref="tree2">
+                    </el-tree>
+                </el-aside>
+
+                <el-aside class="aside borders">
+                    <p>常用语</p>
+                    <el-input
+                        size="small"
+                        placeholder="输入关键字进行过滤"
+                        v-model="filterText3">
+                    </el-input>
+
+                    <el-tree
+                        class="filter-tree"
+                        :data="data3"
+                        :props="defaultProps3"
+                        default-expand-all
+                        :filter-node-method="filterNode"
+                        ref="tree3">
+                    </el-tree>
+                </el-aside>
             </el-container>
         </el-container>
     </div>
@@ -326,18 +331,16 @@ export default {
         background-color color-main
         width 100%
         height 100%
-    .el-aside1
-        height 850px
-        background-color #fff
-    .aside2
-        height 850px
-        background-color #fff
-        border-left 2px solid color-main
-        border-right 2px solid color-main
+    .aside
         p
             text-align center
             color color-main
+        &:last-child
+            border-left 1px solid color-main
+            margin-left 5px
+            padding-left 5px
     .el-main
+        overflow hidden
         .pro-dialog_box
             overflow-y auto
             height 250px
@@ -387,10 +390,9 @@ export default {
                 top 80px
                 left 20px
             .send
-                margin-left 92%
-                margin-top 10px
-                width 8%
-                display inline
+                position absolute
+                right 20px
+                bottom 10px
         .my_chat_input
             border 1px solid #e4e7ed
             height 150px

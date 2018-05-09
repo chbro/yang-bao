@@ -93,7 +93,6 @@ import 'rui-vue-emoji/dist/vue-emoji.css'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 import { getExpert, evalulateExpert, getUserById } from '@/util/getdata'
 import { wsUrl, baseUrl, tokenStr } from '@/util/fetch'
-import { retrieveAid, retrieveUid, retrieveRid } from '@/util/store'
 
 export default {
     components: {
@@ -101,42 +100,45 @@ export default {
     },
 
     mounted () {
-        let aid = retrieveAid()
-        let uid = retrieveUid()
+        let uid = this.$route.params.id
         getUserById(uid).then(res => {
             if (isReqSuccessful(res)) {
+                let { userAgent, userRealname, userRole } = res.data.model
                 this.user = {
                     id: uid,
-                    name: res.data.model.userRealname
+                    name: userRealname,
+                    aid: userAgent,
+                    userRole
                 }
             }
-        })
-
-        getExpert(aid).then(res => {
-            if (isReqSuccessful(res)) {
-                let { phone, name, realName, expert_id, type, email } = res.data
-                this.expert = {
-                    id: res.data.expert_id,
-                    realName,
-                    name,
-                    phone,
-                    email,
-                    type
+        }).then(_ => {
+            getExpert(this.user.aid).then(res => {
+                if (isReqSuccessful(res)) {
+                    let { phone, name, realName, expert_id, type, email } = res.data
+                    this.expert = {
+                        id: res.data.expert_id,
+                        realName,
+                        name,
+                        phone,
+                        email,
+                        type
+                    }
+                } else {
+                    this.$notify.error({
+                        duration: 5000,
+                        title: '错误',
+                        message: '当前没有专家在线'
+                    })    
                 }
-            } else {
+            }, _ => {
                 this.$notify.error({
                     duration: 5000,
                     title: '错误',
-                    message: '当前没有专家在线'
-                })    
-            }
-        }, _ => {
-            this.$notify.error({
-                duration: 5000,
-                title: '错误',
-                message: '匹配专家失败'
+                    message: '匹配专家失败'
+                })
             })
         })
+
 
         // 表情组件初始化
         this.$refs.emoji.appendTo({
@@ -290,7 +292,7 @@ export default {
             form.append('user_id', this.user.id)
             form.append('user_name', this.user.name)
             form.append('talk_id', this.expert.id)
-            form.append('role_id', retrieveRid())
+            form.append('role_id', this.user.userRole)
             let headers = {}
             headers[authStr] = window.localStorage.getItem(tokenStr)
 

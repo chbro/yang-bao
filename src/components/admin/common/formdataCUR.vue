@@ -27,7 +27,7 @@
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump } from '@/util/jskit'
 import { baseUrl, authStr, tokenStr } from '@/util/fetch'
-import { retrieveUid, retrieveName, retrieveFacName, retrieveFacNum } from '@/util/store'
+import { getUserById } from '@/util/getdata'
 
 export default {
     props: {
@@ -88,6 +88,14 @@ export default {
         this.supervise = this.$route.query.supervise
         this.view = this.$route.query.view
         this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
+
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+            }
+        })
+
         if (this.edit) {
             this.getData(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
@@ -126,7 +134,7 @@ export default {
                 window.fetch(baseUrl + '/' + this.apiurl + '/s/' + this.supervise, {
                     method: 'PATCH',
                     headers,
-                    body: JSON.stringify({ispassSup: isPass, supervisor: retrieveUid()})
+                    body: JSON.stringify({ispassSup: isPass, supervisor: this.user.id})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
@@ -139,7 +147,7 @@ export default {
                 window.fetch(baseUrl + '/' + this.apiurl + '/p/' + this.check, {
                     method: 'PATCH',
                     headers,
-                    body: JSON.stringify({ispassCheck: isPass, professor: retrieveUid()})
+                    body: JSON.stringify({ispassCheck: isPass, professor: this.user.id})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
@@ -159,10 +167,11 @@ export default {
 
             let headers = {}
             headers[authStr] = window.localStorage.getItem(tokenStr)
-            this.models.operatorName = retrieveName()
-            this.models.operatorId = retrieveUid()
-            this.models.factoryNum = retrieveFacNum()
-            this.models.factoryName = retrieveFacName()
+            let { userFactory, userRealname, id, factoryName } = this.user
+            this.models.operatorName = userRealname
+            this.models.operatorId = id
+            this.models.factoryNum = userFactory
+            this.models.factoryName = factoryName
             console.log(this.models)
 
             let form = new FormData()

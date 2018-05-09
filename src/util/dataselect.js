@@ -85,7 +85,7 @@ export const getTypeName = (q, cb) => {
         {value: '大黑羊'},
         {value: '努比亚山羊'},
         {value: '努比亚山羊1号'},
-        {value: '狗哥'}
+        {value: '孙萌海1号'}
     ]
     cb(typeName)
 }

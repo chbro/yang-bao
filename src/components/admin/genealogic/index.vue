@@ -43,8 +43,7 @@ export default {
                 {label: '父母号', model: 'eartagOfFathersMother', mr: true},
                 {label: '母父号', model: 'eartagOfMothersFather'},
                 {label: '母母号', model: 'eartagOfMothersMother'},
-                {label: '品种名', model: 'typeName', mr: true, type: 'select', fetchSuggestions: getTypeName},
-                // {label: '品种名', model: 'typeName', type: 'select', fetchSuggestions: getType},
+                {label: '品种名', model: 'typeName', mr: true, type: 'select', fetchSuggestions: getTypeName}
                 
             ],
             // 用于检查字段值是否填写，所以均初始化为null
@@ -63,7 +62,8 @@ export default {
                 eartagOfMothersFather: null,
                 eartagOfMothersMother: null,
                 sex: 0,
-                remark: ''
+                remark: '',
+                typeName: null
             }
         }
     }

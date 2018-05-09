@@ -46,7 +46,6 @@
 import AdminHead from '@/components/common/admin_head'
 import AdminFoot from '@/components/common/admin_foot'
 import { getUserById } from '@/util/getdata'
-import { retrieveRank, retrieveUid } from '@/util/store'
 import { isReqSuccessful } from '@/util/jskit'
 
 /* eslint-disable object-property-newline */
@@ -77,7 +76,7 @@ export default {
                 label: '专家工作',
                 children: [
                     {label: '客户评价', to: 'comment'},
-                    {label: '专家在线课堂', to: 'course'},
+                    {label: '专家在线课堂', to: 'courseintro'},
                     {label: '生产档案审核', to: 'review'},
                     {label: '在线诊断', to: 'prochat'}
                 ]
@@ -171,9 +170,9 @@ export default {
                 // if (agentRank === -1 || agentRank === null || agentRank === undefined) {
                 //     this.treedata.push(this.productionTree)
                 // }
-                this.treedata.push(this.professorTree, this.adminTree, this.productionTree)
             }
         })
+        this.treedata.push(this.professorTree, this.adminTree, this.productionTree)
     },
 
     mounted () {

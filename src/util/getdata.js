@@ -193,7 +193,7 @@ export const postAgent = data => fetch('/agent', data, 'POST')
 
 export const updateAgent = (id, data) => fetch(`/agent/${id}`, data, 'PUT')
 
-export const getAgents = (id, data) => fetch(`/agent/${id}`, data)
+export const getAgents = (agentid, data) => fetch(`/agent/${agentid}`, data)
 
 export const getAgent = id => fetch('/agent/find/' + id)
 
