@@ -14,8 +14,8 @@
         <div class="admin-send" v-if="canModify">
             <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
             <template v-else-if="!view">
-                <el-button type="primary" :disabled="disableBtn" @click="Spv(true)">通过</el-button>
-                <el-button type="primary" :disabled="disableBtn" @click="Spv()">拒绝</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(1)">通过</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(0)">拒绝</el-button>
             </template>
             <el-button type="primary" v-else :disabled="disableBtn" @click="$router.back()">返回</el-button>
         </div>
@@ -128,39 +128,41 @@ export default {
 
     methods: {
         Spv (isPass) {
-            let headers = {}
+            let headers = {
+                'Content-Type': 'application/json'
+            }
             headers[authStr] = window.localStorage.getItem(tokenStr)
             if (this.supervise) {
                 window.fetch(baseUrl + '/' + this.apiurl + '/s/' + this.supervise, {
                     method: 'PATCH',
                     headers,
-                    body: JSON.stringify({ispassSup: isPass, supervisor: this.user.id})
+                    body: JSON.stringify({factoryNum: this.user.userFactory, ispassSup: isPass, supervisor: this.$route.params.id})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
                         patchJump(this.modpath)
                     }
-                }).catch(_ => {
+                }, _ => {
                     this.$message.success('修改监督状态失败')
                 })
             } else if (this.check) {
                 window.fetch(baseUrl + '/' + this.apiurl + '/p/' + this.check, {
                     method: 'PATCH',
                     headers,
-                    body: JSON.stringify({ispassCheck: isPass, professor: this.user.id})
+                    body: JSON.stringify({factoryNum: this.user.userFactory, ispassCheck: isPass, professor: this.$route.params.id})
                 }).then(async res => {
                     let body = await res.json()
                     if (isReqSuccessful(body)) {
                         patchJump(this.modpath)
                     }
-                }).catch(_ => {
+                }, _ => {
                     this.$message.error('审核失败')
                 })
             }
         },
 
         submit () {
-            console.log(this.models)
+            // console.log(this.models)
             if (!checkForm(this.models)) {
                 return
             }

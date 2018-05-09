@@ -2,12 +2,34 @@
     <div class="user-table">
         <el-button @click="addUser">添加用户</el-button>
 
-        <admin-table
-            hide-filter
-            :getData="getFactoryUsers"
-            :deleteData="deleteUser"
-            :headers="headers">
-        </admin-table>
+        <el-table
+            v-loading="load"
+            ref="table"
+            tooltip-effect="light"
+            class="admin-table"
+            :data="tableData">
+            <el-table-column
+                show-overflow-tooltip
+                v-for="(th, i) in headers"
+                :key="i"
+                align='center'
+                :prop="th.prop"
+                :label="th.label"
+                :width="th.width || 150">
+            </el-table-column>
+            <el-table-column
+                class="action"
+                fixed="right"
+                label="操作"
+                align='center'
+                width="160">
+                <template slot-scope="scope">
+                    <div class="opr">
+                        <span @click="deleteUser(scope.$index)">删除</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
 
         <el-dialog title="添加用户" :visible.sync="dialogVisible">
             <el-form :model="form">
@@ -28,7 +50,7 @@
                         <el-radio :disabled="isAgentEmpty" :label="0">代理单位</el-radio>
                         <el-radio :disabled="isFactoryEmpty" :label="1">羊场单位</el-radio>
                         <!-- TODO: 只有系统管理员 admin 才能添加系统管理员 -->
-                        <el-radio :label="2">系统管理员</el-radio>
+                        <el-radio :label="2" v-if="isAdmin">系统管理员</el-radio>
                     </el-radio-group><br/>
                     <el-select v-if="form.flag === 0" size="small" v-model="form.factoryId" filterable placeholder="选择代理单位">
                         <el-option
@@ -50,17 +72,25 @@
             </el-form>
 
             <div slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取消</el-button>
+                <el-button size="small" @click="cancle()">取消</el-button>
                 <el-button size="small" type="primary" @click="confirm()">确定</el-button>
             </div>
         </el-dialog>
+
+        <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="fetchData"
+            :current-page.sync="page">
+        </el-pagination>
+
     </div>
 </template>
 
 <script>
 import AdminTable from '@/components/admin/table'
-import { getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
-import { checkForm, isReqSuccessful } from '@/util/jskit'
+import { getUserById, getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
@@ -80,8 +110,6 @@ export default {
             },
             formLabelWidth: '120px',
             dialogVisible: false,
-            getFactoryUsers,
-            deleteUser,
             headers: [
                 {label: '单位', prop: 'factoryName'},
                 {label: '用户名', prop: 'pkUserid'},
@@ -96,50 +124,97 @@ export default {
             // 羊场单位
             factoryOptions: [],
             isAgentEmpty: false,
-            isFactoryEmpty: false
+            isFactoryEmpty: false,
+
+            tableData: [],
+            load: false,
+            page: 1,
+            total: 1,
+
+            isAdmin: false
         }
     },
 
+    mounted () {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.user = res.data.model
+                this.isAdmin = res.data.agentRank === 3
+            }
+        }).then(this.fetchData)
+        // 获取代理单位
+        getAgentUnit().then(res => {
+            if (isReqSuccessful(res)) {
+                if (res.data.List && !res.data.List.length) {
+                    this.isAgentEmpty = true
+                    return
+                }
+                res.data.List.forEach((item) => {
+                    let option = {
+                        value: item.id,
+                        label: item.agentName
+                    }
+                    this.agentOptions.push(option)
+                })
+            }
+        }, _ => {
+            this.$message.error('获取代理单位失败')
+        })
+        // 获取羊场单位
+        getFactoryUnit().then(res => {
+            if (isReqSuccessful(res)) {
+                if (res.data.List && !res.data.List.length) {
+                    this.isFactoryEmpty = true
+                    return
+                }
+                res.data.List.forEach((item) => {
+                    let option = {
+                        value: item.id,
+                        label: item.breedName
+                    }
+                    this.factoryOptions.push(option)
+                })
+            }
+        }, _ => {
+            this.$message.error('获取羊场单位失败')
+        })
+    },
+
+
     methods: {
+        cancle () {
+            this.form = {}
+            this.dialogVisible = false
+        },
+
+        async fetchData () {
+            this.load = true
+            let res = await getFactoryUsers(this.user.userFactory)
+            this.tableData = res.data.List
+            this.total = res.data.size
+            this.load = false
+        },
+
+        deleteUser (index) {
+            this.$confirm('将永久删除此用户, 是否继续?', '提示', {
+                type: 'warning'
+            }).then(() => {
+                let id = this.tableData[index].id
+                deleteUser(id).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.fetchData()
+                        this.$message.success('删除成功!')
+                    }
+                })
+            }).catch(() => {
+                return false
+            })
+        },
+
         // 添加用户
         addUser () {
             this.dialogVisible = true
-            // 获取代理单位
-            getAgentUnit().then(res => {
-                if (isReqSuccessful(res)) {
-                    if (res.data.List && !res.data.List.length) {
-                        this.isAgentEmpty = true
-                        return
-                    }
-                    res.data.List.forEach((item) => {
-                        let option = {
-                            value: item.id,
-                            label: item.agentName
-                        }
-                        this.agentOptions.push(option)
-                    })
-                }
-            }, _ => {
-                this.$message.error('获取代理单位失败')
-            })
-            // 获取羊场单位
-            getFactoryUnit().then(res => {
-                if (isReqSuccessful(res)) {
-                    if (res.data.List && !res.data.List.length) {
-                        this.isFactoryEmpty = true
-                        return
-                    }
-                    res.data.List.forEach((item) => {
-                        let option = {
-                            value: item.id,
-                            label: item.breedName
-                        }
-                        this.factoryOptions.push(option)
-                    })
-                }
-            }, _ => {
-                this.$message.error('获取羊场单位失败')
-            })
         },
         // 提交
         confirm () {
@@ -151,7 +226,7 @@ export default {
                 for(let i=0; i<len; i++) {
                     if(this.form.factoryId === this.agentOptions[i].value) {
                         this.form.factoryName = this.agentOptions[i].label
-                        return
+                        break
                     }
                 }
             } else {
@@ -159,19 +234,36 @@ export default {
                 for(let i=0; i<len; i++) {
                     if(this.form.factoryId === this.factoryOptions[i].value) {
                         this.form.factoryName = this.factoryOptions[i].label
-                        return
+                        break
                     }
                 }
             }
-            if (!checkForm(this.form)) {
+
+            let passRe = /^[a-zA-Z0-9_]{6,12}$/
+            let phoneRe = /^1[34578]\d{9}$/
+            let warn = this.$message.warning
+            let { username, realname, telephone, password, factoryId } = this.form
+            if (!username) {
+                warn('请输入用户名')
                 return
             }
-            // TODO: 验证手机号码，用户名不得为空，用户名不能重复
-            // 手机可为空，11为数字，用户名不得为空 4-20为大小写字母数字 用户姓名不能为空 单位不得为空
-            if (this.form.password.length < 6) {
-                this.$message.warning('密码长度不能小于6')
+            if (!realname) {
+                warn('请输入用户姓名')
                 return
             }
+            if (telephone && !phoneRe.test(telephone)) {
+                warn('手机号格式不正确')
+                return
+            }
+            if (!passRe.test(password)) {
+                warn('密码必须是6-12位字符数字和下划线')
+                return
+            }
+            if (factoryId === null) {
+                warn('请选择单位')
+                return   
+            }
+
             postUser(this.form).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message({
@@ -179,12 +271,12 @@ export default {
                         message: '添加成功'
                     })
                     // 添加成功后 用户名 用户姓名 手机号置空
-                    this.form.username = ''
-                    this.form.realname = ''
-                    this.form.telephone = ''
-                    this.headers.unshift()
+                    this.form = {}
+                    this.fetchData()
                 }
-            }).catch(() => {
+                this.dialogVisible = false
+            }, _ => {
+                this.dialogVisible = false
                 this.$message.error('添加用户失败')
             })
         }

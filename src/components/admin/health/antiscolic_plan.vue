@@ -1,7 +1,6 @@
 <template>
     <div>
-        <plan release-type="antiscolic">
-        </plan>
+        <plan release-type="antiscolic"></plan>
     </div>
 </template>
 

@@ -6,7 +6,11 @@
             :release-type="releaseType"
             :headers="headers">
         </admin-table>
-        <p v-else v-text="plantext"></p>
+        <div class="release-article" v-else>
+            <h2 v-text="title"></h2>
+            <div v-html="content"></div>
+            <el-button size="small" @click="$router.push({name: releaseType + 'plan'})">返回列表</el-button>
+        </div>
     </div>
 </template>
 
@@ -27,15 +31,23 @@ export default {
     },
 
     watch: {
-        '$route' (newV) {
-            this.isView = newV.query.view
+        '$route': {
+            handler (newV) {
+                this.isView = newV.query.view
+                if (this.isView) {
+                    this.getContent()
+                }
+            },
+            immediate: true
         }
     },
 
     data () {
         return {
             isView: false,
-            plantext: '',
+            content: '',
+            title: '',
+
             headers: [
                 {prop: 'gmtCreate', label: '发布时间', width: 200},
                 {prop: 'operatorName', label: '发布人'},
@@ -47,12 +59,14 @@ export default {
 
     mounted () {
         this.isView = this.$route.query.view
-        if (this.isView !== undefined) {
-            getReleaseById(this.isView).then(res => {
-                if (isReqSuccessful(res)) {
-                    this.plantext = res.data.List
-                }
-            })
+    },
+
+    methods: {
+        async getContent (id = this.isView) {
+            let res = await getReleaseById(id)
+            let data = res.data.model
+            this.title = data.title
+            this.content = data.content
         }
     }
 }

@@ -10,12 +10,14 @@ import Genea from '@/components/genea/genealogic'
 import GeneaDetail from '@/components/genea/genea_detail'
 import Course from '@/components/course'
 import Chat from '@/components/chat/chat'
-import ProChat from '@/components/admin/prochat'
 const SearchRes = () => import('@/components/search_res')
-const ReleaseIndex = () => import('@/components/release')
 
-// 管理员模块
+// 管理员模块首页
 const Admin = () => import('@/components/admin/index')
+// 专家在线咨询
+const ProChat = () => import('@/components/admin/prochat')
+// 发布
+const ReleaseIndex = () => import('@/components/release')
 const CourseIntro = () => import('@/components/admin/professorCourseVideo/intro')
 // 个人信息
 const UserInfo = () => import('@/components/admin/user/user')
@@ -151,7 +153,7 @@ export default new Router({
             {path: 'account', name: 'account', component: Account},
             // 疾病防治
             {path: 'prevention/plan', name: 'preventionplan', component: PreventionPlan},
-            {path: 'prevention', name: 'preventionprac', component: PreventionPrac},
+            {path: 'prevention/prac', name: 'preventionprac', component: PreventionPrac},
             {path: 'prevention/list', name: 'preventionlist', component: PreventionList},
             // 可视系统
             {path: 'visual/diagnose', name: 'diagnose', component: Diagnose},

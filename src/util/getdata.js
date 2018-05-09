@@ -158,7 +158,7 @@ export const updatePrevention = (id, data) => fetch('/diagnosis/' + id, data, 'P
 
 export const getAllPrevention = (id, data) => fetch('/diagnosis/' + id, data)
 
-export const getPrevention = id => fetch('/diagnosis/' + id)
+export const getPrevention = id => fetch('/diagnosis/find/' + id)
 
 export const deletePrevention = id => fetch(`/diagnosis/${id}`, null, 'DELETE')
 
@@ -258,3 +258,25 @@ export const postWarningInfo = data => fetch('/gedit', data, 'GET')
 export const getVideo = data => fetch('/video/find', data, 'POST')
 
 export const deleteVideo = id => fetch('/video/' + id, null, 'DELETE')
+
+// 审核七个生产档案
+export const patchProWelfare = (id, data) => fetch('/of/s/' + id, data, 'PATCH')
+
+export const patchProBreeding = (id, data) => fetch('/breeding/s/' + id, data, 'PATCH')
+
+export const patchProPrevention = (id, data) => fetch('/diagnosis/s/' + id, data, 'PATCH')
+
+export const patchWelfare = (id, data) => fetch('/of/p/' + id, data, 'PATCH')
+
+export const patchPrevention = (id, data) => fetch('/diagnosis/p/' + id, data, 'PATCH')
+
+export const patchBreeding = (id, data) => fetch('/breeding/p/' + id, data, 'PATCH')
+
+// export const patchDisinfect = (id, data) => fetch('/df/p/' + id, data, 'PATCH')
+// export const patchImmune = (id, data) => fetch('/ip/p/' + id, data, 'PATCH')
+// export const patchAntiscolic = (id, data) => fetch('/rp/p/' + id, data, 'PATCH')
+// export const patchStage = (id, data) => fetch('/nutrition/p/' + id, data, 'PATCH')
+// export const patchProDisinfect = (id, data) => fetch('/df/s/' + id, data, 'PATCH')
+// export const patchProImmune = (id, data) => fetch('/ip/s/' + id, data, 'PATCH')
+// export const patchProAntiscolic = (id, data) => fetch('/rp/s/' + id, data, 'PATCH')
+// export const patchProStage = (id, data) => fetch('/nutrition/s/' + id, data, 'PATCH')

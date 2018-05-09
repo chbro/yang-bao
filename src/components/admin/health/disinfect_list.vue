@@ -2,8 +2,7 @@
     <div>
         <admin-table
             modpath="health/disinfect"
-            find-by="factoryNum"
-            :is-disinfect="true"
+            hide-eartag-filter
             :get-data="getAllDisinfects"
             :delete-data="deleteDisinfect"
             :headers="headers">

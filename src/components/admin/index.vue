@@ -24,7 +24,7 @@
                                 <el-button v-if="isProdModule()" class="admin-hl hl-btn" type="primary" @click="changeActive(module, 1)">{{ module.label }}列表</el-button>
                             </div>
                             <div class="options" v-else>
-                                <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" type="primary" @click="checkModule(item)">{{ item.label }}</el-button>
+                                <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" type="primary" @click="checkMod = item.mod">{{ item.label }}</el-button>
                             </div>
                             <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="main-content">
-                            <router-view :user="user"></router-view>
+                            <router-view :user="user" :check-mod="checkMod"></router-view>
                         </div>
                     </div>
                 </el-main>
@@ -62,6 +62,8 @@ export default {
 
     data () {
         return {
+            checkMod: 'welfare',
+
             module: {label: '', to: ''},
             side_width: '18%',
             expanded_key: null,
@@ -148,11 +150,11 @@ export default {
             // 审核7大生产环节
             production: [
                 {label: '卫生与动物福利', mod: 'welfare'},
-                {label: '消毒', mod: 'disinfect'},
-                {label: '免疫', mod: 'immune'},
-                {label: '驱虫', mod: 'antiscolic'},
-                {label: '阶段营养', mod: 'stage'},
-                {label: '配种产子', mod: 'breed'},
+                {label: '消毒', mod: 'health/disinfect'},
+                {label: '免疫', mod: 'health/immune'},
+                {label: '驱虫', mod: 'health/antiscolic'},
+                {label: '阶段营养', mod: 'nutrition/stage'},
+                {label: '配种产子', mod: 'nutrition/breed'},
                 {label: '疫病防治', mod: 'prevention'}
             ],
 
@@ -178,13 +180,13 @@ export default {
     mounted () {
         this.isProCheck = this.$route.name === 'review'
 
-        let path = this.$route.path.substr(7) // rid of '/admin/id/'
+        let path = this.$route.path.substr(7) // rid of '/admin/'
         let [id, parent, child, postfix] = path.split('/')
         let arr = [{text: '溯源管理'}]
         let mod
         let submod
         let treeArr = [this.treedata[0], this.professorTree, this.adminTree, this.productionTree]
-
+console.log(parent, treeArr)
         treeArr.forEach(v => {
             let m
             v.children.forEach(val => {

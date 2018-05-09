@@ -12,7 +12,7 @@
             <el-input class="pick-erpai" size="small" v-model="factoryName">
                 <template slot="prepend">单位名:</template>
             </el-input>
-            <el-input class="pick-erpai" size="small" v-model="eartag">
+            <el-input v-if="!hideEartagFilter" class="pick-erpai" size="small" v-model="eartag">
                 <template slot="prepend">耳牌号:</template>
             </el-input>
             <el-date-picker
@@ -31,7 +31,7 @@
         <el-table
             v-loading="load"
             ref="table"
-            tooltip-effect="light"
+            tooltip-effect="dark"
             class="admin-table"
             :data="tableData">
             <el-table-column
@@ -52,8 +52,8 @@
                 <template slot-scope="scope">
                     <div class="opr" v-if="!releaseType">
                         <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
-                        <template v-if="!checkData.length">
-                            <span @click="edit(scope.$index)">编辑</span>
+                        <template v-if="!isCheck">
+                            <span @click="edit(scope.$index)" v-if="showEdit">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
                         </template>
                     </div>
@@ -103,11 +103,9 @@ export default {
             }
         },
         // 审核接口
-        checkData: {
-            type: Function,
-            default () {
-                return () => {}
-            }
+        isCheck: {
+            type: Boolean,
+            default: false
         },
         headers: {
             type: Array
@@ -132,6 +130,23 @@ export default {
         releaseType: {
             type: String,
             default: ''
+        },
+        showEdit: {
+            type: Boolean,
+            default: true
+        },
+        hideEartagFilter: {
+            type: Boolean,
+            default: false
+        },
+        checkModule: {
+            type: String
+        }
+    },
+
+    watch: {
+        getData (newV) {
+            this.fetchData()
         }
     },
 
@@ -236,18 +251,21 @@ export default {
         edit (index, isView) {
             let id = this.tableData[index].id
             let path
+            let pathid = this.$route.params.id
             if (this.noPrac) {
                 if (isView) {
-                    path = `/admin/${this.user.id}/${this.modpath}?view=${id}`
+                    path = `/admin/${pathid}/${this.modpath}?view=${id}`
                 } else {
-                    path = `/admin/${this.user.id}/${this.modpath}?edit=${id}`
+                    path = `/admin/${pathid}/${this.modpath}?edit=${id}`
+                }
+            } else if (!this.isCheck) {
+                if (isView) {
+                    path = `/admin/${pathid}/${this.modpath}/prac?view=${id}`
+                } else {
+                    path = `/admin/${pathid}/${this.modpath}/prac?edit=${id}`
                 }
             } else {
-                if (isView) {
-                    path = `/admin/${this.user.id}/${this.modpath}/prac?view=${id}`
-                } else {
-                    path = `/admin/${this.user.id}/${this.modpath}/prac?edit=${id}`
-                }
+                path = `/admin/${pathid}/${this.checkModule}/prac?check=${id}`
             }
             this.$router.push(path)
         },

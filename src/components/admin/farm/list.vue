@@ -2,7 +2,6 @@
     <div>
         <admin-table
             modpath="farm"
-            find-by="aid"
             :no-prac="true"
             :hide-filter="true"
             :getData="getFarms"

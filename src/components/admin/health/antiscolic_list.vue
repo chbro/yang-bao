@@ -2,7 +2,6 @@
     <div>
         <admin-table
             modpath="health/antiscolic"
-            find-by="factoryNum"
             :get-data="getAllAntiscolic"
             :delete-data="deleteAntiscolic"
             :headers="headers">

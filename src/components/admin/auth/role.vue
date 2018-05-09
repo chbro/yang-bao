@@ -193,7 +193,7 @@ export default {
             done()
         },
 
-        cancle (done) {
+        cancle () {
             this.editId = this.typeName = this.roleDescription = null
             this.rules = []
             this.addUserVisible = false

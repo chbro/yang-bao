@@ -10,8 +10,8 @@
         <div class="admin-send" v-if="canModify">
             <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
             <template v-else-if="!view">
-                <el-button type="primary" :disabled="disableBtn" @click="Spv(true)">通过</el-button>
-                <el-button type="primary" :disabled="disableBtn" @click="Spv()">拒绝</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(1)">通过</el-button>
+                <el-button type="primary" :disabled="disableBtn" @click="Spv(0)">拒绝</el-button>
             </template>
             <el-button type="primary" v-else :disabled="disableBtn" @click="$router.back()">返回</el-button>
         </div>
@@ -22,8 +22,7 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { checkForm, isReqSuccessful, postJump, patchJump, addressToArray } from '@/util/jskit'
-import { getUserById } from '@/util/getdata'
-
+import { getUserById, patchWelfare, patchBreeding, patchPrevention, patchProWelfare, patchProPrevention, patchProBreeding } from '@/util/getdata'
 export default {
     props: {
         isAgent: {
@@ -42,12 +41,6 @@ export default {
         models: {
             type: Object
         },
-        submitCallback: {
-            type: Function,
-            default () {
-                return _ => {}
-            }
-        },
         hasRemark: {
             type: Boolean,
             default: true
@@ -60,13 +53,6 @@ export default {
             type: Function
         },
         updateData: {
-            type: Function
-        },
-
-        superviseData: {
-            type: Function
-        },
-        checkData: {
             type: Function
         },
 
@@ -112,7 +98,7 @@ export default {
             this.getData(this.edit).then(res => {
                 if (isReqSuccessful(res)) {
                     let obj = {}
-                    console.log(res.data.model, this.models)
+                    // console.log(res.data.model, this.models)
                     Object.keys(this.models).forEach(v => {
                         obj[v] = res.data.model[v]
                     })
@@ -142,22 +128,34 @@ export default {
     },
 
     methods: {
-        spv (isPass) {
+        Spv (isPass) {
+            let sMap = {
+                welfare: patchWelfare,
+                prevention: patchPrevention,
+                'nutrition/breed': patchBreeding
+            }
+            let pMap = {
+                welfare: patchProWelfare,
+                prevention: patchProPrevention,
+                'nutrition/breed': patchProBreeding
+            }
             if (this.supervise) {
-                this.superviseData({ispassSup: isPass}).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.$message.success('审核成功')
-                    }
-                }, _ => {
-                    this.$message.error('审核失败')
-                })
-            } else if (this.check) {
-                this.checkData({ispassCheck: isPass}).then(res => {
+                sMap[this.modpath](this.supervise, {ispassSup: isPass}).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('修改监督状态成功')
+                        this.$router.push({name: 'review'})
                     }
                 }, _ => {
                     this.$message.error('修改监督状态失败')
+                })
+            } else if (this.check) {
+                sMap[this.modpath](this.check, {ispassCheck: isPass}).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('审核成功')
+                        this.$router.push({name: 'review'})
+                    }
+                }, _ => {
+                    this.$message.error('审核失败')
                 })
             }
         },
