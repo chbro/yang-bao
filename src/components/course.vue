@@ -6,14 +6,15 @@
                 <li v-for="(item, i) in this.videoList" :key="i">
                     <i class="list-item-icon iconfont icon-video"></i>
                     <span v-text="item.name"></span>
-                    <span v-text="item.time"></span>
-                    <a class="list-item-download" :href="item.link">下载</a>
+                    <span class="list-item-time" v-text="item.time" :title="item.time"></span>
+                    <a class="list-item-download" :href="item.link" download>下载</a>
                 </li>
             </ul>
             <el-pagination
                 class="video-list-page"
                 layout="prev, pager, next"
                 :total="total"
+                @current-change="getVideoList"
                 :current-page.sync="page">
             </el-pagination>
         </div>
@@ -21,12 +22,22 @@
 </template>
 
 <script>
-import { getVideoUrl } from '@/util/getdata'
+import { baseUrl } from '@/util/fetch.js'
+import { getVideoUrl, getVideo } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 import '@/assets/TcPlayer-2.2.1.js'
 
 export default {
+    data () {
+        return {
+            page: 1,
+            total: 0,
+            videoList: []
+        }
+    },
+
     mounted () {
+        this.getVideoList()
         // console.log(window.TcPlayer)
         getVideoUrl(1, 1).then(res => {
             if (isReqSuccessful(res)) {
@@ -54,22 +65,24 @@ export default {
         })
     },
 
-    data () {
-        return {
-            page: 1,
-            total: 1,
-            videoList: [
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'},
-                {time: '2018-04-29 20:55:17', name: '文件名', link: '22'}
-            ]
+    methods: {
+        getVideoList () {
+            getVideo({
+                page: this.page - 1
+            }).then(res => {
+                this.videoList = []
+                if(isReqSuccessful(res)) {
+                    this.total = res.data.size || 0
+                    res.data.List.forEach((item) => {
+                        this.videoList.push({
+                            id: item.id,
+                            time: item.gmtCreate,
+                            name: item.fileName,
+                            link: `${baseUrl}/movie/${item.fileName}`
+                        })
+                    })
+                }
+            })
         }
     }
 }
@@ -109,20 +122,29 @@ export default {
             width 100%
             padding 20px 0 0 0
             li
+                position relative
+                overflow hidden
+                white-space nowrap
                 box-sizing border-box
+                padding-right 50px
                 height 35px
                 line-height 35px
                 border-bottom 1px solid #eee
                 font-size 14px
                 color color-main
+                text-overflow ellipsis
                 .list-item-icon
                     position relative
                     top 2px
                     margin-right 5px
                     font-size 17px
+                .list-item-time
+                    color color-lightblue
                 .list-item-download
+                    position absolute
+                    right 0
                     color color-main
-                    float right
+                    cursor pointer
                     &:hover
                         color #014F9D
         .video-list-page
