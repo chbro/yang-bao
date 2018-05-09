@@ -13,18 +13,18 @@
                                 <input hidden ref="file" type="file" @change="sendFile()" class="file">
                                 <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
                             </div>
-                            <vue-emoji style="top:68px;"
+                            <vue-emoji
                                 v-show='showEmoji'
                                 ref='emoji'
                                 @select='handleEmojiSelect'
                                 @hide="showEmoji = false"
                             ></vue-emoji>
                             <div class="chat-input">
-                                <div @keypress.enter="send($event)" autofocus contenteditable ref='edit' class="chat_area"></div>
+                                <div autofocus contenteditable ref='edit' class="chat_area"></div>
                             </div>
                             <div class="opr-btns">
-                                <el-button size="small" @click="dialogFormVisible = true">关闭</el-button>
-                                <el-button size="small" @click="send()" class="send">发送</el-button>
+                                <el-button type="primary" size="small" @click="dialogFormVisible = true">关闭</el-button>
+                                <el-button type="primary" size="small" @click="send()" class="send">发送</el-button>
                             </div>
                         </div>
                     </el-main>
@@ -35,7 +35,7 @@
                             <li>邮件：{{ expert.email }}</li>
                             <li>电话：{{ expert.phone }}</li>
                         </ul>
-                        <div class="flybar"></div>
+                        <!-- <img class="flybar" src="//www.looyu.com/images/yiduiyi.png"/> -->
                     </el-aside>
                 </el-container>
             </el-tab-pane>
@@ -43,13 +43,13 @@
                 <div class="message">
                     <el-form>
                         <el-form-item>
-                            <el-input v-model="form.name" auto-complete="off" placeholder="Full Name"></el-input>
+                            <el-input v-model="form.name" auto-complete="off" placeholder="用户姓名"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input v-model="form.email" auto-complete="off" placeholder="Email Address"></el-input>
+                            <el-input v-model="form.email" auto-complete="off" placeholder="邮件地址"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input type="textarea" :rows="4" v-model="form.message" placeholder="Your Message"></el-input>
+                            <el-input type="textarea" :rows="4" v-model="form.message" placeholder="留言内容"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" class="submit_message">提交</el-button>
@@ -335,37 +335,40 @@ export default {
         margin-left 80px
 
 .chat-wrapper
-    width 60%
-    min-width 800px
-    margin 50px auto 0
-    background-color #666
+    box-sizing border-box
+    width 100%
+    padding 10px
+    font-size 15px
+    .el-input input
+        border 1px solid #dcdfe6
+        border-radius 5px
     .el-tabs__content
-        height 429px
+        height auto
     .el-tabs--border-card > .el-tabs__content
         padding 0
     .el-tabs__nav-scroll
-        height 85px
-        background url("../../assets/imgs/header-logo.png")
-        background-repeat no-repeat
-        background-position 15px 2px
+        height 50px
+        line-height 50px
         .el-tabs__nav
-            float right
+            float left
             height 100%
     .el-tabs--border-card > .el-tabs__header .el-tabs__item
-            line-height 85px
+            line-height 50px
     .el-tabs__item
         height 100%
     .el-main
-        height 429px
+        height auto
         overflow-y hidden
         .dialog_box
-            height 60%
+            margin 10px 10px 0 0
+            height 250px
             border 1px solid #e4e7ed
+            border-radius 5px
             overflow-y auto
             .dialog-item
                 overflow hidden
                 font-size 1em
-                margin 10px 0
+                margin 10px 20px
                 margin-left 15px
                 line-height 25px
                 span, .msg
@@ -393,44 +396,43 @@ export default {
                         background-color #3385ff
         .input_box
             position relative
-            height 40%
+            margin 0 10px 10px 0
             .chat-option
-                height 27%
+                height 50px
+                line-height 50px
                 width 100%
-                padding 15px 0 0 0
                 i
                     margin-right 5px
                     cursor pointer
                     font-size 20px
         .chat-input
+            padding 10px 20px 50px 20px
             border 1px solid #e4e7ed
-            height 100px
+            border-radius 5px
+            color #6f7180
             .chat_area
-                width 86%
-                height 60px
+                min-height 100px
                 overflow-y auto
                 margin 5px
                 outline 0
         .opr-btns
             position absolute
             right 20px
-            bottom 0
+            bottom 10px
 
     .el-aside
+        position relative
         background-color #f5f7fa
-        height 429px
+        height auto
         li
             padding 5%
             overflow hidden
             text-overflow ellipsis
             white-space nowrap
         .flybar
-            background: url("http://www.looyu.com/images/yiduiyi.png") no-repeat
-            cursor pointer
-            height 220px
+            position absolute
+            bottom 0
             width 100%
-            margin-top 24.5px
-            background-size cover
     .message
         width 80%
         margin 50px auto 0

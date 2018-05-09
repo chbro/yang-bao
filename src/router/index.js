@@ -9,13 +9,13 @@ import FindPass from '@/components/login/findpass'
 import Genea from '@/components/genea/genealogic'
 import GeneaDetail from '@/components/genea/genea_detail'
 import Course from '@/components/course'
-import Chat from '@/components/chat/chat'
 const SearchRes = () => import('@/components/search_res')
 
 // 管理员模块首页
 const Admin = () => import('@/components/admin/index')
 // 专家在线咨询
-const ProChat = () => import('@/components/admin/prochat')
+const Chat = () => import('@/components/admin/user/chat')
+const ProChat = () => import('@/components/admin/user/prochat')
 // 发布
 const ReleaseIndex = () => import('@/components/release')
 const CourseIntro = () => import('@/components/admin/professorCourseVideo/intro')
@@ -98,7 +98,6 @@ export default new Router({
         {path: '/genea', name: 'genea', component: Genea},
         {path: '/geneadetail/:id', name: 'geneadetail', component: GeneaDetail},
         {path: '/course', name: 'course', component: Course},
-        {path: '/chat', name: 'chat', component: Chat},
         {path: '/search', name: 'search', component: SearchRes},
         // 集团
         {path: '/company', name: 'company', component: ReleaseIndex},
@@ -118,6 +117,8 @@ export default new Router({
         // 管理员模块
         {path: '/admin/:id', component: Admin, meta: {requireAuth: true}, children: [
             {path: '', name: 'userinfo', component: UserInfo},
+            // 在线聊天
+            {path: 'chat', name: 'chat', component: Chat},
             {path: 'prochat', name: 'prochat', component: ProChat},
             // 留言
             {path: 'message', name: 'message', component: Message},

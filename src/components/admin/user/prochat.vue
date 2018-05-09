@@ -228,10 +228,6 @@ export default {
             }
             this.pushChatMessage(html, data.order === 'self')
         }
-
-        // window.onbeforeunload = function () {
-        //     return false
-        // }
     },
 
     destroyed () {
@@ -355,7 +351,7 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../../assets/css/color'
+@import '../../../assets/css/color'
 
 .pro_wrapper
     padding 10px 0
