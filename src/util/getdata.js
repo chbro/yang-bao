@@ -16,7 +16,9 @@ export const LogOut = id => fetch('/logout/' + id)
 /**
  * 添加，展示留言
  */
-export const Comment = data => fetch('/messageBoard/insert', data, 'POST')
+export const CommentInsert = data => fetch('/messageBoard/insert', data, 'POST')
+
+export const Comment = data => fetch('/messageBoard/search', data, 'POST')
 
 export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${page}`)
 
