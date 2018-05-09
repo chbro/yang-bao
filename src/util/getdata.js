@@ -16,7 +16,9 @@ export const LogOut = id => fetch('/logout/' + id)
 /**
  * 添加，展示留言
  */
-export const Comment = data => fetch('/messageBoard/insert', data, 'POST')
+export const CommentInsert = data => fetch('/messageBoard/insert', data, 'POST')
+
+export const Comment = data => fetch('/messageBoard/search', data, 'POST')
 
 export const getMessage = (size, page) => fetch(`/messages/?size=${size}&page=${page}`)
 
@@ -47,7 +49,12 @@ export const getPermission = _ => fetch('/user')
 /**
  * 获取直播或者推流地址
  */
-export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
+
+export const getChannelList = () => fetch('/liveBroadcast/getLiveStat')
+
+export const getPushUrl = id => fetch(`/liveBroadcast/getPushUrl/${id}`)
+
+// export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
 
 /**
  * 聊天模块

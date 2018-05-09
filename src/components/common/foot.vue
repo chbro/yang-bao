@@ -53,18 +53,7 @@
                     <div class="contact-widget">
                         <h3 class="footer-title">留言专栏</h3>
                         <div class="contact-form">
-                            <input v-model="form.username" placeholder="Full Name" minlength="2" maxlength="20">
-                            <input v-model="form.contact" placeholder="Email Address" minlength="5" maxlength="30">
-                            <textarea minlength="1" maxlength="500" v-model="form.message" placeholder="Your Message"></textarea>
-                            <el-select v-model="tagValue" placeholder="请选择">
-                                <el-option
-                                  v-for="tag in tags"
-                                  :key="tag.value"
-                                  :label="tag.label"
-                                  :value="tag.value">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="attitudeValue" placeholder="请选择">
+                            <el-select v-model="form.attitude" placeholder="用户态度">
                                 <el-option
                                   v-for="attitude in attitudes"
                                   :key="attitude.value"
@@ -72,7 +61,7 @@
                                   :value="attitude.value">
                                 </el-option>
                             </el-select>
-                            <el-select v-model="intentionValue" placeholder="请选择">
+                            <el-select v-model="form.intention" placeholder="购买意向">
                                 <el-option
                                   v-for="intention in intentions"
                                   :key="intention.value"
@@ -80,6 +69,9 @@
                                   :value="intention.value">
                                 </el-option>
                             </el-select>
+                            <input v-model="form.username" placeholder="Full Name" minlength="2" maxlength="20">
+                            <input v-model="form.contact" placeholder="Email Address" minlength="5" maxlength="30">
+                            <textarea minlength="1" maxlength="500" v-model="form.message" placeholder="Your Message"></textarea>
                             <button @click="addNote()">Send</button>
                         </div>
                     </div>
@@ -91,7 +83,7 @@
 </template>
 
 <script>
-import { Comment } from '@/util/getdata'
+import { CommentInsert } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
@@ -106,33 +98,28 @@ export default {
                 {label: '产品展示', href: '/'},
                 {label: '电商旺铺', href: '/'}
             ],
-
+            attitudes: [
+                {label:'非常满意', value: '5'},
+                {label:'满意', value: '４'},
+                {label:'一般', value: '３'},
+                {label:'不满意', value: '２'},
+                {label:'非常不满意', value: '１'}
+            ],
+            intentions: [
+                {label:'有', value: '1'},
+                {label:'无', value: '2'}
+            ],
+            // tagValue: null,
+            attitudeValue: null,
+            intentionValue: null,
             form: {
                 username: '',
                 contact: '',
                 message: '',
-                tag: '',
+                tag: '1',
                 attitude: '',
                 intention: ''
             },
-            tags: [
-                {value: 'aaa'},
-                {value: 'bbb'},
-                {value: 'ccc'}
-            ],
-            attitudes: [
-                {value: 'aaa'},
-                {value: 'bbb'},
-                {value: 'ccc'}
-            ],
-            intentions: [
-                {value: 'aaa'},
-                {value: 'bbb'},
-                {value: 'ccc'}
-            ],
-            tagValue: null,
-            attitudeValue: null,
-            intentionValue: null,
 
             news: [
                 {id: 1, imgsrc: '', content: '国务院扶贫办到贵州省努比亚牧业调研', date: '31 Dec, 2017'},
@@ -161,7 +148,7 @@ export default {
                 return
             }
 
-            Comment(this.form).then(res => {
+            CommentInsert(this.form).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$router.push({name: 'comment'})
                 }

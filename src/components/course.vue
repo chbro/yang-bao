@@ -1,6 +1,9 @@
 <template>
     <div class="app-video">
-        <div id="app-video"></div>
+        <div v-show="showVideo" id="app-video"></div>
+        <div v-if="showPic" class="app-video-no">
+            <p class="app-video-tips">暂无专家直播</p>
+        </div>
         <div class="video-list">
             <ul>
                 <li v-for="(item, i) in this.videoList" :key="i">
@@ -23,7 +26,7 @@
 
 <script>
 import { baseUrl } from '@/util/fetch.js'
-import { getVideoUrl, getVideo } from '@/util/getdata'
+import { getChannelList, getVideoUrl, getVideo } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 import '@/assets/TcPlayer-2.2.1.js'
 
@@ -32,33 +35,38 @@ export default {
         return {
             page: 1,
             total: 0,
+            showVideo: false,
+            showPic: false,
             videoList: []
         }
     },
 
     mounted () {
         this.getVideoList()
-        // console.log(window.TcPlayer)
-        getVideoUrl(1, 1).then(res => {
-            if (isReqSuccessful(res)) {
-                let url = res.data.liveBroadcastResp.data.pushUrl
 
-                var player = new TcPlayer('app-video', {
-                    'm3u8': url,
-                    // 增加了一个flv的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
-                    'flv': url,
-                    'autoplay': true,
-                    // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
-                    // 'coverpic': 'http://www.test.com/myimage.jpg',
-                    // 视频的显示宽度，请尽量使用视频分辨率宽度
-                    'width': '100%',
-                    // 视频的显示高度，请尽量使用视频分辨率高度
-                    'height': '100%',
-                    coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'},
-                    wording: {
-                        1002: '暂无专家直播'
-                    }
-                })
+        getChannelList().then(res => {
+            if (isReqSuccessful(res)) {
+                if(res.data.liveChannelResp.data.output[0].all_count) {
+                    this.showVideo = true
+                    let channelName = res.data.liveChannelResp.data.output[0].channel_list[0].channel_name
+                    let url = 'http://' + channelName.split('_')[0] + '.liveplay.myqcloud.com/live/' + channelName
+                    console.log(url)
+                    var player = new TcPlayer('app-video', {
+                        'm3u8': url + '.m3u8',
+                        // 增加了一个flv的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
+                        'flv': url + '.flv',
+                        'autoplay': true,
+                        // iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
+                        // 视频的显示宽度，请尽量使用视频分辨率宽度
+                        'width': '100%',
+                        // 视频的显示高度，请尽量使用视频分辨率高度
+                        'height': '100%',
+                        // coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'}
+                    })
+                } else {
+                    this.showPic = true
+                }
+
             }
         }, _ => {
             this.$message.error('获取直播信息失败')
@@ -93,13 +101,33 @@ export default {
 .app-video
     display flex
     flex-wrap wrap
-    #app-video
+    .app-video-no
+        position relative
         box-sizing border-box
-        padding-left 5%
-        width 60%
+        width 55%
         min-width 600px
         height 400px
-        margin 20px 0
+        margin 20px 0 20px 5%
+        background-image url('//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg')
+        background-size cover
+        .app-video-tips
+            margin 0
+            position absolute
+            top 0
+            bottom 0
+            left 0
+            right 0
+            line-height 400px
+            text-align center
+            color #fff
+            font-size 16px
+            background-color rgba(0, 0, 0, 0.7)
+    #app-video
+        box-sizing border-box
+        width 55%
+        min-width 600px
+        height 400px
+        margin 20px 0 20px 5%
         .vcp-player
             margin 0
         .vcp-error-tips // 视频播放失败样式

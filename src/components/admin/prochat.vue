@@ -1,13 +1,6 @@
 <template>
-    <div id="pro_wrapper">
+    <div class="pro_wrapper">
         <el-container>
-<!--             <el-header>
-                <router-link to="/"><img src="~@/assets/imgs/header-logo.png" alt="header-logo"></router-link>
-                <el-menu :default-active="activeIndex" class="chat-menu" mode="horizontal" text-color="#fff" active-text-color="#ffd04b">
-                    <el-menu-item index="1">生产物资平台</el-menu-item>
-                    <el-menu-item index="2">退出</el-menu-item>
-                </el-menu>
-            </el-header> -->
             <el-container>
                 <el-main>
                     <div class="pro-dialog_box" ref="dialog">
@@ -19,53 +12,43 @@
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                             <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
                             <i title="邀请专家" class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
+                            <el-dropdown placement="top" @command="addExpression">
+                                <span class="el-dropdown-link">
+                                    常用语
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="(item, index) in expressionList" :command="item.label" :key="index">{{ item.label }}</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
-                        <vue-emoji style="top:68px;"
+                        <vue-emoji
                             v-show='showEmoji'
                             ref='emoji'
                             @select='handleEmojiSelect'
                             @hide="showEmoji = false"
                         ></vue-emoji>
                         <div class="my_chat_input">
-                            <div @keypress.enter="send($event)" contenteditable ref='edit' name="" class="chat_area"></div>
+                            <div contenteditable ref='edit' name="" class="chat_area"></div>
                         </div>
-                        <el-button size="small" @click="send()" class="send">发送</el-button>
+                        <el-button type="primary" size="small" @click="send()" class="send">发送</el-button>
                     </div>
                 </el-main>
 
-                <el-aside class="aside" width="180px">
-                    <p>聊天</p>
+                <el-aside class="aside" width="200px">
                     <el-input
                         size="small"
-                        placeholder="过滤关键字"
-                        v-model="filterText">
+                        placeholder="请输入用户姓名"
+                        v-model="filterUser">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
 
                     <el-tree
                         class="filter-tree"
-                        :data="data2"
+                        :data="userList"
                         :props="defaultProps"
-                        default-expand-all
+                        empty-text="用户列表为空"
                         :filter-node-method="filterNode"
-                        ref="tree2">
-                    </el-tree>
-                </el-aside>
-
-                <el-aside class="aside borders">
-                    <p>常用语</p>
-                    <el-input
-                        size="small"
-                        placeholder="输入关键字进行过滤"
-                        v-model="filterText3">
-                    </el-input>
-
-                    <el-tree
-                        class="filter-tree"
-                        :data="data3"
-                        :props="defaultProps3"
-                        default-expand-all
-                        :filter-node-method="filterNode"
-                        ref="tree3">
+                        ref="userTree">
                     </el-tree>
                 </el-aside>
             </el-container>
@@ -96,15 +79,83 @@ export default {
             activeIndex: '1',
 
             options: [],
-            filterText: '',
-            data2: [],
+            filterUser: '',
+            // 满足王老师的常用语需求！！！
+            expressionList: [
+                { label: '你好，你特么没事别给我发消息' }
+            ],
+            userList: [
+                {
+                    // 高能预警：用户放在二级，一级菜单设置为所有用户
+                    label: '所有用户',
+                    children: [
+                        {
+                            label: '黄文海'
+                        },
+                        {
+                            label: '周二狗'
+                        },
+                        {
+                            label: '黄大狗'
+                        },
+                        {
+                            label: '周文海'
+                        },
+                        {
+                            label: '傻嫖哥'
+                        },
+                        {
+                            label: '二狗子'
+                        },
+                        {
+                            label: '没有姓名'
+                        },
+                        {
+                            label: '黄文海'
+                        },
+                        {
+                            label: '周二狗'
+                        },
+                        {
+                            label: '黄大狗'
+                        },
+                        {
+                            label: '周文海'
+                        },
+                        {
+                            label: '傻嫖哥'
+                        },
+                        {
+                            label: '二狗子'
+                        },
+                        {
+                            label: '没有姓名'
+                        },
+                        {
+                            label: '黄文海'
+                        },
+                        {
+                            label: '周二狗'
+                        },
+                        {
+                            label: '黄大狗'
+                        },
+                        {
+                            label: '周文海'
+                        },
+                        {
+                            label: '傻嫖哥'
+                        },
+                        {
+                            label: '二狗子'
+                        },
+                        {
+                            label: '没有姓名'
+                        }
+                    ]
+                }
+            ],
             defaultProps: {
-                children: 'children',
-                label: 'label'
-            },
-            filterText3: '',
-            data3: [],
-            defaultProps3: {
                 children: 'children',
                 label: 'label'
             },
@@ -114,14 +165,15 @@ export default {
     },
 
     mounted () {
-        let id = 17
+        // TODO: 还不是为了获取专家 ID 写的 TODO
+        let id = 2
         getExpressions(id).then(res => {
             if (isReqSuccessful(res)) {
                 let arr = []
                 res.data.List.forEach(v => {
                     arr.push({label: v.expression})
                 })
-                this.data3 = arr
+                this.expressionList = arr
             }
         })
 
@@ -199,6 +251,11 @@ export default {
             keepLastIndex(edit)
         },
 
+        // 添加常用语
+        addExpression (expression) {
+            this.$refs.edit.innerHTML += expression
+        },
+
         send (e) {
             e && e.preventDefault()
 
@@ -215,7 +272,6 @@ export default {
                 talk_id: this.user.id,
                 mode: 0
             }
-            console.log(data)
             try {
                 this.websocket.send(JSON.stringify(data))
             } catch (e) {
@@ -291,11 +347,8 @@ export default {
         }
     },
     watch: {
-        filterText (val) {
-            this.$refs.tree2.filter(val)
-        },
-        filterText3 (val) {
-            this.$refs.tree3.filter(val)
+        filterUser (val) {
+            this.$refs.userTree.filter(val)
         }
     }
 }
@@ -304,8 +357,13 @@ export default {
 <style lang="stylus">
 @import '../../assets/css/color'
 
-#pro_wrapper
+.pro_wrapper
+    padding 10px 0
     height auto
+    font-size 15px
+    .el-input input
+        border 1px solid #dcdfe6
+        border-radius 5px
     .el-header
         height 80px !important
         padding 0
@@ -332,28 +390,25 @@ export default {
         width 100%
         height 100%
     .aside
-        p
-            text-align center
-            color color-main
-        &:last-child
-            border-left 1px solid color-main
-            margin-left 5px
-            padding-left 5px
+        box-sizing border-box
+        padding 0 10px
+        .filter-tree
+            margin-top 5px
     .el-main
         overflow hidden
         .pro-dialog_box
             overflow-y auto
             height 250px
             border 1px solid #e4e7ed
+            border-radius 5px
             .pro-dialog-item
                 overflow hidden
                 font-size 16px
-                margin 10px 0
-                margin-left 15px
+                margin 10px 20px
                 line-height 25px
                 span, .msg
                     float left
-                    padding 5px
+                    padding 5px 5px 5px 0
                 .msg
                     float left
                     max-width 80%
@@ -375,31 +430,35 @@ export default {
                         color #fff
                         background-color #3385ff
         .my_input_box
-            height 35%
+            position relative
             .my_chat_option
-                height 15%
+                height 50px
+                line-height 50px
                 width 100%
-                padding-top 1.5%
                 i
                     margin-right 5px
                     font-size 20px
                     cursor pointer
-                .inviation
-                    margin-left 88%
+                .el-dropdown-link
+                    padding 3px 5px
+                    border-radius 3px
+                    font-size 13px
+                    color #fff
+                    cursor pointer
+                    background-color color-main
             .rui-emoji
                 top 80px
                 left 20px
             .send
                 position absolute
-                right 20px
+                right 10px
                 bottom 10px
         .my_chat_input
+            padding 10px 20px 50px 20px
             border 1px solid #e4e7ed
-            height 150px
+            border-radius 5px
+            color #6f7180
             .chat_area
-                width 86%
-                height 140px
-                overflow-y auto
-                margin 5px
+                min-height 100px
                 outline 0
 </style>

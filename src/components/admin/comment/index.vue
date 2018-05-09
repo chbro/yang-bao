@@ -37,16 +37,16 @@
                 <p>联系方式:  {{ item.contact}}</p>
             </div>
             <div class="comment-detail">
-                <p>留言内容：{{ item.inserttime}}</p>
-                <p>留言时间: {{ item.time}}</p>
-                <p>有无购买意向: {{ item.check}}</p>
+                <p>留言内容：{{ item.message}}</p>
+                <p>留言时间: {{ item.inserttime}}</p>
+                <p>有无购买意向: {{ map[item.check]}}</p>
                 <p>用户态度: {{ map[item.attitude]}}</p>
             </div>
         </div>
         <el-pagination
           layout="prev, pager, next"
-          :total="limit"
-          @current-change="fetchData"
+          :total="total"
+          @current-change="onSubmit"
           :current-page.sync="pageNumb">
         </el-pagination>
     </div>
@@ -64,6 +64,8 @@ export default {
                 buy: '',
                 attitude: '',
                 time: ''
+                // pageNumb: '2',
+                // limit: '20'
             },
 
             buy: [
@@ -84,6 +86,10 @@ export default {
             items: [
                 {}
             ],
+            // mp: {
+            //     1: '有',
+            //     2:'无'
+            // },
             map: {
                 1: '非常不满意',
                 2: '不满意',
@@ -91,16 +97,18 @@ export default {
                 4: '满意',
                 5: '非常满意'
             },
-            pageNumb: 1,
+            total: 0,
+            pageNumb: 100,
             limit: 10
         }
     },
 
     methods: {
         onSubmit () {
-            Comment(this.comment).then(res => {
+            Comment(this.comment, {page: this.pageNumb - 1}).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.items = res.data.data
+                    this.items = res.data.List
+                    this.total = res.data.size
                     this.$router.push({name: 'comment'})
                 }
             }).catch(_ => {
