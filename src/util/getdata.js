@@ -251,3 +251,10 @@ export const updateUserRole = (uid, roleid) => fetch('/user/role/' + uid, {role:
 export const postMessage = data => fetch('/psend', data, 'GET')
 
 export const postWarningInfo = data => fetch('/gedit', data, 'GET')
+
+/**
+ * 专家课堂视频发布
+ */
+export const getVideo = data => fetch('/video/find', data, 'POST')
+
+export const deleteVideo = id => fetch('/video/' + id, null, 'DELETE')

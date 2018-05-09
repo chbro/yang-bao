@@ -77,7 +77,7 @@ export default {
                 label: '专家工作',
                 children: [
                     {label: '客户评价', to: 'comment'},
-                    {label: '专家在线课堂', to: 'course'},
+                    {label: '专家在线课堂', to: 'test'},
                     {label: '生产档案审核', to: 'review'},
                     {label: '在线诊断', to: 'prochat'}
                 ]

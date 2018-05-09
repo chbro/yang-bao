@@ -6,11 +6,13 @@
       :action="url"
       :data="data"
       name="file"
+      :file-list="fileList"
       :disabled="disabled"
       :limit="1"
       accept="video/*"
       :on-exceed="exceed"
       :before-upload="checkFile"
+      :on-change="change"
       :on-success="success"
       :on-error="error"
       :auto-upload="false">
@@ -22,40 +24,36 @@
     <el-table
       ref="table"
       tooltip-effect="light"
-      :data="tableData3"
+      :data="videoList"
       style="width: 100%">
       <el-table-column
-        prop="date"
+        prop="gmtCreate"
         label="上传日期"
         align='center'
         width="200">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="professorName"
         label="专家姓名"
         align='center'
         width="200">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="fileName"
         label="视频名称"
         align='center'
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="date"
-        label="视频链接"
-        align='center'
-        width="200">
+        width="300">
       </el-table-column>
       <el-table-column
         class="action"
         label="操作"
         align='center'
+        fixed="right"
         width="160">
         <template slot-scope="scope">
           <div class="opr">
-            <span class="opr_delete" @click="edit(scope.$index, 1)">删除</span>
+            <a class="opr_download" :href="downloadLink(scope.$index)" download>下载</a>
+            <span class="opr_delete" @click="deleteVideo(scope.$index)">删除</span>
           </div>
         </template>
       </el-table-column>
@@ -63,7 +61,7 @@
     <el-pagination
       layout="prev, pager, next"
       :total="total"
-      @current-change="fetchData"
+      @current-change="getVideoList"
       :current-page.sync="page">
     </el-pagination>
   </div>
@@ -71,33 +69,38 @@
 
 <script>
   import { baseUrl } from '@/util/fetch.js'
+  import { getVideo, deleteVideo } from '@/util/getdata.js'
   import { isReqSuccessful } from '@/util/jskit'
   export default {
     data() {
       return {
         // 上传 URL
         url: `${baseUrl}/video/upload`,
+        fileList: [],
         // 上传视频参数
         data: {},
         disabled: false,
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
+        videoList: [],
+        // 数据总数
+        total: 0,
+        // 当前页数
+        page: 1
       }
     },
     created () {
+      // TODO: 获取专家 ID 和姓名
       this.data = {
         professorId: '16',
         professorName: '狗哥'
-      }
+      },
+      this.getVideoList()
     },
     methods: {
       submitUpload() {
+        if(!this.fileList.length) {
+          this.$message.warning('请选取视频文件')
+          return false
+        }
         this.$refs.upload.submit()
         this.disabled = true
       },
@@ -117,14 +120,69 @@
         }
         return true
       },
+      change (file) {
+        if(file.status === 'ready') { // 添加文件时更新文件列表
+          this.fileList.push(file)
+        }
+      },
       success (response) {
         if(isReqSuccessful(response)) {
+          // 清空文件上传列表
+          this.$refs.upload.clearFiles()
+          this.fileList = []
           this.disabled = false
           this.$message.success('视频上传成功')
         }
       },
       error () {
+        // 清空文件上传列表
+        this.$refs.upload.clearFiles()
+        this.fileList = []
+        this.disabled = false
         this.$message.error('视频上传失败，请重新上传')
+      },
+      // 获取视频文件列表
+      getVideoList () {
+        getVideo({
+          page: this.page - 1
+        }).then(res => {
+          this.videoList = []
+          if(isReqSuccessful(res)) {
+            this.total = res.data.size || 0
+            res.data.List.forEach((item) => {
+              this.videoList.push({
+                id: item.id,
+                gmtCreate: item.gmtCreate,
+                professorName: item.professorName,
+                fileName: item.fileName,
+
+              })
+            })
+          }
+        })
+      },
+      downloadLink (index) {
+        return `${baseUrl}/movie/${this.videoList[index].fileName}`
+      },
+      // 删除视频
+      deleteVideo (index) {
+        this.$confirm('此操作将永久删除该视频文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteVideo(this.videoList[index].id).then(res => {
+            if(isReqSuccessful(res)) {
+              this.$message.success('该条视频删除成功')
+              this.getVideoList()
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
       }
     }
   }
@@ -138,7 +196,9 @@
       color #fff
       background-color color-main
     .professorCourseVideo_upload
-      margin-bottom 15px
+      margin 0 0 15px 10px
+    .opr_download
+      color #606266
     .opr_delete
       cursor pointer
     .el-pagination

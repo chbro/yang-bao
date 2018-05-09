@@ -43,7 +43,10 @@ export default {
                     'width': '100%',
                     // 视频的显示高度，请尽量使用视频分辨率高度
                     'height': '100%',
-                    coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'}
+                    coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'},
+                    wording: {
+                        1002: '暂无专家直播'
+                    }
                 })
             }
         }, _ => {
