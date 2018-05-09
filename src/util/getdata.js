@@ -47,6 +47,9 @@ export const getPermission = _ => fetch('/user')
 /**
  * 获取直播或者推流地址
  */
+
+export const getChannelList = () => fetch('/liveBroadcast/getLiveStat')
+
 export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
 
 /**
