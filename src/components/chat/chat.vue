@@ -103,11 +103,11 @@ export default {
         let uid = this.$route.params.id
         getUserById(uid).then(res => {
             if (isReqSuccessful(res)) {
-                let { userAgent, userRealname, userRole } = res.data.model
+                let { userFactory, userRealname, userRole } = res.data.model
                 this.user = {
                     id: uid,
                     name: userRealname,
-                    aid: userAgent,
+                    aid: userFactory,
                     userRole
                 }
             }

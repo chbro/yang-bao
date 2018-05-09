@@ -117,7 +117,6 @@ export default {
     mounted () {
         if (this.updateSubmitter) {
             let id = this.$route.params.id
-            console.log(id)
             getUserById(id).then(res => {
                 if (isReqSuccessful(res)) {
                     this.user = res.data.model

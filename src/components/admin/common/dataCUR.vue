@@ -2,7 +2,7 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models" :update-submitter="edit && updateSubmitter"></basic-info>
+        <basic-info :radio-sex="radioSex" :items="items" :models.sync="models" :update-submitter="updateSubmitter"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
@@ -101,7 +101,6 @@ export default {
         this.supervise = this.$route.query.supervise
         this.view = this.$route.query.view
         this.edit = this.$route.query.edit || this.$route.query.check || this.$route.query.supervise || this.view
-
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <plan releaseType="course"></plan>
+        <plan release-type="course"></plan>
     </div>
 </template>
 

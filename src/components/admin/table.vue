@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="admin-list-pass" v-if="!hideFilter && !isPlan ">
+        <div class="admin-list-pass" v-if="!hideFilter && !releaseType ">
             <el-select @change="fetchData()" width="120" v-if="!hidePass" size="small" v-model="isPass" placeholder="所有数据">
                 <el-option
                     v-for="(val, key) in options"
@@ -50,7 +50,7 @@
                 align='center'
                 width="160">
                 <template slot-scope="scope">
-                    <div class="opr" v-if="!isPlan">
+                    <div class="opr" v-if="!releaseType">
                         <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
                         <template v-if="!checkData.length">
                             <span @click="edit(scope.$index)">编辑</span>
@@ -75,7 +75,7 @@
 
 <script>
 import { isReqSuccessful } from '@/util/jskit'
-import { getUserById } from '@/util/getdata'
+import { getUserById, getReleaseByName } from '@/util/getdata'
 
 export default {
     props: {
@@ -129,9 +129,9 @@ export default {
             default: false
         },
         // 方案表
-        isPlan: {
-            type: Boolean,
-            default: false
+        releaseType: {
+            type: String,
+            default: ''
         }
     },
 
@@ -172,7 +172,7 @@ export default {
             this.$router.push({name: this.modpath, query: {view: id}})
         },
 
-        fetchData () {
+        async fetchData () {
             let param = {
                 page: this.page - 1,
                 size: 10
@@ -199,31 +199,37 @@ export default {
             }
 
             this.load = true
-            this.getData(pathid, param).then(res => {
-                if (isReqSuccessful(res)) {
-                    let data = res.data
+            if (!this.releaseType) {
+                this.getData(pathid, param).then(res => {
+                    if (isReqSuccessful(res)) {
+                        let data = res.data
 
-                    if (this.isAgent) {
-                        data.List.forEach(v => {
-                            let map = ['', '省级代理', '市级代理', '县级代理']
-                            v.agentRank = map[v.agentRank]
-                        })
+                        if (this.isAgent) {
+                            data.List.forEach(v => {
+                                let map = ['', '省级代理', '市级代理', '县级代理']
+                                v.agentRank = map[v.agentRank]
+                            })
+                        }
+                        let item = data.List[0]
+                        if (item && item.ispassCheck !== null && item.ispassCheck !== undefined) {
+                            data.List.forEach(v => {
+                                let map = ['未通过', '已通过', '未审核']
+                                v.ispassCheck = map[v.ispassCheck]
+                            })
+                        }
+                        this.tableData = data.List
+                        this.total = data.size
                     }
-                    let item = data.List[0]
-                    if (item && item.ispassCheck !== null && item.ispassCheck !== undefined) {
-                        data.List.forEach(v => {
-                            let map = ['未通过', '已通过', '未审核']
-                            v.ispassCheck = map[v.ispassCheck]
-                        })
-                    }
-                    this.tableData = data.List
-                    this.total = data.size
-                }
-                this.load = false
-            }, _ => {
-                this.load = false
-                this.$message.error('获取数据失败')
-            })
+                    this.load = false
+                }, _ => {
+                    this.load = false
+                    this.$message.error('获取数据失败')
+                })
+            } else {
+                let res = await getReleaseByName(this.releaseType)
+                this.tableData = res.data.List
+                this.total = res.data.size
+            }
         },
 
         edit (index, isView) {

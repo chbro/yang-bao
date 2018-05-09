@@ -3,9 +3,7 @@
         <admin-table
             v-if="!this.isView"
             :modpath="releaseType + 'plan'"
-            is-plan
             :release-type="releaseType"
-            :delete-data="_ => {}"
             :headers="headers">
         </admin-table>
         <p v-else v-text="plantext"></p>
