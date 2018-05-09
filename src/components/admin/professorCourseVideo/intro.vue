@@ -1,7 +1,14 @@
 <template>
     <div>
-        <el-button size="small" @click="getPushUrl">获取推流地址</el-button>
-        <span class="address" v-show="pushUrl" v-text="pushUrl"></span>
+        <el-tooltip class="item" effect="dark" content="点击获取直播推流地址" placement="top">
+            <el-button :disabled="disabled" type="primary" size="small" @click="getPushUrl" title="">我要直播</el-button>
+        </el-tooltip>
+        <template v-if="pushUrl">
+            <span class="address" v-text="pushUrl"></span>
+            <el-tooltip class="item" effect="dark" content="点击复制" placement="top">
+                <i @click="copy" class="el-icon-document icon_copy"></i>
+            </el-tooltip>
+        </template>
         <div class="publish">
             <h2 v-text="title"></h2>
             <p class="course-richtext" v-html="content"></p>
@@ -10,14 +17,16 @@
 </template>
 
 <script>
-import { getReleaseByName } from '@/util/getdata'
+import { getPushUrl, getReleaseByName } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     data() {
         return {
             content: '',
             title: '',
-            pushUrl: ''
+            pushUrl: '',
+            disabled: false
         }
     },
 
@@ -30,13 +39,35 @@ export default {
 
     methods: {
         getPushUrl() {
-            // TODO
+            // TODO: 获取专家 ID
+            getPushUrl('16').then((res) => {
+                if(isReqSuccessful(res)) {
+                    this.pushUrl = res.data.liveBroadcastResp.data.pushUrl
+                    this.disabled = true
+                }
+            })
+        },
+        // 复制
+        copy () {
+            var oInput = document.createElement('input')
+            oInput.value = this.pushUrl
+            document.body.appendChild(oInput)
+            oInput.select() // 选择对象
+            document.execCommand("Copy") // 执行浏览器复制命令
+            oInput.style.display='none'
         }
     }
 }
 </script>
 
 <style lang="stylus" scoped>
+.address
+    display inline-block
+    margin 0 0 0 10px
+    font-size 14px
+.icon_copy
+    font-size 18px
+    cursor pointer
 .course-richtext
     img
         max-width 100%

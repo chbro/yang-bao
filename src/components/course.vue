@@ -1,8 +1,8 @@
 <template>
     <div class="app-video">
-        <div v-if="showVideo" id="app-video"></div>
-        <div v-else class="app-video-no">
-            <p v-if="showPic" class="app-video-tips">暂无专家直播</p>
+        <div v-show="showVideo" id="app-video"></div>
+        <div v-if="showPic" class="app-video-no">
+            <p class="app-video-tips">暂无专家直播</p>
         </div>
         <div class="video-list">
             <ul>
@@ -50,7 +50,7 @@ export default {
                     this.showVideo = true
                     let channelName = res.data.liveChannelResp.data.output[0].channel_list[0].channel_name
                     let url = 'http://' + channelName.split('_')[0] + '.liveplay.myqcloud.com/live/' + channelName
-
+                    console.log(url)
                     var player = new TcPlayer('app-video', {
                         'm3u8': url + '.m3u8',
                         // 增加了一个flv的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
