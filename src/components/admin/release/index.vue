@@ -65,7 +65,7 @@ export default {
             /* eslint-disable object-property-newline */
             sendingImage: false,
             options: [
-                {label: '专家课堂视频', value: 'teach'},
+                {label: '专家在线课堂', value: 'course'},
                 {label: '首页介绍', value: 'index', children: [
                     {label: '集团', value: 'company'},
                     {label: '产品', value: 'product'},

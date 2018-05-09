@@ -166,7 +166,7 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
-                // let { agentRank } = res.data.model
+                // let { agentRank } = res.data
                 // if (agentRank === -1 || agentRank === null || agentRank === undefined) {
                 //     this.treedata.push(this.productionTree)
                 // }

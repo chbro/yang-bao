@@ -4,7 +4,7 @@
             title="代理管理"
             modpath="agent"
             @update:models="v => models = v"
-            :update-submitter="true"
+            :update-submitter="$route.query.edit > 0"
             :is-agent="true"
             :has-remark="false"
             :models.sync="models"
