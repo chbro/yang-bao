@@ -52,7 +52,7 @@ export const getChannelList = () => fetch('/liveBroadcast/getLiveStat')
 
 export const getPushUrl = id => fetch(`/liveBroadcast/getPushUrl/${id}`)
 
-export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
+// export const getVideoUrl = (id, type) => fetch(`/liveBroadcast/getPushUrl?userid=${id}&usertype=${type}`)
 
 /**
  * 聊天模块

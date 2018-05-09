@@ -12,8 +12,16 @@
                             <input hidden ref="file" type="file" @change="sendFile()" class="file">
                             <i class="iconfont icon-3801wenjian" @click="$refs.file.click()"></i>
                             <i title="邀请专家" class="iconfont icon-icon_users my_inviation" @click="invite()"></i>
+                            <el-dropdown placement="top" @command="addExpression">
+                                <span class="el-dropdown-link">
+                                    常用语
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="(item, index) in expressionList" :command="item.label" :key="index">{{ item.label }}</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
-                        <vue-emoji style="top:68px;"
+                        <vue-emoji
                             v-show='showEmoji'
                             ref='emoji'
                             @select='handleEmojiSelect'
@@ -27,7 +35,6 @@
                 </el-main>
 
                 <el-aside class="aside" width="200px">
-                    <!-- <p>用户列表</p> -->
                     <el-input
                         size="small"
                         placeholder="请输入用户姓名"
@@ -73,6 +80,10 @@ export default {
 
             options: [],
             filterUser: '',
+            // 满足王老师的常用语需求！！！
+            expressionList: [
+                { label: '你好，你特么没事别给我发消息' }
+            ],
             userList: [
                 {
                     // 高能预警：用户放在二级，一级菜单设置为所有用户
@@ -154,14 +165,15 @@ export default {
     },
 
     mounted () {
-        let id = 17
+        // TODO: 还不是为了获取专家 ID 写的 TODO
+        let id = 2
         getExpressions(id).then(res => {
             if (isReqSuccessful(res)) {
                 let arr = []
                 res.data.List.forEach(v => {
                     arr.push({label: v.expression})
                 })
-                this.data3 = arr
+                this.expressionList = arr
             }
         })
 
@@ -237,6 +249,11 @@ export default {
             img.src = img.src.replace('/images', '/static/images')
             edit.appendChild(img)
             keepLastIndex(edit)
+        },
+
+        // 添加常用语
+        addExpression (expression) {
+            this.$refs.edit.innerHTML += expression
         },
 
         send (e) {
@@ -422,8 +439,13 @@ export default {
                     margin-right 5px
                     font-size 20px
                     cursor pointer
-                .inviation
-                    margin-left 88%
+                .el-dropdown-link
+                    padding 3px 5px
+                    border-radius 3px
+                    font-size 13px
+                    color #fff
+                    cursor pointer
+                    background-color color-main
             .rui-emoji
                 top 80px
                 left 20px
