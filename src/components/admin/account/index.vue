@@ -242,8 +242,8 @@ export default {
                     }
                 }
             } else if (flag === 3) {
-                this.factoryId = this.user.factoryId
-                this.factoryName = this.user.factoryName
+                this.form.factoryId = this.user.userFactory
+                this.form.factoryName = this.user.factoryName
             }
 
             let warn = this.$message.warning
@@ -290,6 +290,8 @@ export default {
                 this.dialogVisible = false
             }, _ => {
                 this.dialogVisible = false
+                // 添加成功后置空密码
+                this.form.password = ''
                 this.$message.error('添加用户失败')
             })
         }
