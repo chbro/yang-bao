@@ -61,7 +61,6 @@ export default {
                         'width': '100%',
                         // 视频的显示高度，请尽量使用视频分辨率高度
                         'height': '100%',
-                        // coverpic: {"style": "stretch", "src": '//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg'}
                     })
                 } else {
                     this.showPic = true
@@ -108,7 +107,7 @@ export default {
         min-width 600px
         height 400px
         margin 20px 0 20px 5%
-        background-image url('//img1.gtimg.com/v/pics/hv1/78/174/2273/147846273.jpg')
+        background-image url('//otxtxlg3e.bkt.clouddn.com/QQ20180511-0.jpg')
         background-size cover
         .app-video-tips
             margin 0

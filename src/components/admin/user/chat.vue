@@ -35,7 +35,7 @@
                             <li>邮件：{{ expert.email }}</li>
                             <li>电话：{{ expert.phone }}</li>
                         </ul>
-                        <!-- <img class="flybar" src="//www.looyu.com/images/yiduiyi.png"/> -->
+                        <img class="flybar" src="//timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525981450379&di=9e7e2242dc95f0113c3c84e880b301a7&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F242dd42a2834349bc83325b9c2ea15ce36d3bed1.jpg"/>
                     </el-aside>
                 </el-container>
             </el-tab-pane>
