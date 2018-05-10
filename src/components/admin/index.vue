@@ -26,9 +26,9 @@
                             <div class="options" v-else>
                                 <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" type="primary" @click="checkMod = item.mod">{{ item.label }}</el-button>
                             </div>
-                            <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
+   <!--                          <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
-                            </el-input>
+                            </el-input> -->
                         </div>
 
                         <div class="main-content">
@@ -169,21 +169,21 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
-                let { userRole, flag } = res.data
-                if (flag === 0) {
-                    // 羊场
-                    this.treedata.push(this.productionTree)
-                } else if (flag === 1) {
-                    // 代理
-                    this.treedata.push(this.productionTree)
-                    if ([4, 8, 12, 16].includes(userRole)) {
-                        // 专家代理
-                        this.treedata.push(this.professorTree)
-                    } else {
-                        // 普通代理
-                        this.treedata.push(this.adminTree)
-                    }
-                }
+                // let { userRole, flag } = res.data
+                // if (flag === 0) {
+                //     // 羊场
+                //     this.treedata.push(this.productionTree)
+                // } else if (flag === 1) {
+                //     // 代理
+                //     this.treedata.push(this.productionTree)
+                //     if ([4, 8, 12, 16].includes(userRole)) {
+                //         // 专家代理
+                //         this.treedata.push(this.professorTree)
+                //     } else {
+                //         // 普通代理
+                //         this.treedata.push(this.adminTree)
+                //     }
+                // }
                 // flag: 2 普通用户
             }
         })

@@ -58,15 +58,28 @@
                     <span v-text="item.text"></span>
                 </el-checkbox>
                 <el-checkbox-group v-model="rules">
-                    <el-checkbox :label="i + '-' + 0">增加</el-checkbox>
-                    <el-checkbox :label="i + '-' + 1">删除</el-checkbox>
-                    <el-checkbox :label="i + '-' + 2">查询</el-checkbox>
-                    <el-checkbox :label="i + '-' + 3">修改</el-checkbox>
-                    <template v-if="item.supervise">
-                        <el-checkbox :label="i + '-' + 4">监督</el-checkbox>
-                        <el-checkbox :label="i + '-' + 5">审核</el-checkbox>
+                    <template v-if="item.msg">
+                        <el-checkbox :label="i + '-' + 0">下载数据库表格</el-checkbox>
+                        <el-checkbox :label="i + '-' + 1">发送短信</el-checkbox>
+                        <el-checkbox :label="i + '-' + 2">编辑短信</el-checkbox>
                     </template>
-                    <el-checkbox :label="i + '-' + 6" v-if="item.totalScore">查看总评分</el-checkbox>
+                    <template v-else-if="item.file">
+                        <el-checkbox :label="i + '-' + 0">下载文件</el-checkbox>
+                    </template>
+                    <template v-else-if="item.note">
+                        <el-checkbox :label="i + '-' + 1">查看留言</el-checkbox>
+                    </template>
+                    <template v-else>
+                        <el-checkbox :label="i + '-' + 0">增加</el-checkbox>
+                        <el-checkbox :label="i + '-' + 1">删除</el-checkbox>
+                        <el-checkbox :label="i + '-' + 2">查询</el-checkbox>
+                        <el-checkbox :label="i + '-' + 3">修改</el-checkbox>
+                        <template v-if="item.supervise">
+                            <el-checkbox :label="i + '-' + 4">监督</el-checkbox>
+                            <el-checkbox :label="i + '-' + 5">审核</el-checkbox>
+                        </template>
+                        <el-checkbox :label="i + '-' + 6" v-if="item.totalScore">查看总评分</el-checkbox>
+                    </template>
                 </el-checkbox-group>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -150,7 +163,12 @@ export default {
                 {text: '专家'},
                 {text: '技术员'},
                 {text: '管理员'},
-                {text: '拓展模块信息查询'}
+                {text: '拓展模块信息查询'},
+                {text: '短信', msg: 1},
+                {text: '羊品种'},
+                {text: '文件', file: 1},
+                {text: '留言', note: 1},
+                {text: '驱虫实施档案', supervise: 1}
             ]
         }
     },

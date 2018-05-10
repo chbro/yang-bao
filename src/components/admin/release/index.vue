@@ -113,7 +113,7 @@ export default {
                 if (isReqSuccessful(body)) {
                     this.$message.success('上传成功')
                     // remember to take http://
-                    window.CKEDITOR.instances.myeditor.insertHtml(`<img src="http://${body.data.List}"/>`)
+                    window.CKEDITOR.instances.myeditor.insertHtml(`<img style="max-width: 100%" src="http://${body.data.List}"/>`)
                 }
                 this.sendingImage = false
                 resetFile(ref)
@@ -169,8 +169,8 @@ export default {
 
 <style lang="stylus">
 .release
-    .release-to,
     .release-title
+        width 355px
         margin 15px 0
     .release-module
         display inline-block
@@ -181,6 +181,7 @@ export default {
         i
             position absolute
             bottom -96px
+            right 430px
             color #000
             cursor pointer
 </style>

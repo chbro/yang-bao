@@ -67,7 +67,7 @@
                     <template v-if="!hasLoggedIn">
                         <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>
                     </template>
-                    <router-link :to="{name: 'userinfo', params: {id: uid}}">个人中心</router-link>
+                    <router-link v-else :to="{name: 'userinfo', params: {id: uid}}">个人中心</router-link>
                 </div>
                 <div class="nav-search">
                     <input placeholder="搜索-Search...">
@@ -82,9 +82,19 @@
 import { tokenStr } from '@/util/fetch'
 
 export default {
+    data () {
+        return {
+            uid: null,
+            hasLoggedIn: false
+        }
+    },
+
     created () {
         this.hasLoggedIn = window.localStorage.getItem(tokenStr)
-        this.uid = this.hasLoggedIn.substr(0, this.hasLoggedIn.indexOf(':'))
+        if (this.hasLoggedIn) {
+            this.uid = this.hasLoggedIn.substr(0, this.hasLoggedIn.indexOf(':'))
+        }
+        console.log(this.hasLoggedIn, this.uid)
     },
 
     mounted () {
