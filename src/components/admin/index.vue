@@ -71,7 +71,8 @@ export default {
             treedata: [
                 {label: '会员中心', children: [
                     {label: '个人信息修改', to: 'userinfo'},
-                    {label: '密码修改', to: 'passmod'}
+                    {label: '密码修改', to: 'passmod'},
+                    {label: '在线咨询', to: 'chat'}
                 ]}    
             ],
             professorTree: {
@@ -273,10 +274,10 @@ export default {
                     return
                 }
                 // if chat open another page
-                if (node.to === 'chat') {
-                    window.open(window.location.origin + '/#/chat?from=' + window.encodeURIComponent(data.parent.label))
-                    return
-                }
+                // if (node.to === 'chat') {
+                //     window.open(window.location.origin + '/#/chat?from=' + window.encodeURIComponent(data.parent.label))
+                //     return
+                // }
 
                 let arr = [{text: '溯源管理'}]
                 let parent = data.parent
