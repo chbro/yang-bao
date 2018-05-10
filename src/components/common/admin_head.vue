@@ -19,8 +19,8 @@
 
             <div class="tab-right">
                 <div class="u-info">
-                    <span>用户：{{user.pkUserid}}</span>
-                    <span>部门：{{user.factoryName}}</span>
+                    <span>用户：{{username}}</span>
+                    <span>部门：{{department}}</span>
                 </div>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
                 <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
@@ -32,22 +32,21 @@
 
 <script>
 import { getUserById, LogOut } from '@/util/getdata'
-import { isReqSuccessful, jumpToLogin } from '@/util/jskit'
+import { jumpToLogin } from '@/util/jskit'
 
 export default {
-    created () {
-        let id = this.$route.params.id
-        getUserById(id).then(res => {
-            if (isReqSuccessful(res)) {
-                this.user = res.data.model
-            }
-        })
+    props: {
+        username: {
+            type: String
+        },
+        department: {
+            type: String
+        }
     },
 
     data () {
         return {
-            datestr: '',
-            user: {}
+            datestr: ''
         }
     },
 
@@ -75,12 +74,12 @@ export default {
             this.$confirm('确定要注销吗?', '提示', {
                 type: 'warning'
             }).then(() => {
-                LogOut(this.user.id).then(res => {
+                LogOut(this.$route.params.id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('注销成功')
-                        setTimeout(_ => {
-                            jumpToLogin(this.$router)
-                        }, 600)
+                        // setTimeout(_ => {
+                        jumpToLogin(this.$router)
+                        // }, 600)
                     }
                 })
             }).catch(() => {

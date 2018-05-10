@@ -20,6 +20,18 @@ import { getUserById, updateUser } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
+    props: {
+        user: {
+            type: Object
+        }
+    },
+
+    watch: {
+        user (newV) {
+            this.models = newV
+        }
+    },
+
     components: {
         BasicInfo
     },
@@ -87,16 +99,14 @@ export default {
         }
     },
 
-    mounted () {
-        this.id = this.$route.params.id
-        getUserById(this.id).then(res => {
-            if (isReqSuccessful(res)) {
-                this.models = res.data.model
-            }
-        }, _ => {
-            this.$message.error('获取用户信息失败')
-        })
-    },
+    // mounted () {
+    //     this.id = this.$route.params.id
+    //     getUserById(this.id).then(res => {
+    //         if (isReqSuccessful(res)) {
+    //             this.models = res.data.model
+    //         }
+    //     })
+    // },
 
     methods: {
         submit () {

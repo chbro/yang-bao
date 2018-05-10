@@ -1,6 +1,6 @@
 <template>
     <div class="app-home">
-        <admin-head></admin-head>
+        <admin-head :username="user.pkUserid" :department="user.factoryName"></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
                 <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
