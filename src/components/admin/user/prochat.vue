@@ -128,7 +128,7 @@ export default {
                 }
             }
         }).then(_ => {
-            // this.expert.id
+            // TODO: this.expert.id 根据专家 ID 获取常用语列表
             getExpressions(2).then(res => {
                 if (isReqSuccessful(res)) {
                     let arr = []
@@ -140,7 +140,14 @@ export default {
             })
             getClients(this.expert.id).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.userList[0].children = res.data.List
+                    let arr = []
+                    res.data.List.forEach((item) => {
+                        arr.push({
+                            id: item.id,
+                            label: item.user_realname || `用户${item.id}`
+                        })
+                    })
+                    this.userList[0].children = arr
                     // TODO: id-name 点击name获取聊天记录
                 }
             })
