@@ -32,7 +32,7 @@
 
 <script>
 import { getUserById, LogOut } from '@/util/getdata'
-import { jumpToLogin } from '@/util/jskit'
+import { jumpToLogin, isReqSuccessful } from '@/util/jskit'
 
 export default {
     props: {
