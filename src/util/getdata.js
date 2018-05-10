@@ -279,6 +279,10 @@ export const patchPrevention = (id, data) => fetch('/diagnosis/p/' + id, data, '
 
 export const patchBreeding = (id, data) => fetch('/breeding/p/' + id, data, 'PATCH')
 
+//可视系统
+export const diagnoseUp = data => fetch('/uploadFile/upload', data, 'POST')
+
+export const diaSearchExpert = data => fetch('/searchfile/searchByExpert', data, 'POST')
 // export const patchDisinfect = (id, data) => fetch('/df/p/' + id, data, 'PATCH')
 // export const patchImmune = (id, data) => fetch('/ip/p/' + id, data, 'PATCH')
 // export const patchAntiscolic = (id, data) => fetch('/rp/p/' + id, data, 'PATCH')

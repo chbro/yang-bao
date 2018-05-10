@@ -5,9 +5,10 @@ import Vue from 'vue'
 import md5 from 'md5'
 
 export const wsUrl = 'ws://180.76.180.95:9010/websocket'
-const baseUrl = 'http://180.76.180.95:9010'
+// const baseUrl = 'http://180.76.180.95:9010'
+// const baseUrl = 'http://192.168.1.121:9010'
 // const baseUrl = 'http://192.168.1.110:9010' // 老猪
-// const baseUrl = 'http://192.168.1.106:9010' // 文嫖
+const baseUrl = 'http://192.168.1.106:9010' // 文嫖
 const tokenStr = md5('sheep-token')
 const authStr = 'Authorization'
 let app = new Vue()

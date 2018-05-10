@@ -39,7 +39,7 @@
             <div class="comment-detail">
                 <p>留言内容：{{ item.message}}</p>
                 <p>留言时间: {{ item.inserttime}}</p>
-                <p>有无购买意向: {{ map[item.check]}}</p>
+                <p>有无购买意向: {{ item.intention}}</p>
                 <p>用户态度: {{ map[item.attitude]}}</p>
             </div>
         </div>
@@ -63,9 +63,9 @@ export default {
                 message: '',
                 buy: '',
                 attitude: '',
-                time: ''
-                // pageNumb: '2',
-                // limit: '20'
+                time: '',
+                pageNumb: '1',
+                limit: '10'
             },
 
             buy: [
@@ -107,13 +107,23 @@ export default {
         onSubmit () {
             Comment(this.comment, {page: this.pageNumb - 1}).then(res => {
                 if (isReqSuccessful(res)) {
+                    let arr = ['', '有', '无']
+                    res.data.List.forEach(v => {
+                        if (v.intention === '1') {
+                            v.intention = '有'
+                        } else if (v.intention === '2') {
+                            v.intention = '无'
+                        }
+                    })
+                    // console.log(res.data.List)
                     this.items = res.data.List
-                    this.total = res.data.size
-                    this.$router.push({name: 'comment'})
+                    this.total = res.data.List.size
                 }
             }).catch(_ => {
                 this.$message.error('查询失败')
             })
+            this.pageNumb = this.total / this.limit
+            
         }
     }
 }
