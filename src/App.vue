@@ -85,4 +85,9 @@ img
 
 .cursor-p
     cursor pointer
+
+.el-table th
+    border-left 2px solid #98c9e6
+    color #fff
+    background-color color-main
 </style>

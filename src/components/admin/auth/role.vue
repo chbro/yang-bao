@@ -8,19 +8,21 @@
             <el-table-column
                 prop="typeName"
                 label="角色名"
+                align="center"
                 width="240">
             </el-table-column>
             <el-table-column
                 prop="id"
                 label="角色编号"
+                align="center"
                 width="240">
             </el-table-column>
             <el-table-column
                 prop="roleDescription"
                 label="角色说明"
-                width="240">
+                align="center">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column align="center" width="160" label="操作">
                 <template slot-scope="scope">
                     <el-button
                         size="mini"

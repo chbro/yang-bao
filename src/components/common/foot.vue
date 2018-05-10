@@ -306,13 +306,4 @@ export default {
     text-align center
     color #C9C9C9
     background-color color-main
-
-@media screen and (max-width 600px)
-    .app-footer
-        padding 15px 5%
-        .el-col-6
-            width 100%
-            margin-bottom 15px
-    .footer-bottom
-        display none
 </style>

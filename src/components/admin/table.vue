@@ -41,7 +41,7 @@
                 align='center'
                 :prop="th.prop"
                 :label="th.label"
-                :width="th.width || 150">
+                :width="th.width">
             </el-table-column>
             <el-table-column
                 class="action"
