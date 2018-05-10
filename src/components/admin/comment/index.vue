@@ -154,7 +154,7 @@ export default {
                             attitude: this.map[item.attitude]
                         })
                     })
-                    this.total = res.data.Size
+                    this.total = res.data.size
                 }
             }).catch(_ => {
                 this.$message.error('查询失败')

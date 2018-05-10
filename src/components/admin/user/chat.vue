@@ -107,28 +107,30 @@ export default {
                 this.user = {
                     id: uid,
                     name: userRealname,
-                    aid: agent,
+                    aid: res.data.agent,
                     userRole
                 }
             }
         }).then(_ => {
             getExpert(this.user.aid).then(res => {
+                if (res.data === null) {
+                    this.$notify.warning({
+                        duration: 5000,
+                        title: '友情提醒',
+                        message: '当前没有专家在线'
+                    })
+                    return
+                }
                 if (isReqSuccessful(res)) {
                     let { phone, name, realName, expert_id, type, email } = res.data
                     this.expert = {
-                        id: res.data.expert_id,
+                        id: expert_id,
                         realName,
                         name,
                         phone,
                         email,
                         type
                     }
-                } else {
-                    this.$notify.warning({
-                        duration: 5000,
-                        title: '友情提醒',
-                        message: '当前没有专家在线'
-                    })    
                 }
             }, _ => {
                 this.$notify.error({

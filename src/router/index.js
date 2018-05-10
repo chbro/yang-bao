@@ -122,7 +122,7 @@ export default new Router({
             {path: 'prochat', name: 'prochat', component: ProChat},
             // 留言
             {path: 'message', name: 'message', component: Message},
-            {path: 'comment', name: 'comment', component: AcountComment},
+            {path: 'comment/account', name: 'comment', component: AcountComment},
             {path: 'comment/result', name: 'commentres', component: CommentResult},
             {path: 'comment/summary', name: 'commentsum', component: CommentSummary},
             {path: 'passmod', name: 'passmod', component: PasswordModify},

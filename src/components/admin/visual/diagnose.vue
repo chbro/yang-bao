@@ -5,15 +5,11 @@
         <basic-info :items="items" :models="models"></basic-info>
         <div class="card">
             <p class="card-title">症状描述:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
-        </div>
-        <div class="card">
-            <p class="card-title">诊断结果:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
+            <el-input type="textarea" v-model="models.symptom"></el-input>
         </div>
         <div class="card">
             <p class="card-title">解决方法:</p>
-            <el-input type="textarea" v-model="models.note"></el-input>
+            <el-input type="textarea" v-model="models.solution"></el-input>
         </div>
 
         <div class="admin-send">
@@ -25,10 +21,23 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
+import { diagnoseUp, getUserById } from '@/util/getdata'
+import { baseUrl, authStr, tokenStr } from '@/util/fetch'
+import { isReqSuccessful } from '@/util/jskit'
 
 export default {
     components: {
         BasicInfo
+    },
+
+    mounted () {
+        let id = this.$route.params.id
+        getUserById(id).then(res => {
+            if(isReqSuccessful(res)) {
+                this.user = res.data.model
+                this.models.uploader = this.user.pkUserid
+            }
+        })
     },
 
     data () {
@@ -51,10 +60,10 @@ export default {
         return {
             items: [ {
                 label: '商标耳牌',
-                model: 'signal'
+                model: 'brand'
             }, {
                 label: '检疫耳牌',
-                model: 'check'
+                model: 'vaccine'
             }, {
                 label: '性别',
                 model: 'sex',
@@ -68,17 +77,40 @@ export default {
                 fetchSuggestions: getExpert
             }, {
                 label: '上传图片或视频:',
-                model: 'upfile',
+                model: 'file',
                 type: 'file',
                 fetchSuggestions: getSex
             }],
             models: {
-                upfile: null,
+                file: null,
                 sex: null,
-                signal: null,
-                check: null,
-                expert: null
+                brand: null,
+                vaccine: null,
+                expert: null,
+                uploader: null
             }
+        }
+    },
+    methods: {
+        submit () {
+            let form = new FormData()
+            Object.keys(this.models).forEach(v =>{
+                form.append(v, this.models[v])
+            })
+            let headers = {}
+            headers[authStr] = window.localStorage.getItem(tokenStr)
+            window.fetch(baseUrl + '/uploadFile/upload', {
+                method: 'POST',
+                headers,
+                body: form
+            }).then(async res => {
+                    let body = await res.json()
+                    if (isReqSuccessful(body)) {
+                        this.$message.success('提交成功')
+                    }
+                }, _ => {
+                    this.$message.error('提交失败')
+                })
         }
     }
 }

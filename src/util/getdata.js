@@ -284,3 +284,20 @@ export const patchProDisinfect = (id, data) => fetch('/df/p/' + id, data, 'PATCH
 export const patchProImmune = (id, data) => fetch('/ip/p/' + id, data, 'PATCH')
 export const patchProAntiscolic = (id, data) => fetch('/rp/p/' + id, data, 'PATCH')
 export const patchProStage = (id, data) => fetch('/nutrition/p/' + id, data, 'PATCH')
+
+// 可视系统
+export const diagnoseUp = data => fetch('/uploadFile/upload', data, 'POST')
+
+export const diaSearchAll = data => fetch('/searchfile/searchAll', data, 'POST')
+
+export const diaSearchByExpert = data => fetch('/searchfile/searchByExpert', data, 'POST')
+
+export const diaSearchByDate = data => fetch('/searchfile/searchByDate', data, 'POST')
+
+export const diaSearchByBrand = data => fetch('/searchfile/searchByBrand', data, 'POST')
+
+export const diaSearchByVaccine = data => fetch('/searchfile/searchByVaccine', data, 'POST')
+
+export const diaSearchBySymptom = data => fetch('/searchfile/searchBySymptom', data, 'POST')
+
+export const diaSearchByUploader = data => fetch('/searchfile/searchByUploader', data, 'POST')
