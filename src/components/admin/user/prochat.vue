@@ -246,7 +246,7 @@ export default {
             edit.appendChild(img)
             keepLastIndex(edit)
         },
-
+        // TODO: 添加常用语插入光标所在位置
         // 添加常用语
         addExpression (expression) {
             this.$refs.edit.innerHTML += expression

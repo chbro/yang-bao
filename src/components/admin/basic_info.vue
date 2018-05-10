@@ -108,7 +108,7 @@ export default {
 
     data () {
         return {
-            holder: '上传耳牌号文件',
+            holder: '上传文件',
             pcaa,
             options: []
         }
