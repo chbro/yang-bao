@@ -52,7 +52,7 @@
                             <el-input type="textarea" :rows="4" v-model="form.message" placeholder="留言内容"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" class="submit_message">提交</el-button>
+                            <el-button @click="submitMessage" type="primary" class="submit_message">提交</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -88,11 +88,11 @@
 </template>
 
 <script>
-import VueEmoji from 'rui-vue-emoji'
 import 'rui-vue-emoji/dist/vue-emoji.css'
+import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-import { getExpert, evalulateExpert, getUserById } from '@/util/getdata'
-import { wsUrl, baseUrl, tokenStr } from '@/util/fetch'
+import { getExpert, evalulateExpert, getUserById, CommentInsert } from '@/util/getdata'
+import { wsUrl, baseUrl, tokenStr, authStr } from '@/util/fetch'
 
 export default {
     components: {
@@ -183,9 +183,9 @@ export default {
             }
         }
 
-        // window.onbeforeunload = function () {
-        //     return false
-        // }
+        window.onbeforeunload = function () {
+            return false
+        }
     },
 
     destroyed () {
@@ -198,9 +198,6 @@ export default {
             dialogFormVisible: false, // 评价弹框是否可见
             description: '',
             form: {
-                region: '',
-                resource: '',
-                desc: '',
                 email: '',
                 name: '',
                 message: ''
@@ -215,6 +212,19 @@ export default {
     },
 
     methods: {
+        submitMessage () {
+            // TODO: 用户提交对专家的留言
+            // let data = {
+
+            // }
+            // CommentInsert(data).then(res => {
+            //     if (isReqSuccessful(res)) {
+            //         this.$message.success('留言成功')
+            //         this.form = {}
+            //     }
+            // })
+        },
+
         evaluate () {
             if (this.description.length >= 200) {
                 this.$message.warning('评价字数不能超过200')

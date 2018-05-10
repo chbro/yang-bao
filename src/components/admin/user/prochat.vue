@@ -61,8 +61,7 @@ import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
 import { getExpert, getUserById, getExpressions, getClients } from '@/util/getdata'
-import { wsUrl, baseUrl } from '@/util/fetch'
-import { tokenStr } from '@/util/fetch'
+import { wsUrl, baseUrl, tokenStr, authStr } from '@/util/fetch'
 
 export default {
     components: {
@@ -138,7 +137,7 @@ export default {
                     this.expressionList = arr
                 }
             })
-            getClients(this.expert.id).then(res => {
+            getClients(id).then(res => {
                 if (isReqSuccessful(res)) {
                     this.userList[0].children = res.data.List
                     // TODO: id-name 点击name获取聊天记录
@@ -186,6 +185,10 @@ export default {
                 html = data.message
             }
             this.pushChatMessage(html, data.order === 'self')
+        }
+
+        window.onbeforeunload = function () {
+            return false
         }
     },
 
@@ -251,7 +254,7 @@ export default {
             form.append('mode', 0)
 
             let headers = {}
-            headers[tokenStr] = window.localStorage.getItem(tokenStr)
+            headers[authStr] = window.localStorage.getItem(tokenStr)
 
             window.fetch(baseUrl + '/talk/upload', {
                 method: 'POST',
