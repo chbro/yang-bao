@@ -150,13 +150,4 @@ export default {
         color #ffffff
     .link a
         color #ffffff
-
-@media screen and (max-width 600px)
-    h3
-        font-size 16px
-@media screen and (max-width 320px)
-    .login-main .code
-        margin-right 33%
-    h3
-        font-size 15px
 </style>

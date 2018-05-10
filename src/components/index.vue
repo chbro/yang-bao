@@ -155,14 +155,4 @@ img
     margin-bottom 10px
     overflow hidden
     text-align center
-
-@media screen and (max-width 600px)
-    .icon-group
-        .left-icons
-            width 100%
-            >div
-                i
-                    font-size 40px
-            &+img
-                display none
 </style>
