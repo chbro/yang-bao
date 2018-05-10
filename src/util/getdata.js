@@ -65,11 +65,11 @@ export const getPushUrl = id => fetch(`/liveBroadcast/getPushUrl/${id}`)
 // 专家匹配, 邀请专家
 export const getExpert = agentid => fetch('/getExpert/' + agentid)
 
-// 获取所有聊天记录
-export const getTalkRecords = _ => fetch('/getTalkRecord')
+// 专家获取聊天好友
+export const getClients = proid => fetch('/getClientList/' + proid)
 
-// 获取聊天记录详情
-export const getTalkRecordDetail = talkid => fetch('/getTalkRecord/' + talkid)
+// 获取所有聊天记录 用户传id 专家传talkid
+export const getTalkRecord = id => fetch('/getTalkRecord/' + id)
 
 // 获取常用语
 export const getExpressions = expertid => fetch('/getExpression?expert_id=' + expertid)

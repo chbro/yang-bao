@@ -60,7 +60,7 @@
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-import { getExpert, getUserById, getExpressions } from '@/util/getdata'
+import { getExpert, getUserById, getExpressions, getClients } from '@/util/getdata'
 import { wsUrl, baseUrl } from '@/util/fetch'
 import { tokenStr } from '@/util/fetch'
 
@@ -81,9 +81,7 @@ export default {
             options: [],
             filterUser: '',
             // 满足王老师的常用语需求！！！
-            expressionList: [
-                { label: '你好，你特么没事别给我发消息' }
-            ],
+            expressionList: [],
             userList: [
                 {
                     // 高能预警：用户放在二级，一级菜单设置为所有用户
@@ -92,65 +90,19 @@ export default {
                         {
                             label: '黄文海'
                         },
-                        {
-                            label: '周二狗'
-                        },
+
                         {
                             label: '黄大狗'
                         },
-                        {
-                            label: '周文海'
-                        },
+
                         {
                             label: '傻嫖哥'
-                        },
-                        {
-                            label: '二狗子'
                         },
                         {
                             label: '没有姓名'
                         },
                         {
                             label: '黄文海'
-                        },
-                        {
-                            label: '周二狗'
-                        },
-                        {
-                            label: '黄大狗'
-                        },
-                        {
-                            label: '周文海'
-                        },
-                        {
-                            label: '傻嫖哥'
-                        },
-                        {
-                            label: '二狗子'
-                        },
-                        {
-                            label: '没有姓名'
-                        },
-                        {
-                            label: '黄文海'
-                        },
-                        {
-                            label: '周二狗'
-                        },
-                        {
-                            label: '黄大狗'
-                        },
-                        {
-                            label: '周文海'
-                        },
-                        {
-                            label: '傻嫖哥'
-                        },
-                        {
-                            label: '二狗子'
-                        },
-                        {
-                            label: '没有姓名'
                         }
                     ]
                 }
@@ -176,13 +128,20 @@ export default {
                 }
             }
         }).then(_ => {
-            getExpressions(this.expert.id).then(res => {
+            // this.expert.id
+            getExpressions(2).then(res => {
                 if (isReqSuccessful(res)) {
                     let arr = []
                     res.data.List.forEach(v => {
                         arr.push({label: v.expression})
                     })
                     this.expressionList = arr
+                }
+            })
+            getClients(this.expert.id).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.userList[0].children = res.data.List
+                    // TODO: id-name 点击name获取聊天记录
                 }
             })
         })

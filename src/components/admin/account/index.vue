@@ -47,11 +47,12 @@
                 </el-form-item>
                 <el-form-item label="单位" :label-width="formLabelWidth">
                     <el-radio-group v-model="form.flag">
-                        <el-radio :disabled="isAgentEmpty" :label="0">代理单位</el-radio>
-                        <el-radio :disabled="isFactoryEmpty" :label="1">羊场单位</el-radio>
+                        <el-radio :disabled="isAgentEmpty" :label="1">代理单位</el-radio>
+                        <el-radio :disabled="isFactoryEmpty" :label="0">羊场单位</el-radio>
                         <el-radio :label="2" v-if="isAdmin">系统管理员</el-radio>
+                        <el-radio :label="3">本单位用户</el-radio>
                     </el-radio-group><br/>
-                    <el-select v-if="form.flag === 0" size="small" v-model="form.factoryId" filterable placeholder="选择代理单位">
+                    <el-select v-if="form.flag === 1" size="small" v-model="form.factoryId" filterable placeholder="选择代理单位">
                         <el-option
                             v-for="(item, i) in agentOptions"
                             :key="i + 'factory'"
@@ -59,7 +60,7 @@
                             :value="item.value">
                         </el-option>
                      </el-select>
-                     <el-select v-if="form.flag === 1" size="small" v-model="form.factoryId" filterable placeholder="选择羊场单位">
+                     <el-select v-if="form.flag === 0" size="small" v-model="form.factoryId" filterable placeholder="选择羊场单位">
                         <el-option
                             v-for="(item, i) in factoryOptions"
                             :key="i + 'farm'"
@@ -91,6 +92,7 @@ import AdminTable from '@/components/admin/table'
 import { getUserById, getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 import { validatePassword, validateTelephone, validateUsername } from '@/util/validate'
+import md5 from 'md5'
 
 export default {
     components: {
@@ -220,9 +222,10 @@ export default {
         // 提交
         confirm () {
             // 设置 factoryName
-            if(this.form.flag === 2) {
+            let { flag } = this.form
+            if(flag === 2) {
                 this.form.factoryName = '系统管理员'
-            } else if(this.form.flag === 0) {
+            } else if(flag === 1) {
                 let len = this.agentOptions.length
                 for(let i=0; i<len; i++) {
                     if(this.form.factoryId === this.agentOptions[i].value) {
@@ -230,7 +233,7 @@ export default {
                         break
                     }
                 }
-            } else {
+            } else if (flag === 0) {
                 let len = this.factoryOptions.length
                 for(let i=0; i<len; i++) {
                     if(this.form.factoryId === this.factoryOptions[i].value) {
@@ -238,6 +241,9 @@ export default {
                         break
                     }
                 }
+            } else if (flag === 3) {
+                this.factoryId = this.user.factoryId
+                this.factoryName = this.user.factoryName
             }
 
             let warn = this.$message.warning
@@ -270,6 +276,7 @@ export default {
                 return   
             }
 
+            this.form.password = md5(this.form.password)
             postUser(this.form).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message({

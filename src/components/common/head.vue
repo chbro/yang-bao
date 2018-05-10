@@ -94,7 +94,6 @@ export default {
         if (this.hasLoggedIn) {
             this.uid = this.hasLoggedIn.substr(0, this.hasLoggedIn.indexOf(':'))
         }
-        console.log(this.hasLoggedIn, this.uid)
     },
 
     mounted () {

@@ -42,17 +42,17 @@ export default {
 
     data () {
         let sexs = [
-            {value: '雌', key: 0},
-            {value: '雄', key: 1}
+            {value: '雌'},
+            {value: '雄'}
         ]
         let getSex = (q, cb) => {
             cb(sexs)
         }
 
         let experts = [
-            {value: 'a', key: 0},
-            {value: 'b', key: 1},
-            {value: 'c', key: 2}
+            {value: '孙二狗'},
+            {value: '孙二娘'},
+            {value: '孙牢记'}
         ]
         let getExpert = (q, cb) => {
             cb(experts)
