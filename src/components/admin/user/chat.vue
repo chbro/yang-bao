@@ -124,9 +124,9 @@ export default {
                         type
                     }
                 } else {
-                    this.$notify.error({
+                    this.$notify.warning({
                         duration: 5000,
-                        title: '错误',
+                        title: '友情提醒',
                         message: '当前没有专家在线'
                     })    
                 }
