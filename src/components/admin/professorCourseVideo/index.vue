@@ -24,6 +24,7 @@
     <el-table
       ref="table"
       tooltip-effect="light"
+      class="admin-table"
       :data="videoList"
       style="width: 100%">
       <el-table-column
@@ -41,8 +42,7 @@
       <el-table-column
         prop="fileName"
         label="视频名称"
-        align='center'
-        width="300">
+        align='center'>
       </el-table-column>
       <el-table-column
         class="action"
@@ -114,10 +114,6 @@
       checkFile (file) {
         const type = file.name.substring(file.name.indexOf('.') + 1)      
         const isExceed = file.size / 1024 / 1024 <= 500
-        if(type !== 'mp3' && type !== 'mp4') {
-          this.$message.warning('只能上传mp3或者mp4文件')
-          return false
-        }
         if(!isExceed) {
           this.$message.warning('视频文件大小不能超过500M')
           return isExceed
@@ -195,10 +191,6 @@
 <style lang="stylus">
 @import '~@/assets/css/color'
   .mod_professorCourseVideo
-    .el-table th
-      border-left none
-      color #fff
-      background-color color-main
     .professorCourseVideo_upload
       margin 0 0 15px 10px
     .opr_download

@@ -83,9 +83,9 @@
                 fixed="right"
                 label="操作"
                 align="center"
-                width="100">
+                width="160">
                 <template slot-scope="scope">
-                    <el-button @click="deleteComment(scope.$index)" type="text" size="small">删除</el-button>
+                    <span class="table_delete" @click="deleteComment(scope.$index)">删除</span>
                 </template>
             </el-table-column>
         </el-table>
@@ -185,7 +185,8 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
+@import '~@/assets/css/color'
 .mod_comment
     font-size 15px
     .comment_search
@@ -199,4 +200,6 @@ export default {
             margin-right 10px
     .comment_table
         margin-top 10px
+        .table_delete
+            cursor pointer
 </style>

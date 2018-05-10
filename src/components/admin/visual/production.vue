@@ -35,8 +35,8 @@
                       center>
                         <!-- FIXME: video 标签兼容性处理 -->
                         <div class="show-detail">
-                            <img @click="productionShow = true" class="production-image" :src="item.url" :onerror="defaultImg">
-                            <video :src="item.url" class="production-video" controls="controls"></video>
+                            <video v-if="item.filetype === 1" :src="item.url" class="production-video" controls="controls"></video>
+                            <img v-else @click="productionShow = true" class="production-image" :src="item.url" :onerror="defaultImg">
                         </div>
                         <div class="show-list">
                             <ul>
@@ -132,7 +132,8 @@ export default {
                                 sex: item.sex,
                                 expert: item.expert,
                                 udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`
+                                url: `${baseUrl}/pic/${item.filename}`,
+                                filetype: item.filetype
                             })
                         })
                         this.proList = arr
@@ -145,7 +146,7 @@ export default {
                 diaSearchByDate({
                     sdate: this.time[0] || null,
                     edate: this.time[1] || null,
-                    pageNumb: this.pageNumb,
+                    pageNumb: this.pageNumb - 1,
                     limit: this.limit
                 }).then(res => {
                     if(isReqSuccessful(res)) {
@@ -165,7 +166,8 @@ export default {
                                 sex: item.sex,
                                 expert: item.expert,
                                 udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`
+                                url: `${baseUrl}/pic/${item.filename}`,
+                                filetype: item.filetype
                             })
                         })
                         this.proList = arr
@@ -177,7 +179,7 @@ export default {
             } else { // 按相应条件查询
                 this.diaSearch[this.condition]({
                     [this.condition]: this.keyWords,
-                    pageNumb: this.pageNumb,
+                    pageNumb: this.pageNumb - 1,
                     limit: this.limit
                 }).then(res => {
                     if(isReqSuccessful(res)) {
@@ -197,7 +199,8 @@ export default {
                                 sex: item.sex,
                                 expert: item.expert,
                                 udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`
+                                url: `${baseUrl}/pic/${item.filename}`,
+                                filetype: item.filetype
                             })
                         })
                         this.proList = arr

@@ -2,6 +2,7 @@
   <div class="mod_welfareList">
     <el-table
       ref="table"
+      class="admin-table"
       tooltip-effect="light"
       :data="tableData"
       style="width: 100%">
@@ -109,7 +110,6 @@
       </el-table-column>
       <el-table-column
         prop="supervisorName"
-        width="150"
         align='center'
         label="监督执行">
       </el-table-column>
@@ -128,6 +128,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      class="page"
       layout="prev, pager, next"
       :total="total"
       @current-change="fetchData"
@@ -219,8 +220,8 @@
 .mod_welfareList
   .el-table th
     border-left none
-    color #fff
-    background-color color-main
   .el-table thead.is-group th
     background color-main
+  .page
+    text-align right
 </style>
