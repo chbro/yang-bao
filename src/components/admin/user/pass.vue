@@ -11,6 +11,7 @@
 <script>
 import BasicInfo from '@/components/admin/basic_info'
 import { updatePassword } from '@/util/getdata'
+import { validatePassword } from '@/util/validate'
 import { jumpToLogin, isReqSuccessful } from '@/util/jskit'
 import md5 from 'md5'
 
@@ -37,16 +38,21 @@ export default {
     methods: {
         submit () {
             let { oldpass, newpass, repeat } = this.models
-            if (Object.keys(this.models).some(v => this.models[v].length < 6)) {
-                this.$message.warning('密码长度不小于6')
+            let warn = this.$message.warning
+            if (!(oldpass && newpass && repeat)) {
+                warn('请完善表单信息')
+                return
+            }
+            if (Object.keys(this.models).some(v => validatePassword(this.models[v]) !== true)) {
+                warn(validatePassword())
                 return
             }
             if (newpass === oldpass) {
-                this.$message.warning('新密码与原密码不能一样')
+                warn('新密码与原密码不能一样')
                 return
             }
             if (newpass !== repeat) {
-                this.$message.warning('新密码与确认密码不一致')
+                warn('新密码与确认密码不一致')
                 return
             }
 
@@ -57,9 +63,11 @@ export default {
             updatePassword(this.$route.params.id, data).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功，请重新登录')
-                    jumpToLogin(this.$router)
+                    setTimeout(_ => {
+                        jumpToLogin(this.$router)
+                    }, 600)
                 }
-            }).catch(() => {
+            }, _ => {
                 this.$message.error('修改失败')
             })
         }

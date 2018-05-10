@@ -39,8 +39,7 @@ export default {
 
     methods: {
         getPushUrl() {
-            // TODO: 获取专家 ID
-            getPushUrl('16').then((res) => {
+            getPushUrl(this.$route.params.id).then((res) => {
                 if(isReqSuccessful(res)) {
                     this.pushUrl = res.data.liveBroadcastResp.data.pushUrl
                     this.disabled = true
@@ -54,7 +53,7 @@ export default {
             document.body.appendChild(oInput)
             oInput.select() // 选择对象
             document.execCommand("Copy") // 执行浏览器复制命令
-            oInput.style.display='none'
+            document.body.removeChild(oInput)
         }
     }
 }

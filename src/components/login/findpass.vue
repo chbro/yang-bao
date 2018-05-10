@@ -49,27 +49,28 @@
 <script>
 import { FindPass, GetQuestions } from '@/util/getdata'
 import { validateName, isReqSuccessful } from '@/util/jskit'
+import { validatePassword } from '@/util/validate'
 import md5 from 'md5'
 
 export default {
     data () {
         var validatePass = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else if (this.form.newpass_repeat !== '') {
                 this.$refs.form.validateField('newpass_repeat')
             }
             callback()
         }
         var validatePass2 = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请再次输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else if (value !== this.form.newpass) {
                 callback(new Error('两次输入密码不一致!'))
             } else {

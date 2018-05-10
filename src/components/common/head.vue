@@ -64,7 +64,10 @@
                     <li><router-link to="/contact">联系我们</router-link></li>
                 </ul>
                 <div class="login-entry">
-                    <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>
+                    <template v-if="!hasLoggedIn">
+                        <router-link to="/login">登录</router-link>/<router-link to="/register">注册</router-link>
+                    </template>
+                    <router-link :to="{name: 'userinfo', params: {id: uid}}">个人中心</router-link>
                 </div>
                 <div class="nav-search">
                     <input placeholder="搜索-Search...">
@@ -76,7 +79,14 @@
 </template>
 
 <script>
+import { tokenStr } from '@/util/fetch'
+
 export default {
+    created () {
+        this.hasLoggedIn = window.localStorage.getItem(tokenStr)
+        this.uid = this.hasLoggedIn.substr(0, this.hasLoggedIn.indexOf(':'))
+    },
+
     mounted () {
         let nav = this.$refs.indexNav
         let ticking = false

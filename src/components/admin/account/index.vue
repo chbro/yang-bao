@@ -49,7 +49,6 @@
                     <el-radio-group v-model="form.flag">
                         <el-radio :disabled="isAgentEmpty" :label="0">代理单位</el-radio>
                         <el-radio :disabled="isFactoryEmpty" :label="1">羊场单位</el-radio>
-                        <!-- TODO: 只有系统管理员 admin 才能添加系统管理员 -->
                         <el-radio :label="2" v-if="isAdmin">系统管理员</el-radio>
                     </el-radio-group><br/>
                     <el-select v-if="form.flag === 0" size="small" v-model="form.factoryId" filterable placeholder="选择代理单位">
@@ -91,6 +90,7 @@
 import AdminTable from '@/components/admin/table'
 import { getUserById, getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
+import { validatePassword, validateTelephone, validateUsername } from '@/util/validate'
 
 export default {
     components: {
@@ -140,7 +140,8 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
-                this.isAdmin = res.data.agentRank === 3
+                // 系统管理员暂时为 userRole: 3
+                this.isAdmin = res.data.userRole === 3
             }
         }).then(this.fetchData)
         // 获取代理单位
@@ -239,24 +240,29 @@ export default {
                 }
             }
 
-            let passRe = /^[a-zA-Z0-9_]{6,12}$/
-            let phoneRe = /^1[34578]\d{9}$/
             let warn = this.$message.warning
             let { username, realname, telephone, password, factoryId } = this.form
+            let valUs = validateUsername(username)
             if (!username) {
                 warn('请输入用户名')
+                return
+            }
+            if (valUs !== true) {
+                warn(valUs)
                 return
             }
             if (!realname) {
                 warn('请输入用户姓名')
                 return
             }
-            if (telephone && !phoneRe.test(telephone)) {
-                warn('手机号格式不正确')
+            let valPh = validateTelephone(telephone)
+            if (telephone && valPh !== true) {
+                warn(valPh)
                 return
             }
-            if (!passRe.test(password)) {
-                warn('密码必须是6-12位字符数字和下划线')
+            let valPas = validatePassword(password)
+            if (valPas !== true) {
+                warn(valPas)
                 return
             }
             if (factoryId === null) {

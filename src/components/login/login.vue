@@ -17,7 +17,7 @@
                 </el-form-item>
 
                 <el-form-item prop="code">
-                    <el-input :minlength="4" :maxlength="4" style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
+                    <el-input @keypress.native.enter="submitForm('ruleForm')" :minlength="4" :maxlength="4" style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
                     <div class="code" @click="refreshCode" title="点击更换验证码">
                         <s-identify :identifyCode="identifyCode"></s-identify>
                     </div>
@@ -41,6 +41,7 @@ import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
 import { userStr } from '@/util/fetch'
 import { validateName, isReqSuccessful } from '@/util/jskit'
+import { validatePassword } from '@/util/validate'
 import md5 from 'md5'
 
 export default {
@@ -50,11 +51,11 @@ export default {
 
     data () {
         let validatePass = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else {
                 callback()
             }
@@ -88,7 +89,8 @@ export default {
             },
             // identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
             identifyCodes: '1234567890',
-            identifyCode: ''        }
+            identifyCode: ''
+        }
     },
 
     mounted () {
@@ -107,7 +109,9 @@ export default {
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
                             this.$message.success('登录成功')
-                            this.$router.push('/admin/' + res.data.id)
+                            setTimeout(_ => {
+                                this.$router.push('/admin/' + res.data.id)
+                            }, 600)
                         }
                     })
                 } else {

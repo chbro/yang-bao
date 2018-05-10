@@ -104,8 +104,7 @@ export default {
                     Object.keys(this.models).forEach(v => {
                         obj[v] = data[v]
                     })
-                    this.canModify = data.ispassCheck === '2'
-                    console.log(this.canModify)
+                    this.canModify = data.ispassCheck == '2'
                     this.$emit('update:models', obj)
                 }
             }).catch(_ => {
@@ -174,7 +173,7 @@ export default {
             this.models.operatorId = id
             this.models.factoryNum = userFactory
             this.models.factoryName = factoryName
-            console.log(this.models)
+            // console.log(this.models)
 
             let form = new FormData()
             Object.keys(this.models).forEach(v => {
