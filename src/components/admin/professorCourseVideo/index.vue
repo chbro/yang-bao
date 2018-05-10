@@ -69,7 +69,7 @@
 
 <script>
   import { baseUrl } from '@/util/fetch.js'
-  import { getVideo, deleteVideo } from '@/util/getdata.js'
+  import { getVideo, deleteVideo, getUserById } from '@/util/getdata.js'
   import { isReqSuccessful } from '@/util/jskit'
   export default {
     data() {
@@ -88,11 +88,15 @@
       }
     },
     created () {
-      // TODO: 获取专家 ID 和姓名
-      this.data = {
-        professorId: '16',
-        professorName: '狗哥'
-      },
+      let id = this.$route.params.id
+      getUserById(id).then(res => {
+        if (isReqSuccessful(res)) {
+          this.data = {
+            professorId: id,
+            professorName: res.data.pkUserid
+          }
+        }
+      })
       this.getVideoList()
     },
     methods: {

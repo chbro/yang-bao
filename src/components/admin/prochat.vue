@@ -165,17 +165,7 @@ export default {
     },
 
     mounted () {
-        // TODO: 还不是为了获取专家 ID 写的 TODO
-        let id = 2
-        getExpressions(id).then(res => {
-            if (isReqSuccessful(res)) {
-                let arr = []
-                res.data.List.forEach(v => {
-                    arr.push({label: v.expression})
-                })
-                this.expressionList = arr
-            }
-        })
+        let id = this.$route.params.id
 
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
@@ -185,6 +175,16 @@ export default {
                     name: userRealname
                 }
             }
+        }).then(_ => {
+            getExpressions(this.expert.id).then(res => {
+                if (isReqSuccessful(res)) {
+                    let arr = []
+                    res.data.List.forEach(v => {
+                        arr.push({label: v.expression})
+                    })
+                    this.expressionList = arr
+                }
+            })
         })
 
         this.$refs.emoji.appendTo({

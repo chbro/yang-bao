@@ -50,9 +50,20 @@ export default {
     }
   },
   methods: {
-    // TODO: 提交
     // 发送短信
     postMessage () {
+      let arr = this.mobile.split(',')
+      try {
+        arr.forEach((v, i) => {
+          if (!/^1[34578]\d{9}$/.test(v)) {
+            this.$message.warning(`请检查第${i}个手机号:${v}`)
+            throw new Error('rx')
+          }
+        })
+      } catch(e) {
+        return
+      }
+
       postMessage({
         mobile: this.mobile,
         message: this.message

@@ -78,7 +78,9 @@ export default {
                 LogOut(this.user.id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('注销成功')
-                        jumpToLogin(this.$router)
+                        setTimeout(_ => {
+                            jumpToLogin(this.$router)
+                        }, 600)
                     }
                 })
             }).catch(() => {

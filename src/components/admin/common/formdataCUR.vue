@@ -104,8 +104,7 @@ export default {
                     Object.keys(this.models).forEach(v => {
                         obj[v] = data[v]
                     })
-                    this.canModify = data.ispassCheck === '2'
-                    console.log(this.canModify)
+                    this.canModify = data.ispassCheck == '2'
                     this.$emit('update:models', obj)
                 }
             }).catch(_ => {

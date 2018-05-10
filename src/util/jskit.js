@@ -78,11 +78,12 @@ export const checkSubmit = info => {
 }
 
 export const checkForm = form => {
-    let trade = form.tradeMarkEartag
-    if (trade && !/^\d{15}$/.test(trade)) {
+    let trade = form.tradeMarkEartag || form.earTag
+    if (trade !== undefined && !/^\d{15}$/.test(trade)) {
         app.$message.warning('商标耳牌必须是15位数字')
         return false
     }
+
     if (Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
         app.$message.warning('请完善表单信息')
         return false
@@ -178,7 +179,7 @@ let jump = (msg, name) => {
     let id = window.location.hash.substr(8).split('/')[0]
     setTimeout(() => {
         window.location.assign(window.location.origin + '/#/admin/' + id + '/' + name + '/list')
-    }, 800)
+    }, 600)
 }
 export const postJump = routename => {
     jump('录入成功', routename)

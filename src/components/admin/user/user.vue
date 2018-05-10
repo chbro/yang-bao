@@ -59,7 +59,7 @@ export default {
                 {label: '找回密码问题1', type: 'select', fetchSuggestions: getQ, model: 'question_1'},
                 {label: '找回密码问题2', type: 'select', fetchSuggestions: getQ, model: 'question_2'},
                 {label: '找回密码问题3', type: 'select', fetchSuggestions: getQ, model: 'question_3', mr: 1},
-                {label: '找回密码答案1', type: 'select', fetchSuggestions: getQ, model: 'answer_1'},
+                {label: '找回密码答案1', model: 'answer_1'},
                 {label: '找回密码答案2', model: 'answer_2'},
                 {label: '找回密码答案3', model: 'answer_3', mr: 1}
             ],

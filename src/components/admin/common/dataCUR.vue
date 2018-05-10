@@ -106,6 +106,7 @@ export default {
                     if ('breedLocation' in obj) {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
+                    this.canModify = res.data.ispassCheck == '2'
                     this.$emit('update:models', obj)
                 }
             }, _ => {

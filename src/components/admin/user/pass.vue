@@ -57,7 +57,9 @@ export default {
             updatePassword(this.$route.params.id, data).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功，请重新登录')
-                    jumpToLogin(this.$router)
+                    setTimeout(_ => {
+                        jumpToLogin(this.$router)
+                    }, 600)
                 }
             }).catch(() => {
                 this.$message.error('修改失败')

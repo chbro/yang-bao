@@ -17,7 +17,7 @@
                 </el-form-item>
 
                 <el-form-item prop="code">
-                    <el-input :minlength="4" :maxlength="4" style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
+                    <el-input @keypress.native.enter="submitForm('ruleForm')" :minlength="4" :maxlength="4" style="width:30%;min-width:50px;" v-model="ruleForm.code"></el-input>
                     <div class="code" @click="refreshCode" title="点击更换验证码">
                         <s-identify :identifyCode="identifyCode"></s-identify>
                     </div>
@@ -88,7 +88,8 @@ export default {
             },
             // identifyCodes: '1234567890abcdefghigklmnopqrstuvwxyz',
             identifyCodes: '1234567890',
-            identifyCode: ''        }
+            identifyCode: ''
+        }
     },
 
     mounted () {
@@ -107,7 +108,9 @@ export default {
                     Login(data).then(res => {
                         if (isReqSuccessful(res)) {
                             this.$message.success('登录成功')
-                            this.$router.push('/admin/' + res.data.id)
+                            setTimeout(_ => {
+                                this.$router.push('/admin/' + res.data.id)
+                            }, 600)
                         }
                     })
                 } else {

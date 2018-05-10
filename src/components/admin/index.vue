@@ -186,25 +186,27 @@ export default {
         let mod
         let submod
         let treeArr = [this.treedata[0], this.professorTree, this.adminTree, this.productionTree]
-console.log(parent, treeArr)
-        treeArr.forEach(v => {
-            let m
-            v.children.forEach(val => {
-                if (Array.isArray(val.children)) {
-                    m = v.children.find(v => v.to === parent || v.to === parent + 'plan')
-                } else if (val.to === parent || val.to === parent + 'plan') {
-                    m = val
-                }
-            })
-            if (m) {
-                mod = m
-                if (mod.children) {
-                    submod = mod.children.find(v => v.to === child + postfix || v.to === child + 'prac')
-                }
-            }
-        })
 
+        let postfixArr = ['prac', 'list', 'plan']
+        let idx = postfixArr.indexOf(child)
+        for (let tree of treeArr) {
+            if (idx !== -1) {
+                mod = tree.children.find(v => v.to === parent || v.to === parent + postfixArr[idx])
+            } else {
+                mod = tree.children.find(v => v.to === parent)
+            }
+            if (mod && Array.isArray(mod.children)) {
+                submod = mod.children.find(v => v.to === child + postfix || v.to === child + 'prac')
+            } else if (mod) {
+                break
+            }
+        }
         console.log(mod, submod)
+        // if (!child) {
+        //     arr.push({text: })
+        // }
+        // return
+
         if (mod && submod) {
             // open left tree
             if (postfix === 'list') {
@@ -213,18 +215,17 @@ console.log(parent, treeArr)
                 this.expanded_key = [child]
             }
 
-            arr.push({text: mod.label}, {text: submod.label})
+            arr.push({text: mod.label, to: mod.to}, {text: submod.label, to: submod.to})
             this.module = submod
         } else if (mod) {
             this.expanded_key = [parent]
-
-            // some module has no child
-            arr.push({text: mod.label})
+            arr.push({text: mod.label, to: mod.to})
             this.module = mod
         } else {
             // default index of admin
-            arr.push({text: '个人信息修改'})
+            arr.push({text: '会员中心'}, {text: '个人信息修改', to: 'userinfo'})
             this.module = {label: '个人信息修改', to: 'userinfo'}
+            this.expanded_key = ['userinfo']
         }
         this.bread = arr
     },
