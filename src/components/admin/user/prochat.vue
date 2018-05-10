@@ -43,6 +43,7 @@
                     </el-input>
 
                     <el-tree
+                        @node-click="selectClient"
                         class="filter-tree"
                         :data="userList"
                         :props="defaultProps"
@@ -60,7 +61,7 @@
 import 'rui-vue-emoji/dist/vue-emoji.css'
 import VueEmoji from 'rui-vue-emoji'
 import { keepLastIndex, isReqSuccessful, resetFile } from '@/util/jskit'
-import { getExpert, getUserById, getExpressions, getClients } from '@/util/getdata'
+import { getExpert, getUserById, getExpressions, getClients, getTalkRecord } from '@/util/getdata'
 import { wsUrl, baseUrl, tokenStr, authStr } from '@/util/fetch'
 
 export default {
@@ -82,29 +83,7 @@ export default {
             // 满足王老师的常用语需求！！！
             expressionList: [],
             userList: [
-                {
-                    // 高能预警：用户放在二级，一级菜单设置为所有用户
-                    label: '所有用户',
-                    children: [
-                        {
-                            label: '黄文海'
-                        },
-
-                        {
-                            label: '黄大狗'
-                        },
-
-                        {
-                            label: '傻嫖哥'
-                        },
-                        {
-                            label: '没有姓名'
-                        },
-                        {
-                            label: '黄文海'
-                        }
-                    ]
-                }
+                {label: '所有用户', children: []}
             ],
             defaultProps: {
                 children: 'children',
@@ -204,6 +183,33 @@ export default {
     },
 
     methods: {
+        async selectClient (data, node) {
+            if (node.isLeaf) {
+                let res = await getTalkRecord(data.id)
+                let arr = []
+                let id = this.$route.params.id
+                res.data.List.forEach(v => {
+                    let obj = {}
+                    if (v.talker_id === id) {
+                        obj.self = 1
+                        this.expert.name = v.talker_name
+                    } else {
+                        this.user.name = v.talker_name
+                    }
+                    obj.html = v.content
+                    arr.push(obj)
+                })
+                this.items = arr
+                this.$nextTick(_ => {
+                    let dialog = this.$refs.dialog
+                    if (dialog) {
+                        dialog.scrollTop = dialog.scrollHeight
+                    }
+                })
+                // console.log(arr)
+            }
+        },
+
         filterNode (value, data) {
             if (!value) return true
             return data.label.indexOf(value) !== -1
@@ -293,7 +299,7 @@ export default {
                         to: [+this.user.id, this.expert.id, res.data.expert_id],
                         user_id: this.expert.id
                     }
-                    console.log(data)
+                    // console.log(data)
                     this.websocket.send(JSON.stringify(data))
                 }
             }, _ => {
