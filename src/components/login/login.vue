@@ -2,7 +2,7 @@
     <div class="login-main">
         <div class="head_title">
             <router-link to="/"><img src="../../assets/imgs/index/logo-input.png" alt="logo"></router-link>
-            <h3>东俊（有机）养殖生产管理追溯系统管理平台</h3>
+            <div class="login_title">东俊（有机）养殖生产管理追溯系统管理平台</div>
         </div>
 
         <div class="box">
