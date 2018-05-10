@@ -131,7 +131,7 @@ export default new Router({
             {path: 'welfare/prac', name: 'welfareprac', component: Welfare},
             {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
             {path: 'welfare/plan', name: 'welfareplan', component: WelfarePlan},
-            {path: 'auth/role', name: 'authrole', component: AuthRole},
+            {path: 'authrole', name: 'authrole', component: AuthRole},
             {path: 'genealogic/prac', name: 'genealogic', component: Genealogic},
             {path: 'genealogic/list', name: 'genealogiclist', component: GenealogicList},
             // 卫生疫控

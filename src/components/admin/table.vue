@@ -50,15 +50,19 @@
                 align='center'
                 width="160">
                 <template slot-scope="scope">
-                    <div class="opr" v-if="!releaseType">
+                    <div class="opr" v-if="!releaseType && !isCheck">
                         <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
-                        <template v-if="!isCheck">
+                        <template>
                             <span @click="edit(scope.$index)" v-if="showEdit">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
                         </template>
                     </div>
+                    <div class="opr" v-else-if="releaseType">
+                        <span  @click="viewPlan(scope.$index)">查看</span>
+                    </div>
                     <div class="opr" v-else>
-                        <span @click="viewPlan(scope.$index)">查看</span>
+                        <span @click="Spv(1, scope.$index)">通过</span>
+                        <span @click="Spv(0, scope.$index)">拒绝</span>
                     </div>
                 </template>
             </el-table-column>
@@ -76,6 +80,25 @@
 <script>
 import { isReqSuccessful } from '@/util/jskit'
 import { getUserById, getReleaseByName } from '@/util/getdata'
+import {
+// 监督执行
+    patchWelfare,
+    patchBreeding,
+    patchPrevention,
+    patchDisinfect,
+    patchImmune,
+    patchAntiscolic,
+    patchStage,
+// 专家审核
+    patchProWelfare,
+    patchProPrevention,
+    patchProBreeding,
+    patchProDisinfect,
+    patchProImmune,
+    patchProAntiscolic,
+    patchProStage
+} from '@/util/getdata'
+
 
 export default {
     props: {
@@ -181,9 +204,62 @@ export default {
     },
 
     methods: {
+        Spv (isPass, idx) {
+            let {id, ispassCheck} = this.tableData[idx]
+            if (ispassCheck !== '未审核') {
+                this.$message.warning('该条记录已审核')
+                return
+            }
+
+            let superviseMap = {
+                welfare: patchWelfare,
+                prevention: patchPrevention,
+                'nutrition/breed': patchBreeding,
+                'nutrition/stage': patchStage,
+                'health/antiscolic': patchAntiscolic,
+                'health/disinfect': patchAntiscolic,
+                'health/immune': patchAntiscolic
+            }
+            let professorMap = {
+                welfare: patchProWelfare,
+                prevention: patchProPrevention,
+                'nutrition/breed': patchProBreeding,
+                'nutrition/stage': patchProStage,
+                'health/antiscolic': patchProAntiscolic,
+                'health/disinfect': patchProAntiscolic,
+                'health/immune': patchProAntiscolic
+            }
+            let data = {
+                unpassReason: '',
+                factoryNum: this.user.userFactory,
+                professor: this.$route.params.id
+            }
+            // userRole 20羊场监督员
+            if (this.user.userRole == 20) {
+                data.ispassSup = isPass
+                superviseMap[this.checkModule](id, data).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('监督执行成功')
+                        // this.tableData[idx].ispassCheck = isPass ? '已执行' : '未执行'
+                    }
+                }, _ => {
+                    this.$message.error('监督执行失败')
+                })
+            } else {
+                data.ispassCheck = isPass
+                professorMap[this.checkModule](id, data).then(res => {
+                    if (isReqSuccessful(res)) {
+                        this.$message.success('审核成功')
+                        this.tableData[idx].ispassCheck = isPass ? '已通过' : '未通过'
+                    }
+                }, _ => {
+                    this.$message.error('审核失败')
+                })
+            }
+        },
+
         viewPlan (index) {
             let id = this.tableData[index].id
-            console.log(id)
             this.$router.push({name: this.modpath, query: {view: id}})
         },
 
@@ -200,8 +276,8 @@ export default {
             }
             if (this.gmtCreate !== null) {
                 console.log(this.gmtCreate)
-                param.gmtStart = this.gmtCreate[0]
-                param.gmtEnd = this.gmtCreate[1]
+                param.startTime = this.gmtCreate[0]
+                param.endTime = this.gmtCreate[1]
             }
 
             let pathid
@@ -230,6 +306,41 @@ export default {
                             data.List.forEach(v => {
                                 let map = ['未通过', '已通过', '未审核']
                                 v.ispassCheck = map[v.ispassCheck]
+                            })
+                        }
+                        if (item && item.killWormDeratization !== undefined) {
+                            data.List.forEach(v => {
+                                let map = ['否', '是']
+                                Object.keys(v).forEach(v2 => {
+                                    if (v[v2] === 0 || v[v2] === 1) {
+                                        v[v2] = map[v[v2]]
+                                    }
+                                })
+                            })
+                        }
+                        if (item && item.materialA !== undefined) {
+                            data.List.forEach(v => {
+                                let map = [
+                                    'materialA',
+                                    'materialM',
+                                    'materialO',
+                                    'materialWM',
+                                    'materialWO',
+                                    'roughageP',
+                                    'roughageD',
+                                    'roughageO',
+                                    'roughageWP',
+                                    'roughageWD',
+                                    'roughageWO',
+                                    'pickingM',
+                                    'pickingR',
+                                    'pickingO'
+                                ]
+                                map.forEach(v2 => {
+                                    if (v[v2] && v[v2].indexOf('[') !== -1) {
+                                        v[v2] = JSON.parse(v[v2]).join(',')
+                                    }
+                                })
                             })
                         }
                         this.tableData = data.List

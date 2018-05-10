@@ -41,6 +41,7 @@ import SIdentify from '@/components/login/identify'
 import { Login } from '@/util/getdata'
 import { userStr } from '@/util/fetch'
 import { validateName, isReqSuccessful } from '@/util/jskit'
+import { validatePassword } from '@/util/validate'
 import md5 from 'md5'
 
 export default {
@@ -50,11 +51,11 @@ export default {
 
     data () {
         let validatePass = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-20位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else {
                 callback()
             }

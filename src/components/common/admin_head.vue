@@ -13,13 +13,13 @@
             <div class="admin-tabs">
                 <el-button>溯源管理</el-button>
                 <el-button>进销存系统</el-button>
-                <el-button>财务管理管理</el-button>
+                <el-button>财务管理系统</el-button>
                 <el-button @click="logout()">退出</el-button>
             </div>
 
             <div class="tab-right">
                 <div class="u-info">
-                    <span>用户：{{user.userRealname}}</span>
+                    <span>用户：{{user.pkUserid}}</span>
                     <span>部门：{{user.factoryName}}</span>
                 </div>
                 <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>

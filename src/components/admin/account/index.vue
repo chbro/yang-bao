@@ -90,6 +90,7 @@
 import AdminTable from '@/components/admin/table'
 import { getUserById, getUsers, deleteUser, postUser, getFactories, getAgentUnit, getFactoryUnit, getFactoryUsers } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
+import { validatePassword, validateTelephone, validateUsername } from '@/util/validate'
 
 export default {
     components: {
@@ -239,24 +240,29 @@ export default {
                 }
             }
 
-            let passRe = /^[a-zA-Z0-9_]{6,12}$/
-            let phoneRe = /^1[34578]\d{9}$/
             let warn = this.$message.warning
             let { username, realname, telephone, password, factoryId } = this.form
+            let valUs = validateUsername(username)
             if (!username) {
                 warn('请输入用户名')
+                return
+            }
+            if (valUs !== true) {
+                warn(valUs)
                 return
             }
             if (!realname) {
                 warn('请输入用户姓名')
                 return
             }
-            if (telephone && !phoneRe.test(telephone)) {
-                warn('手机号格式不正确')
+            let valPh = validateTelephone(telephone)
+            if (telephone && valPh !== true) {
+                warn(valPh)
                 return
             }
-            if (!passRe.test(password)) {
-                warn('密码必须是6-12位字符数字和下划线')
+            let valPas = validatePassword(password)
+            if (valPas !== true) {
+                warn(valPas)
                 return
             }
             if (factoryId === null) {

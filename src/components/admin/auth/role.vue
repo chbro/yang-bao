@@ -2,6 +2,7 @@
     <div class="auth-role">
         <el-button @click="addUserVisible = true">添加角色</el-button>
         <el-table
+            v-loading="load"
             :data="tableData"
             style="width: 100%">
             <el-table-column
@@ -112,6 +113,7 @@ export default {
 
     data () {
         return {
+            load: false,
             page: 1,
             total: 1,
 
@@ -160,7 +162,7 @@ export default {
                 this.user = res.data.model
                 this.user.agentRank = res.data.agentRank
             }
-        }).then(_ => {        
+        }).then(_ => {
             getRoles(this.user.agentRank, {size: 100}).then(res => {
                 if (isReqSuccessful(res)) {
                     for (let v of res.data.List) {
@@ -221,16 +223,21 @@ export default {
                     this.$message.success('修改员工角色成功')
                 }
             }, _ => {
-                this.$message.success('修改员工角色失败')
+                this.$message.error('修改员工角色失败')
             })
         },
 
         fetchRoles () {
+            this.load = true
             getRoles(this.user.agentRank, {page: this.page - 1}).then(res => {
                 if (isReqSuccessful(res)) {
                     this.tableData = res.data.List
                     this.total = res.data.size
                 }
+                this.load = false
+            }, _ => {
+                this.$message.error('获取角色失败')
+                this.load = false
             })
         },
 
@@ -285,7 +292,7 @@ export default {
                     }
                     this.addUserVisible = false
                 }, _ => {
-                    this.$message.success('修改角色失败')
+                    this.$message.error('修改角色失败')
                     this.addUserVisible = false
                 })
             }
@@ -343,4 +350,7 @@ export default {
         .el-dialog__body
             >.el-input
                 margin-bottom 10px
+
+    >.el-button
+        margin-bottom 15px
 </style>

@@ -5,6 +5,7 @@
 
 import Vue from 'vue'
 import { tokenStr } from './fetch'
+import { validateTelephone } from './validate'
 
 let app = new Vue()
 export const jumpToLogin = r => {
@@ -84,16 +85,24 @@ export const checkForm = form => {
         return false
     }
 
-    if (Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
-        app.$message.warning('请完善表单信息')
-        return false
-    }
-
     let weight = form.birthWeight
     if (weight && !/^\d+\.?\d{0,}$/.test(weight)) {
         app.$message.warning('初登体重只能输入数字')
         return false
     }
+
+    let phone = form.familyPhone || form.officialPhone || form.userTelephone
+    let val = validateTelephone(phone)
+    if (phone && val !== true) {
+        app.$message.warning(val)
+        return false
+    }
+
+    if (Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
+        app.$message.warning('请完善表单信息')
+        return false
+    }
+
     return true
 }
 

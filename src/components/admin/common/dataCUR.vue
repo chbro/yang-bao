@@ -106,7 +106,10 @@ export default {
                     if ('breedLocation' in obj) {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
-                    this.canModify = res.data.ispassCheck == '2'
+                    // 0审核未通过 1审核通过 2未审核
+                    if (res.data.ispassCheck && res.data.ispassCheck != '2') {
+                        this.canModify = false
+                    }
                     this.$emit('update:models', obj)
                 }
             }, _ => {
@@ -130,35 +133,35 @@ export default {
 
     methods: {
         Spv (isPass) {
-            let sMap = {
-                welfare: patchWelfare,
-                prevention: patchPrevention,
-                'nutrition/breed': patchBreeding
-            }
-            let pMap = {
-                welfare: patchProWelfare,
-                prevention: patchProPrevention,
-                'nutrition/breed': patchProBreeding
-            }
-            if (this.supervise) {
-                sMap[this.modpath](this.supervise, {ispassSup: isPass}).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.$message.success('修改监督状态成功')
-                        this.$router.push({name: 'review'})
-                    }
-                }, _ => {
-                    this.$message.error('修改监督状态失败')
-                })
-            } else if (this.check) {
-                sMap[this.modpath](this.check, {ispassCheck: isPass}).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.$message.success('审核成功')
-                        this.$router.push({name: 'review'})
-                    }
-                }, _ => {
-                    this.$message.error('审核失败')
-                })
-            }
+            // let sMap = {
+            //     welfare: patchWelfare,
+            //     prevention: patchPrevention,
+            //     'nutrition/breed': patchBreeding
+            // }
+            // let pMap = {
+            //     welfare: patchProWelfare,
+            //     prevention: patchProPrevention,
+            //     'nutrition/breed': patchProBreeding
+            // }
+            // if (this.supervise) {
+            //     sMap[this.modpath](this.supervise, {ispassSup: isPass}).then(res => {
+            //         if (isReqSuccessful(res)) {
+            //             this.$message.success('修改监督状态成功')
+            //             this.$router.push({name: 'review'})
+            //         }
+            //     }, _ => {
+            //         this.$message.error('修改监督状态失败')
+            //     })
+            // } else if (this.check) {
+            //     sMap[this.modpath](this.check, {ispassCheck: isPass}).then(res => {
+            //         if (isReqSuccessful(res)) {
+            //             this.$message.success('审核成功')
+            //             this.$router.push({name: 'review'})
+            //         }
+            //     }, _ => {
+            //         this.$message.error('审核失败')
+            //     })
+            // }
         },
 
         submit () {
@@ -168,11 +171,12 @@ export default {
 
             let data = Object.assign({}, this.models)
             let { userFactory, userRealname, id, factoryName } = this.user
-            if (this.updateSubmitter) {
-                data.factoryNum = this.models.factoryNum
-            } else {
-                data.factoryNum = userFactory
-            }
+            data.factoryNum = this.models.factoryNum || userFactory
+            // if (this.updateSubmitter) {
+            //     data.factoryNum = this.models.factoryNum || userFactory
+            // } else {
+            //     data.factoryNum = userFactory
+            // }
             if (!this.isAgent) {
                 data.operatorName = userRealname
                 data.operatorId = id

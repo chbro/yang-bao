@@ -22,8 +22,8 @@
                 </el-form-item>
                 <el-form-item label="密码强度" class="pass-level">
                     <template v-show="strength">
-                        <el-tag type="warning" v-if="strength === 1 || strength === 0">弱</el-tag>
-                        <el-tag type="info" v-else-if="strength === 2">中</el-tag>
+                        <el-tag type="danger" v-if="strength === 1 || strength === 0">弱</el-tag>
+                        <el-tag type="warning" v-else-if="strength === 2">中</el-tag>
                         <el-tag type="success" v-else-if="strength === 3">强</el-tag>
                     </template>
                 </el-form-item>
@@ -94,37 +94,38 @@
 <script>
 import { Register } from '@/util/getdata'
 import { checkPassStrength, validateName, validateEmail, validatePhone, isReqSuccessful } from '@/util/jskit'
+import { validateQQ, validatePassword } from '@/util/validate'
 import md5 from 'md5'
 
 export default {
     data () {
         var validatePass = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-12位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else if (this.ruleForm.checkPass !== '') {
                 this.$refs.ruleForm.validateField('checkPass')
             }
             callback()
         }
         var validatePass2 = (rule, value, callback) => {
-            let passReg = /^[a-zA-Z0-9_]{6,12}$/
+            let val = validatePassword(value)
             if (value === '') {
                 callback(new Error('请再次输入密码'))
-            } else if (!passReg.test(value)) {
-                callback(new Error('密码必须是6-12位字符数字和下划线'))
+            } else if (val !== true) {
+                callback(new Error(val))
             } else if (value !== this.ruleForm.password) {
                 callback(new Error('两次输入密码不一致!'))
             } else {
                 callback()
             }
         }
-        let validateQQ = (rule, value, callback) => {
-            let qqReg = /^$|[1-9]\d{4,9}$/
-            if (!qqReg.test(value)) {
-                callback(new Error('请输入正确的qq号'))
+        let validateQ = (rule, value, callback) => {
+            let val = validateQQ(value)
+            if (val !== true) {
+                callback(new Error(val))
             } else {
                 callback()
             }
@@ -162,7 +163,7 @@ export default {
                     { validator: validatePhone, trigger: 'blur' }
                 ],
                 qq: [
-                    { validator: validateQQ, trigger: 'blur' }
+                    { validator: validateQ, trigger: 'blur' }
                 ]
             },
             options: [

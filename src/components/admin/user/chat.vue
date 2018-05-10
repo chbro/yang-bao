@@ -107,7 +107,7 @@ export default {
                 this.user = {
                     id: uid,
                     name: userRealname,
-                    aid: userFactory,
+                    aid: agent,
                     userRole
                 }
             }

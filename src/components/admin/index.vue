@@ -169,10 +169,22 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
-                // let { agentRank } = res.data
-                // if (agentRank === -1 || agentRank === null || agentRank === undefined) {
-                //     this.treedata.push(this.productionTree)
-                // }
+                let { userRole, flag } = res.data
+                if (flag === 0) {
+                    // 羊场
+                    this.treedata.push(this.productionTree)
+                } else if (flag === 1) {
+                    // 代理
+                    this.treedata.push(this.productionTree)
+                    if ([4, 8, 12, 16].includes(userRole)) {
+                        // 专家代理
+                        this.treedata.push(this.professorTree)
+                    } else {
+                        // 普通代理
+                        this.treedata.push(this.adminTree)
+                    }
+                }
+                // flag: 2 普通用户
             }
         })
         this.treedata.push(this.professorTree, this.adminTree, this.productionTree)
