@@ -24,7 +24,7 @@ export default {
             deleteAntiscolic,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态'},
-                {prop: 'factoryName', label: '工厂名'},
+                {prop: 'factoryName', label: '养殖场'},
                 {prop: 'crowdNum', label: '驱虫羊(群)'},
                 {prop: 'eartagFile', label: '耳牌附件号'},
                 {prop: 'repellentTime', label: '驱虫时间', width: 200},

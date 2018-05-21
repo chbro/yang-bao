@@ -7,6 +7,22 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
+        prop="ispassCheck"
+        label="审核状态"
+        align='center'>
+      </el-table-column>
+      <el-table-column
+        prop="gmtCreate"
+        label="提交时间"
+        width="200"
+        align='center'>
+      </el-table-column>
+      <el-table-column
+        prop="factoryName"
+        label="养殖场"
+        align='center'>
+      </el-table-column>
+      <el-table-column
         prop="checkTime"
         label="自检、主管上级检查时间"
         align='center'
@@ -114,6 +130,11 @@
         label="监督执行">
       </el-table-column>
       <el-table-column
+        prop="ispassSup"
+        align='center'
+        label="监督执行状态">
+      </el-table-column>
+      <el-table-column
         class="action"
         fixed="right"
         label="操作"
@@ -180,11 +201,13 @@
       async fetchData () {
         let res = await getAllWelfare(this.user.userFactory, {page: this.page - 1})
         res.data.List.forEach(v => {
+          let mapCheck = ['未通过', '已通过', '未审核']
+          let mapSup = ['未执行', '执行', '未检查']
           Object.keys(v).forEach(v2 => {
-            if (v[v2] === 0) {
-              v[v2] = '否'
-            } else if (v[v2] === 1) {
-              v[v2] = '是'
+            if (v2 === 'ispassCheck') {
+              v[v2] = mapCheck[v[v2]]
+            } else if (v2 === 'ispassSup') {
+              v[v2] = mapSup[v[v2]]
             }
           })
         })

@@ -24,7 +24,7 @@ export default {
             deleteBreeding,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {prop: 'factoryName', label: '工厂名'},
+                {prop: 'factoryName', label: '养殖场'},
                 {label: '配种后移至栏/栋', prop: 'building'},
                 {label: '母羊商标耳牌', prop: 'mEtB'},
                 {label: '种公商标耳牌', prop: 'fEtB'},

@@ -7,6 +7,22 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
+        prop="ispassCheck"
+        label="审核状态"
+        align='center'>
+      </el-table-column>
+      <el-table-column
+        prop="gmtCreate"
+        label="提交时间"
+        width="200"
+        align='center'>
+      </el-table-column>
+      <el-table-column
+        prop="factoryName"
+        label="养殖场"
+        align='center'>
+      </el-table-column>
+      <el-table-column
         prop="building"
         width="150"
         align="center"
@@ -36,11 +52,11 @@
         align="center"
         label="阶段">
       </el-table-column>
-      <el-table-column label="精料配方" align="center">
+      <el-table-column label="精料配方(%)" align="center">
         <el-table-column
           prop="materialA"
           width="150"
-          align="center"
+          align="添加剂"
           label="预混料">
         </el-table-column>
         <el-table-column
@@ -56,7 +72,7 @@
           label="其他">
         </el-table-column>
       </el-table-column>
-      <el-table-column label="精料用量" align="center">
+      <el-table-column label="精料用量(体重%)" align="center">
         <el-table-column
           prop="name"
           width="materialWM"
@@ -152,6 +168,11 @@
         prop="supervisorName"
         align='center'
         label="监督执行">
+      </el-table-column>
+      <el-table-column
+        prop="ispassSup"
+        align='center'
+        label="监督执行状态">
       </el-table-column>
       <el-table-column
         prop="remark"

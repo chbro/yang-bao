@@ -26,7 +26,7 @@ export default {
             deleteImmune,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {prop: 'factoryName', label: '工厂名'},
+                {prop: 'factoryName', label: '养殖场'},
                 {prop: 'crowdNum', label: '接种羊(群)', width: '180'},
                 {prop: 'eartagFile', label: '免疫耳牌附件号'},
                 {prop: 'immuneTime', label: '接种时间', width: '180'},

@@ -94,8 +94,7 @@ export default {
                 answer_2: null,
                 answer_3: null,
                 userRemark: null
-            },
-            id: null
+            }
         }
     },
 
@@ -137,7 +136,7 @@ export default {
             }
 
             this.disableBtn = true
-            updateUser(this.id, this.models).then(res => {
+            updateUser(this.$route.params.id, this.models).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功')
                 }

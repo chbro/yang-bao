@@ -116,6 +116,7 @@ export default {
                 {label: '单位', prop: 'factoryName'},
                 {label: '用户名', prop: 'pkUserid'},
                 {label: '用户角色', prop: 'userRole'},
+                {label: '角色编号', prop: 'userRole'},
                 {label: '手机号', prop: 'userTelephone'},
                 {label: '办公电话', prop: 'officialPhone'},
                 {label: 'qq', prop: 'qq'},

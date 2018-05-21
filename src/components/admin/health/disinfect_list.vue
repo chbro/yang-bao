@@ -25,7 +25,7 @@ export default {
             deleteDisinfect,
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: 100},
-                {prop: 'factoryName', label: '工厂名'},
+                {prop: 'factoryName', label: '养殖场'},
                 {prop: 'disinfectTime', label: '日期', width: 200},
                 {prop: 'place', label: '消毒场所'},
                 {prop: 'disinfectName', label: '消毒药名称'},

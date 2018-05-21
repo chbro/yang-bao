@@ -10,7 +10,7 @@
                 </el-option>
             </el-select>
             <el-input class="pick-erpai" size="small" v-model="factoryName">
-                <template slot="prepend">单位名:</template>
+                <template slot="prepend">养殖场:</template>
             </el-input>
             <el-input v-if="!hideEartagFilter" class="pick-erpai" size="small" v-model="eartag">
                 <template slot="prepend">耳牌号:</template>
@@ -42,6 +42,12 @@
                 :prop="th.prop"
                 :label="th.label"
                 :width="th.width">
+            </el-table-column>
+            <el-table-column
+                v-if="hasSup"
+                align='center'
+                prop="ispassSup"
+                label="监督执行状态">
             </el-table-column>
             <el-table-column
                 class="action"
@@ -164,6 +170,11 @@ export default {
         },
         checkModule: {
             type: String
+        },
+        // 表头是否有监督执行状态字段
+        hasSup: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -306,6 +317,12 @@ export default {
                             data.List.forEach(v => {
                                 let map = ['未通过', '已通过', '未审核']
                                 v.ispassCheck = map[v.ispassCheck]
+                            })
+                        }
+                        if (item && item.ispassSup !== null && item.ispassSup !== undefined) {
+                            data.List.forEach(v => {
+                                let map = ['未执行', '执行', '未检查']
+                                v.ispassSup = map[v.ispassSup]
                             })
                         }
                         if (item && item.killWormDeratization !== undefined) {

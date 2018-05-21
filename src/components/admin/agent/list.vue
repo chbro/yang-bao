@@ -2,7 +2,7 @@
     <div>
         <admin-table
             modpath="agent"
-            find-by="aid"
+            :has-sup="false"
             :is-agent="true"
             :no-prac="true"
             :hide-filter="true"

@@ -2,8 +2,7 @@
     <div>
         <admin-table
             modpath="genealogic"
-            find-by="factoryNum"
-            hide-filter
+            :has-sup="false"
             :getData="getGeneas"
             :deleteData="deleteGeneaRec"
             :isGenea="true"

@@ -30,16 +30,14 @@ let mapHeaders = {
         { label: '是否遵守操作规范', prop: 'operationSpecification', },
         { label: '羊舍空气与温度是否合格', prop: 'airTemperature' },
         { label: '羊只运动与采光是否合格', prop: 'exerciseDaylighting' },
-        { label: '车辆进出是否消毒', prop: 'carDisinfect' },
-        { label: '备注', prop: 'remark' }
+        { label: '车辆进出是否消毒', prop: 'carDisinfect' }
     ],
     'health/disinfect': [ // 消毒实施档案
         { label: '消毒时间', prop: 'disinfectTime', },
         { label: '消毒场所', prop: 'place' },
         { label: '消毒药名称', prop: 'disinfectName' },
         { label: '用药剂量', prop: 'dose' },
-        { label: '消毒方法', prop: 'disinfectWay' },
-        { prop: 'remark', label: '备注' }
+        { label: '消毒方法', prop: 'disinfectWay' }
     ],
     prevention: [
         {label: '日期', prop: 'diagnosisTime', width: '200'},
@@ -49,8 +47,7 @@ let mapHeaders = {
         {label: '诊断结果', prop: 'diagnosisResult'},
         {label: '治疗方案及用药剂量', prop: 'diagnosisMethod'},
         {label: '总用药量',prop: 'dose'},
-        {label: '治疗效果',prop: 'treatEffect'},
-        {prop: 'remark', label: '备注', width: '200'}
+        {label: '治疗效果',prop: 'treatEffect'}
     ],
     'nutrition/breed': [
         {label: '配种后移至栏/栋', prop: 'building'},
@@ -58,8 +55,7 @@ let mapHeaders = {
         {label: '种公商标耳牌', prop: 'fEtB'},
         {label: '配种时间', prop: 'breedingT'},
         {label: '妊娠时间', prop: 'gestationT'},
-        {label: '产前免疫种类及时间', prop: 'prenatalIT'},
-        {prop: 'remark', label: '备注'}
+        {label: '产前免疫种类及时间', prop: 'prenatalIT'}
     ],
     'nutrition/stage': [
         {label: '栏/栋', prop: 'building'},
@@ -81,8 +77,7 @@ let mapHeaders = {
         {label: '领料总量精料', prop: 'pickingM'},
         {label: '领料总量粗料', prop: 'pickingR'},
         {label: '领料总量其他', prop: 'pickingO'},
-        {label: '饮水', prop: 'water'},
-        {label: '备注', prop: 'remark'}
+        {label: '饮水', prop: 'water'}
 
     ],
     'health/antiscolic': [
@@ -91,11 +86,7 @@ let mapHeaders = {
         {prop: 'repellentTime', label: '驱虫时间', width: 200},
         {prop: 'repellentName', label: '药物名称', width: 160},
         {prop: 'repellentWay', label: '给药途径', width: '160'},
-        {prop: 'dose', label: '给药剂量(ml)'},
-        {prop: 'operatorName', label: '操作人员'},
-        {prop: 'professor', label: '技术审核'},
-        {prop: 'supervisor', label: '监督执行'},
-        {prop: 'remark', label: '备注', width: '200'}
+        {prop: 'dose', label: '给药剂量(ml)'}
     ],
     'health/immune': [
         {prop: 'crowdNum', label: '接种羊(群)', width: '180'},
@@ -104,20 +95,17 @@ let mapHeaders = {
         {prop: 'immuneKind', label: '疫苗种类'},
         {prop: 'immuneWay', label: '接种方法'},
         {prop: 'dose', label: '接种剂量(ml)'},
-        {prop: 'immuneDuring', label: '免疫期', width: '160'},
-        {prop: 'operatorName', label: '操作人员'},
-        {prop: 'professor', label: '技术审核'},
-        {prop: 'supervisor', label: '监督执行'},
-        {prop: 'remark', label: '备注', width: '200'}
+        {prop: 'immuneDuring', label: '免疫期', width: '160'}
     ]
 }
 Object.keys(mapHeaders).forEach(v => {
     mapHeaders[v].unshift({ label: '提交时间', prop: 'gmtCreate' })
-    mapHeaders[v].unshift({ label: '单位名', prop: 'factoryName' })
+    mapHeaders[v].unshift({ label: '养殖场', prop: 'factoryName' })
     mapHeaders[v].unshift({ label: '审核状态', prop: 'ispassCheck' })
     mapHeaders[v].push({prop: 'operatorName', label: '操作人员'})
     mapHeaders[v].push({prop: 'professor', label: '技术审核'})
     mapHeaders[v].push({prop: 'supervisor', label: '监督执行'})
+    mapHeaders[v].push({prop: 'remark', label: '备注', width: 200})
 })
 export default {
     props: {

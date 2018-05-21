@@ -150,7 +150,13 @@ export default {
 
             CommentInsert(this.form).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.$router.push({name: 'comment'})
+                    let id = this.$route.params.id
+                    if (id) {
+                        this.$router.push({name: 'comment', params: {id}})
+                    } else {
+                        this.$message.success('留言成功')
+                        this.form = {}
+                    }
                 }
             }, _ => {
                 this.$message.error('留言失败')
