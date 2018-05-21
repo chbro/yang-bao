@@ -140,6 +140,7 @@ export default {
             type: Array
         },
 
+
         // 是否显示操作栏的审核功能
         hidePass: {
             type: Boolean,
@@ -422,5 +423,5 @@ export default {
 .el-table th
     border-left 2px solid #98c9e6
     color #fff
-    background-color color-main
+    background-color color-main !important
 </style>

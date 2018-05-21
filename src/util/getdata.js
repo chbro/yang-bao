@@ -86,7 +86,9 @@ export const evaluateChat = data => fetch('/evaluation', data, 'POST')
 /**
  * 配种产子
  */
-export const postBreeding = data => fetch('/breeding', data, 'POST')
+export const postBreeding1 = data => fetch('/breeding', data, 'POST')
+
+export const postBreeding2 = data => fetch('/breeding', data, 'POST')
 
 export const updateBreeding = (id, data) => fetch(`/breeding/${id}`, data, 'PUT')
 
@@ -182,7 +184,7 @@ export const getUserByName = id => fetch('/user/id/' + id)
 
 export const getUsers = (facid, data) => fetch('/user/' + facid, data)
 
-export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
+export const updateUser = (id, data) => fetch('/user/' + id, data)
 
 export const deleteUser = id => fetch('/user/' + id, null, 'DELETE')
 

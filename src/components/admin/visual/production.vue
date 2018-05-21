@@ -26,17 +26,17 @@
         <div class="production-view">
             <div class="production-content" v-for="(item, i) in proList" :key="i">
                 <el-card>
-                    <img @click="productionShow = true" class="production-image" :src="item.url" :onerror="defaultImg">
+                    <img @click="test(i)" class="production-image" :src="item.url" :onerror="defaultImg">
                     <p class="production-info">症状描述：{{ item.symptom }}</p>
                     <p class="production-info">解决方案：{{ item.solution }}</p>
                     <el-dialog
-                      :visible.sync="productionShow"
+                      :visible.sync="productionShow[i]"
                       width="50%"
                       center>
                         <!-- FIXME: video 标签兼容性处理 -->
                         <div class="show-detail">
                             <video v-if="item.filetype === 1" :src="item.url" class="production-video" controls="controls"></video>
-                            <img v-else @click="productionShow = true" class="production-image" :src="item.url" :onerror="defaultImg">
+                            <img v-else class="production-image" :src="item.url" :onerror="defaultImg">
                         </div>
                         <div class="show-list">
                             <ul>
@@ -93,7 +93,7 @@ export default {
             condition: 'all',
             time: [],
             keyWords: '',
-            productionShow: false,
+            productionShow: [],
             proList: [],
             pageNumb: 1,
             total: 0,
@@ -106,6 +106,9 @@ export default {
     },
 
     methods: {
+        test (i) {
+            this.$set(this.productionShow, i, true);
+        },
         change () {
             this.pageNumb = 1
         },
@@ -138,6 +141,7 @@ export default {
                         })
                         this.proList = arr
                         this.total = res.data.size
+                        this.productionShow = new Array(arr.length).fill(false);
                     }
                 }).catch(_ => {
                     this.$message.error('查询失败')
@@ -172,6 +176,7 @@ export default {
                         })
                         this.proList = arr
                         this.total = res.data.size
+                        this.productionShow = new Array(arr.length).fill(false);
                     }
                 }).catch(_ => {
                     this.$message.error('查询失败')
@@ -235,6 +240,7 @@ export default {
             .production-image
                 display block
                 width 100%
+                height 160px
                 cursor pointer
             .production-video
                 width 100%

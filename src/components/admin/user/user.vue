@@ -135,8 +135,10 @@ export default {
                 return
             }
 
-            this.disableBtn = true
-            updateUser(this.$route.params.id, this.models).then(res => {
+            this.disableBtn = true 
+            this.id = this.$route.params.id    
+                
+            updateUser(this.id, this.models).then(res => {
                 if (isReqSuccessful(res)) {
                     this.$message.success('修改成功')
                 }
