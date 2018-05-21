@@ -183,7 +183,7 @@ export const getUserByName = id => fetch('/user/id/' + id)
 
 export const getUsers = (facid, data) => fetch('/user/' + facid, data)
 
-export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
+export const updateUser = (id, data) => fetch('/user/' + id, data)
 
 export const deleteUser = id => fetch('/user/' + id, null, 'DELETE')
 

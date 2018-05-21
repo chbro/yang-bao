@@ -7,7 +7,9 @@
                 </el-input>
 
                 <el-input :placeholder="item.placeholder" :class="{block: item.block, mr: item.mr}" :key="i" v-else-if="item.type === 'file'" :value="holder" class="select-file" size="small" disabled @click.native="$refs.erpai[0].click()">
-                    <template slot="prepend">{{ item.label || '免疫耳牌号文件:'}}<input type="file" @change="selectFile(item)" hidden ref="erpai"></template>
+                    <template slot="prepend">{{ item.label || '免疫耳牌号文件:'}}
+                        <input type="file" @change="selectFile(item)" hidden ref="erpai">
+                    </template>
                 </el-input>
 
                 <div :key="i" v-else-if="item.type === 'time'" class="time el-input-group" :class="{'double-width': item.doubleWidth, mr: item.mr}">

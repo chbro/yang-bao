@@ -24,6 +24,7 @@ import BasicInfo from '@/components/admin/basic_info'
 import { diagnoseUp, getUserById } from '@/util/getdata'
 import { baseUrl, authStr, tokenStr } from '@/util/fetch'
 import { isReqSuccessful } from '@/util/jskit'
+import {config} from '@/util/config'
 
 export default {
     components: {
@@ -93,6 +94,10 @@ export default {
     },
     methods: {
         submit () {
+            if ( !this.beforeUpload ( this.models.file ) ) {
+                return false;
+            }
+
             let form = new FormData()
             Object.keys(this.models).forEach(v =>{
                 form.append(v, this.models[v])
@@ -111,6 +116,19 @@ export default {
                 }, _ => {
                     this.$message.error('提交失败')
                 })
+        },
+
+        beforeUpload ( file ) {
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < config.imageSize;
+            console.log( file );
+            console.log( isJPG )
+            if (isJPG && !isLt2M) {
+                this.$message.error(`上传图片大小不能超过 ${config.imageSize} MB!`);
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 }
