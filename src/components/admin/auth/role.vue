@@ -61,15 +61,17 @@
                 </el-checkbox>
                 <el-checkbox-group v-model="rules">
                     <template v-if="item.msg">
+                        <el-checkbox :label="i + '-' + 0">发送短信</el-checkbox>
+                        <el-checkbox :label="i + '-' + 1">编辑短信</el-checkbox>
+                    </template>
+                    <template v-else-if="item.downloadExcel">
                         <el-checkbox :label="i + '-' + 0">下载数据库表格</el-checkbox>
-                        <el-checkbox :label="i + '-' + 1">发送短信</el-checkbox>
-                        <el-checkbox :label="i + '-' + 2">编辑短信</el-checkbox>
                     </template>
                     <template v-else-if="item.file">
                         <el-checkbox :label="i + '-' + 0">下载文件</el-checkbox>
                     </template>
                     <template v-else-if="item.note">
-                        <el-checkbox :label="i + '-' + 1">查看留言</el-checkbox>
+                        <el-checkbox :label="i + '-' + 0">查看留言</el-checkbox>
                     </template>
                     <template v-else>
                         <el-checkbox :label="i + '-' + 0">增加</el-checkbox>
@@ -151,12 +153,13 @@ export default {
                 {text: '免疫实施档案', supervise: 1},
                 {text: '阶段营养档案', supervise: 1},
                 {text: '卫生动物福利档案', supervise: 1},
+                {text: '驱虫实施档案', supervise: 1},
                 {text: '专家评价', totalScore: 1},
                 {text: '方案'},
                 {text: '代理'},
                 {text: '客户'},
                 {text: '直播'},
-                {text: '社区活动'},
+                // {text: '社区活动'},
                 {text: '信息发布'},
                 {text: '系谱档案'},
                 {text: '视频'},
@@ -168,10 +171,10 @@ export default {
                 // {text: '拓展模块信息查询'},
                 {text: '角色管理'},
                 {text: '短信', msg: 1},
+                {text: '下载', downloadExcel: 1},
                 {text: '羊品种'},
                 {text: '文件', file: 1},
-                {text: '留言', note: 1},
-                {text: '驱虫实施档案', supervise: 1}
+                {text: '留言', note: 1}
             ]
         }
     },

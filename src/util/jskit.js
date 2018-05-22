@@ -159,6 +159,9 @@ export const getPeriods = (q, cb) => {
 }
 
 export const isReqSuccessful = (res) => {
+    if (res === void 0) {
+        return
+    }
     if (!(res && res.meta)) {
         app.$message.error('请求失败')
         return false

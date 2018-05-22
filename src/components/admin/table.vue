@@ -41,7 +41,15 @@
                 align='center'
                 :prop="th.prop"
                 :label="th.label"
-                :width="th.width">
+                :width="th.width || 150">
+                <el-table-column
+                    v-if="th.children"
+                    v-for="(thc, j) in th.children"
+                    :key="j"
+                    :prop="thc.prop"
+                    :label="thc.label"
+                    :width="thc.width || 150">
+                </el-table-column>
             </el-table-column>
             <el-table-column
                 v-if="hasSup"

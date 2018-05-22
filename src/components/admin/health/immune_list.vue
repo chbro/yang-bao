@@ -25,6 +25,8 @@ export default {
             getAllImmune,
             deleteImmune,
             headers: [
+                {label: '提交时间', prop: 'gmtCreate'},
+                {label: '养殖场', prop: 'factoryName'},
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '养殖场'},
                 {prop: 'crowdNum', label: '接种羊(群)', width: '180'},

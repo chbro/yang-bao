@@ -6,7 +6,7 @@
             :deleteData="deleteBreeding"
             :headers1="headers_1"
             :headers2="headers_2"
-            :headers3="headers_3">            >
+            :headers3="headers_3">
         </admin-table>
     </div>
 </template>
