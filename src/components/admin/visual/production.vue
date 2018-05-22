@@ -26,7 +26,8 @@
         <div class="production-view">
             <div class="production-content" v-for="(item, i) in proList" :key="i">
                 <el-card>
-                    <img @click="test(i)" class="production-image" :src="item.url" :onerror="defaultImg">
+                    <i v-if="item.filetype === 1" class="el-icon-caret-right video-icon "></i>
+                    <img @click="showPop(i)" class="production-image" :src="item.url" :onerror="defaultImg">
                     <p class="production-info">症状描述：{{ item.symptom }}</p>
                     <p class="production-info">解决方案：{{ item.solution }}</p>
                     <el-dialog
@@ -36,17 +37,17 @@
                         <!-- FIXME: video 标签兼容性处理 -->
                         <div class="show-detail">
                             <video v-if="item.filetype === 1" :src="item.url" class="production-video" controls="controls"></video>
-                            <img v-else class="production-image" :src="item.url" :onerror="defaultImg">
+                            <img v-else class="production-image-detail" :src="item.url" :onerror="defaultImg">
                         </div>
                         <div class="show-list">
                             <ul>
-                                <li>商标耳牌： {{ item.brand }}</li>
-                                <li>检疫耳牌： {{ item.vaccine }}</li>
-                                <li>畜牧性别： {{ item.sex }}</li>
-                                <li>症状描述:  {{ item.symptom }}</li>
-                                <li>解决方案： {{ item.solution }}</li>
-                                <li>就诊专家： {{ item.expert }}</li>
-                                <li>上传日期： {{ item.udate }}</li>
+                                <li><el-tag>商标耳牌</el-tag> {{ item.brand }}</li>
+                                <li><el-tag>检疫耳牌</el-tag> {{ item.vaccine }}</li>
+                                <li><el-tag>畜牧性别</el-tag> {{ item.sex }}</li>
+                                <li><el-tag type="warning">症状描述</el-tag> {{ item.symptom }}</li>
+                                <li><el-tag type="danger">解决方案</el-tag> {{ item.solution }}</li>
+                                <li><el-tag type="success">就诊专家</el-tag> {{ item.expert }}</li>
+                                <li><el-tag>上传日期</el-tag> {{ item.udate }}</li>
                             </ul>
                         </div>
                     </el-dialog>
@@ -57,6 +58,7 @@
         <el-pagination
           layout="prev, pager, next"
           :total="total"
+          :page-size="12"
           :current-page.sync="pageNumb"
           @current-change="getProList">
         </el-pagination>
@@ -106,7 +108,7 @@ export default {
     },
 
     methods: {
-        test (i) {
+        showPop (i) {
             this.$set(this.productionShow, i, true);
         },
         change () {
@@ -224,6 +226,11 @@ export default {
 .mod_production
     .el-card__body
         padding 10px
+        position: relative
+    .el-dialog__close
+        font-size: 25px
+    .el-dialog__body
+        padding-top: 40px    
     .production-search
         margin 10px auto 15px
         .search-input
@@ -237,6 +244,14 @@ export default {
             margin 0 10px 10px 0
             &:nth-of-type(4n)
                 margin-right 0
+            .video-icon 
+                font-size: 100px
+                color: #f5f7facf
+                position: absolute
+                top: 30px
+                left: 90px
+                cursor: pointer 
+                pointer-events:none    
             .production-image
                 display block
                 width 100%
@@ -252,12 +267,21 @@ export default {
                 white-space nowrap
                 text-overflow ellipsis
         .show-detail
-            width 70%
+            width 95%
             margin 0 auto 20px
             border 1px solid #ccc
+            .production-image-detail
+                display block
+                width 100%
+                cursor pointer
         .show-list
-            width 80%
+            width 90%
             margin 0 auto
+            li
+                margin-top 10px
+            .el-tag
+                margin-right: 10px
+                font-size: 14px
     .el-pagination
         text-align right
 </style>
