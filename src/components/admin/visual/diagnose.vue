@@ -121,8 +121,6 @@ export default {
         beforeUpload ( file ) {
             const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < config.imageSize;
-            console.log( file );
-            console.log( isJPG )
             if (isJPG && !isLt2M) {
                 this.$message.error(`上传图片大小不能超过 ${config.imageSize} MB!`);
                 return false;
