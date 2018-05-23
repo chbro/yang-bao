@@ -121,7 +121,7 @@ export default {
                 5: '非常满意'
             },
             commentData: [],
-            total: 0,
+            total: 1,
             pageNumb: 1,
             limit: 10
         }
@@ -154,7 +154,7 @@ export default {
                             attitude: this.map[item.attitude]
                         })
                     })
-                    this.total = res.data.size
+                    this.total = res.data.Size
                 }
             }).catch(_ => {
                 this.$message.error('查询失败')
