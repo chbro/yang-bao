@@ -3,11 +3,10 @@
 		<area-select></area-select>
         <div class="trace-charts">
             <div>
-                <ve-histogram :data="chartData" :settings="chartSettings" width="500px" height="500px"></ve-histogram>
+                <ve-line :data="chartData" :settings="chartSettings" width="500px" height="500px"></ve-line>
             </div>
         </div>
-		<state-info :data="chartData.rows[0].temp" :state="state.temp"  label="温度"></state-info>
-		<state-info :data="chartData.rows[0].damp" :state="state.damp"  label="湿度"></state-info>	
+		<state-info :data="chartData.rows[0]['pm']" :state="state.pm"  label="质量"></state-info>	
 		 <el-table
 			:data="chartData.rows"
 			:stripe="true"
@@ -19,14 +18,8 @@
 			>
 			</el-table-column>
 			<el-table-column
-			prop="temp"
-			label="温度"
-			align="center"			
-			>
-			</el-table-column>
-			<el-table-column
-			prop="damp"
-			label="湿度"
+			prop="pm"
+			label="PM2.5"
 			align="center"			
 			>
 			</el-table-column>
@@ -44,7 +37,7 @@
 </template>
 
 <script>
-import VeHistogram from 'v-charts/lib/histogram'
+import VeLine from  'v-charts/lib/line'
 import AreaSelect from './area_select'
 import StateInfo from './state_info'
 
@@ -52,38 +45,39 @@ import StateInfo from './state_info'
 
 export default {
     components: {
-        VeHistogram, AreaSelect, StateInfo 
+        VeLine, AreaSelect, StateInfo 
 	},
 	
 	data () {
 		return {
 			chartData: {
-				columns: ['date', 'temp', 'damp'],
+				columns: ['date', 'pm'],
 				rows: [
-					{ date: '2018-01-03 21:33', temp:25, damp: 83, state: 0 },
-					{ date: '2018-01-03 21:31', temp:28, damp: 50, state: 1},
-					{ date: '2018-01-03 21:29', temp:26, damp: 60, state: 1},
-					{ date: '2018-01-03 21:27', temp:20, damp: 70, state: 1},
-					{ date: '2018-01-03 21:25', temp:23, damp: 80, state: 1},
-					{ date: '2018-01-03 21:23', temp:27, damp: 83, state: 1}
+					{ date: '2018-01-03 21:33', 'pm':123, state: 0 },
+					{ date: '2018-01-03 21:31', 'pm':173, state: 1},
+					{ date: '2018-01-03 21:29', 'pm':153, state: 1},
+					{ date: '2018-01-03 21:27', 'pm':153, state: 1},
+					{ date: '2018-01-03 21:25', 'pm':163, state: 1},
+					{ date: '2018-01-03 21:23', 'pm':153, state: 1}
 				]
 			},
 
 			state: {
-				temp: {
-					normal: [20, 30],
-					warn: [30, 50],
+				pm: {
+					normal: [100, 200],
+					warn: [200, 500],
 				},
-				damp: {
-					normal: [60, 80],
-					warn: [80, 90],					
-				}
 			},
 
 			chartSettings: {
-				axisSite: {
-					right: ['damp']
+				legendName: {
+					pm: 'PM2.5'
 				},
+				label: {
+					normal: {
+						show: true
+					}
+				}
 			},
 		}
 	},
@@ -125,4 +119,3 @@ export default {
 	margin 0 auto	
 	width 90%	
 </style>
-
