@@ -24,6 +24,8 @@ const UserInfo = () => import('@/components/admin/user/user')
 const PasswordModify = () => import('@/components/admin/user/pass')
 // 审核
 const Review = () => import('@/components/admin/review/index')
+const ReviewSheep = () => import('@/components/admin/review/reviewSheep')
+
 // 留言
 const CommentSummary = () => import('@/components/admin/comment/index')
 const AcountComment = () => import('@/components/admin/comment/accountComment')
@@ -126,7 +128,9 @@ export default new Router({
             {path: 'comment/result', name: 'commentres', component: CommentResult},
             {path: 'comment/summary', name: 'commentsum', component: CommentSummary},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
+            //审核
             {path: 'review', name: 'review', component: Review},
+            {path: 'reviewSheep', name: 'reviewSheep', component: ReviewSheep},
             // 动物福利
             {path: 'welfare/prac', name: 'welfareprac', component: Welfare},
             {path: 'welfare/list', name: 'welfarelist', component: WelfareList},
