@@ -6,8 +6,8 @@
                 <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend" width="500px" height="500px"></ve-histogram>
             </div>
         </div>
-		<state-info :data="chartData.rows[0].quality" :state="state.quality"  label="质量"></state-info>
-		<state-info :data="chartData.rows[0].ph" :state="state.ph"  label="PH值"></state-info>		
+		<state-info :data="chartData.rows[0].quality.value" :state="state.quality"  label="质量"></state-info>
+		<state-info :data="chartData.rows[0].ph.value" :state="state.ph"  label="PH值"></state-info>		
 		 <el-table
 			:data="chartData.rows"
 			:stripe="true"
@@ -19,24 +19,31 @@
 			>
 			</el-table-column>
 			<el-table-column
-			prop="quality"
+			prop="quality.value"
 			label="质量"
 			align="center"			
 			>
 			</el-table-column>
 			<el-table-column
-			prop="ph"
+			label="质量状态"
+			align="center"			
+			>
+				<template slot-scope="scope">
+					<el-tag :type="stateInfo( scope.row.quality.state )">{{scope.row.quality.info}}</el-tag>
+				</template>
+			</el-table-column>
+			<el-table-column
+			prop="ph.value"
 			label="PH值"
 			align="center"			
 			>
 			</el-table-column>
 			<el-table-column
-			prop="state"
-			label="状态"
+			label="ph值状态"
 			align="center"			
 			>
 				<template slot-scope="scope">
-					<el-tag :type="stateInfo( scope.row )">{{scope.row.info}}</el-tag>
+					<el-tag :type="stateInfo( scope.row.ph.state )">{{scope.row.ph.info}}</el-tag>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -60,10 +67,10 @@ export default {
 			chartData: {
 				columns: ['date', 'quality', 'ph'],
 				rows: [
-					{ date: '2018-01-03 21:33', ph:5.0, quality: 503, state: 0 },
-					{ date: '2018-01-03 21:31', ph:6.0, quality: 123, state: 1},
-					{ date: '2018-01-03 21:29', ph:8.0, quality: 2123, state: 1},
-					{ date: '2018-01-03 21:27', ph:6.0, quality: 4123, state: 1},
+					{ date: '2018-01-03 21:33', ph:5.0, quality: 503},
+					{ date: '2018-01-03 21:31', ph:6.0, quality: 123},
+					{ date: '2018-01-03 21:29', ph:8.0, quality: 2123},
+					{ date: '2018-01-03 21:27', ph:6.0, quality: 4123},
 				]
 			},
 
@@ -99,18 +106,37 @@ export default {
 	},
 
     created () {
-		this.chartData.rows.forEach( val => {
-			this.$set( val, "info", '正常状态');
+		let state = this.state	
+		this.chartData.rows.forEach( val => {	
+			for ( let key in val ) {
+				if ( key !== 'date' ) {
+					let normal = state[key].normal;
+					let warn = state[key].warn;
+					let vaule = val[key];
+					val[key] = {};
+					this.$set(val[key], "value", vaule);
+					// console.log( key )														
+					if ( vaule >= normal[0] && vaule <= normal[1] ) {
+						this.$set( val[key], "state", 1);					
+						this.$set( val[key], "info", '正常状态');
+					} else if ( vaule >= warn[0] && vaule <= warn[1] ) {	
+						this.$set( val[key], "state", 2);					
+						this.$set( val[key], "info", '警告状态');							
+					} else {
+						this.$set( val[key], "state", 3);					
+						this.$set( val[key], "info", '异常状态');
+					}	
+				}
+			}
 		});
+		// console.log( this.chartData.rows )
     },  
 
     methods: {
 		stateInfo( data ) {
-			if ( data.state === 0 ) {
-				data.info = "正常状态"
+			if ( data === 1 ) {
 				return 'success'
-			} else {
-				data.info = "警告状态"		
+			} else {	
 				return 'warning'				
 			}
 		}
