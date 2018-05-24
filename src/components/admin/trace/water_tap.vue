@@ -45,13 +45,13 @@
 			:stripe="true"
 			>
 			<el-table-column
-			prop="日期"
+			prop="date"
 			label="日期"
 			align="center"
 			>
 			</el-table-column>
 			<el-table-column
-			prop="质量"
+			prop="quality"
 			label="质量"
 			align="center"			
 			>
@@ -62,7 +62,7 @@
 			align="center"			
 			>
 				<template slot-scope="scope">
-					<el-tag :type="stateInfo( scope.row.state )">{{info}}</el-tag>
+					<el-tag :type="stateInfo( scope.row )">{{scope.row.info}}</el-tag>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -71,8 +71,6 @@
 
 <script>
 import VeLine from 'v-charts/lib/line'
-import VeHistogram from 'v-charts/lib/histogram'
-import VePie from 'v-charts/lib/pie'
 import AreaSelect from './area_select'
 
 
@@ -85,14 +83,14 @@ export default {
 	data () {
 		return {
 			chartData: {
-				columns: ['日期', '质量'],
+				columns: ['date', 'quality'],
 				rows: [
-					{ '日期': '2018-01-03 21:33', '质量': 123, state: 0 },
-					{ '日期': '2018-01-03 21:31', '质量': 1223, state: 1},
-					{ '日期': '2018-01-03 21:29', '质量': 2123, state: 1},
-					{ '日期': '2018-01-03 21:27', '质量': 4123, state: 1},
-					{ '日期': '2018-01-03 21:25', '质量': 3123, state: 1},
-					{ '日期': '2018-01-03 21:23', '质量': 7123, state: 1}
+					{ date: '2018-01-03 21:33', quality: 123, state: 0 },
+					{ date: '2018-01-03 21:31', quality: 1223, state: 1},
+					{ date: '2018-01-03 21:29', quality: 2123, state: 1},
+					{ date: '2018-01-03 21:27', quality: 4123, state: 1},
+					{ date: '2018-01-03 21:25', quality: 3123, state: 1},
+					{ date: '2018-01-03 21:23', quality: 7123, state: 1}
 				]
 			},
 
@@ -104,13 +102,13 @@ export default {
 			chartSettings: {
 				
 			},
-
-			info: '',
 		}
 	},
 
     created () {
-
+		this.chartData.rows.forEach( val => {
+			this.$set( val, "info", '正常状态');
+		});
         // this.chartData2 = {
         //     columns: ['日期', '成本', '利润', '占比', '其他'],
         //     rows: [
@@ -155,11 +153,11 @@ export default {
 			}
 		},
 		stateInfo( data ) {
-			if ( data === 0 ) {
-				this.info = "正常状态"
+			if ( data.state === 0 ) {
+				data.info = "正常状态"
 				return 'success'
 			} else {
-				this.info = "警告状态"				
+				data.info = "警告状态"		
 				return 'warning'				
 			}
 		}
