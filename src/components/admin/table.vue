@@ -237,8 +237,8 @@ export default {
                 'nutrition/breed': patchBreeding,
                 'nutrition/stage': patchStage,
                 'health/antiscolic': patchAntiscolic,
-                'health/disinfect': patchAntiscolic,
-                'health/immune': patchAntiscolic
+                'health/disinfect': patchDisinfect,
+                'health/immune': patchImmune
             }
             let professorMap = {
                 welfare: patchProWelfare,
@@ -246,8 +246,8 @@ export default {
                 'nutrition/breed': patchProBreeding,
                 'nutrition/stage': patchProStage,
                 'health/antiscolic': patchProAntiscolic,
-                'health/disinfect': patchProAntiscolic,
-                'health/immune': patchProAntiscolic
+                'health/disinfect': patchProDisinfect,
+                'health/immune': patchProImmune
             }
             let data = {
                 unpassReason: '',
@@ -255,6 +255,7 @@ export default {
                 professor: this.$route.params.id
             }
             // userRole 20羊场监督员
+            console.log(this.checkModule)
             if (this.user.userRole == 20) {
                 data.ispassSup = isPass
                 superviseMap[this.checkModule](id, data).then(res => {

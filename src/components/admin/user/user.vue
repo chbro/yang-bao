@@ -36,6 +36,12 @@ export default {
         BasicInfo
     },
 
+    mounted () {
+        if (Object.keys(this.user).length) {
+            this.models = this.user
+        }
+    },
+
     data () {
         let getQ = (q, cb) => {
             let data = [

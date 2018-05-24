@@ -9,10 +9,10 @@
             <p>登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
-                    <el-input :autofocus="true" :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name"></el-input>
+                    <el-input :autofocus="true" :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name" class="login-input-username"></el-input>
                 </el-form-item>
 
-                <el-form-item prop="pass">
+                <el-form-item prop="pass" class="login-input-password">
                     <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
                 </el-form-item>
 
@@ -154,4 +154,9 @@ export default {
         color #ffffff
     .link a
         color #ffffff
+
+    .login-input-password,
+    .login-input-username
+        input
+            box-shadow: 0 0 0 400px #fff inset;
 </style>
