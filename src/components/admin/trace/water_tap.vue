@@ -3,7 +3,7 @@
 		<area-select></area-select>
         <div class="trace-charts">
             <div>
-                <ve-histogram :data="chartData" :settings="chartSettings" width="500px" height="500px"></ve-histogram>
+                <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend" width="500px" height="500px"></ve-histogram>
             </div>
         </div>
 		<state-info :data="chartData.rows[0].quality" :state="state.quality"  label="质量"></state-info>
@@ -64,8 +64,6 @@ export default {
 					{ date: '2018-01-03 21:31', ph:6.0, quality: 123, state: 1},
 					{ date: '2018-01-03 21:29', ph:8.0, quality: 2123, state: 1},
 					{ date: '2018-01-03 21:27', ph:6.0, quality: 4123, state: 1},
-					{ date: '2018-01-03 21:25', ph:7.0, quality: 3123, state: 1},
-					{ date: '2018-01-03 21:23', ph:7.0, quality: 7123, state: 1}
 				]
 			},
 
@@ -87,10 +85,17 @@ export default {
 				labelMap: {
 					quality: '质量',
 					ph: 'PH值'
-				},
-				
-			},
-		}
+				}
+			},			
+			chartExtend : {
+				series (v) {
+					v.forEach(i => {
+						i.barWidth = 20
+					})
+					return v
+				}
+			}
+		}		
 	},
 
     created () {
