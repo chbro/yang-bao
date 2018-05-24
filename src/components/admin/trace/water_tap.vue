@@ -84,6 +84,11 @@ export default {
 				axisSite: {
 					right: ['ph']
 				},
+				labelMap: {
+					quality: '质量',
+					ph: 'PH值'
+				},
+				
 			},
 		}
 	},

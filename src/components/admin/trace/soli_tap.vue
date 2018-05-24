@@ -84,6 +84,10 @@ export default {
 				axisSite: {
 					right: ['damp']
 				},
+				labelMap: {
+					temp: '温度',
+					damp: '湿度'
+				}
 			},
 		}
 	},
