@@ -3,12 +3,12 @@
 		<area-select></area-select>
         <div class="trace-charts">
             <div>
-                <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend"  width="500px" height="500px"></ve-histogram>
+                <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend"  width="400px" height="400px"></ve-histogram>
             </div>
         </div>
-		<state-info :data="chartData.rows[0].temp" :state="state.temp"  label="温度"></state-info>
-		<state-info :data="chartData.rows[0].damp" :state="state.damp"  label="湿度"></state-info>	
-		 <el-table
+		<state-info :data="chartData.rows[0].temp.value" :state="state.temp"  label="温度"></state-info>
+		<state-info :data="chartData.rows[0].damp.value" :state="state.damp"  label="湿度"></state-info>	
+		<el-table
 			:data="chartData.rows"
 			:stripe="true"
 			>
@@ -19,24 +19,31 @@
 			>
 			</el-table-column>
 			<el-table-column
-			prop="temp"
+			prop="temp.value"
 			label="温度"
 			align="center"			
 			>
 			</el-table-column>
 			<el-table-column
-			prop="damp"
+			label="温度状态"
+			align="center"			
+			>
+				<template slot-scope="scope">
+					<el-tag :type="stateInfo( scope.row.temp.state )">{{scope.row.temp.info}}</el-tag>
+				</template>
+			</el-table-column>
+			<el-table-column
+			prop="damp.value"
 			label="湿度"
 			align="center"			
 			>
 			</el-table-column>
 			<el-table-column
-			prop="state"
-			label="状态"
+			label="湿度状态"
 			align="center"			
 			>
 				<template slot-scope="scope">
-					<el-tag :type="stateInfo( scope.row )">{{scope.row.info}}</el-tag>
+					<el-tag :type="stateInfo( scope.row.damp.state )">{{scope.row.damp.info}}</el-tag>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -60,12 +67,10 @@ export default {
 			chartData: {
 				columns: ['date', 'temp', 'damp'],
 				rows: [
-					{ date: '2018-01-03 21:33', temp:25, damp: 83, state: 0 },
-					{ date: '2018-01-03 21:31', temp:28, damp: 50, state: 1},
-					{ date: '2018-01-03 21:29', temp:26, damp: 60, state: 1},
-					{ date: '2018-01-03 21:27', temp:20, damp: 70, state: 1},
-					{ date: '2018-01-03 21:25', temp:23, damp: 80, state: 1},
-					{ date: '2018-01-03 21:23', temp:27, damp: 83, state: 1}
+					{ date: '2018-01-03 21:33', temp:25, damp: 83},
+					{ date: '2018-01-03 21:31', temp:28, damp: 50},
+					{ date: '2018-01-03 21:29', temp:26, damp: 60},
+					{ date: '2018-01-03 21:27', temp:20, damp: 70},
 				]
 			},
 
@@ -102,18 +107,36 @@ export default {
 	},
 
     created () {
-		this.chartData.rows.forEach( val => {
-			this.$set( val, "info", '正常状态');
+		let state = this.state	
+		this.chartData.rows.forEach( val => {	
+			for ( let key in val ) {
+				if ( key !== 'date' ) {
+					let normal = state[key].normal;
+					let warn = state[key].warn;
+					let vaule = val[key];
+					val[key] = {};
+					this.$set(val[key], "value", vaule);
+					 console.log( normal[0] )														
+					if ( vaule >= normal[0] && vaule <= normal[1] ) {
+						this.$set( val[key], "state", 1);					
+						this.$set( val[key], "info", '正常状态');
+					} else if ( vaule >= warn[0] && vaule <= warn[1] ) {	
+						this.$set( val[key], "state", 2);					
+						this.$set( val[key], "info", '警告状态');							
+					} else {
+						this.$set( val[key], "state", 3);					
+						this.$set( val[key], "info", '异常状态');
+					}	
+				}
+			}
 		});
     },  
 
     methods: {
 		stateInfo( data ) {
-			if ( data.state === 0 ) {
-				data.info = "正常状态"
+			if ( data === 1 ) {
 				return 'success'
-			} else {
-				data.info = "警告状态"		
+			} else {	
 				return 'warning'				
 			}
 		}
@@ -124,7 +147,8 @@ export default {
 <style lang="stylus" scoped>
 .trace-charts
 	display inline-block
-	margin-left 80px
+	margin-left 50px
+	margin-right 10px
 	font-size 0
 	>div
 		display inline-block
