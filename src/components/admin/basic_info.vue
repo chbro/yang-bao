@@ -37,9 +37,9 @@
                     </el-autocomplete>
                 </div>
 
-                <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'selectYN'" class="time el-input-group select">
+                <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'selectYN'" class="time el-input-group select" >
                     <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <el-select size="small" v-model="models[item.model]">
+                    <el-select size="small" v-model="models[item.model]" style="width: 95px;" >
                         <el-option label="是" value="1"></el-option>
                         <el-option label="否" value="0"></el-option>                        
                     </el-select>
@@ -159,4 +159,8 @@ export default {
 .radios-el
     display inline-block
     vertical-align middle
+.el-input-group
+    width: calc((100% - 60px) / 2) !important    
+.admin-form .time .time-span+.el-input
+    width: 255px !important    
 </style>
