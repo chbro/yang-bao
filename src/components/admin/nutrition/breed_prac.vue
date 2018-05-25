@@ -1,7 +1,7 @@
 <template>
     <div>
         <data-cur
-            title="配种产子实施档案----配种"
+            title="配种产子实施档案"
             modpath="nutrition/breed"
             @update:models="v => models = v"
             :models.sync="models"
@@ -10,30 +10,6 @@
             :get-data="getBreeding"
             :post-data="postBreeding1"
             :update-data="updateBreeding">
-        </data-cur>
-        <data-cur
-            title="配种产子实施档案----产前免疫"
-            modpath="nutrition/breed"
-            @update:models="v => models = v"
-            :models.sync="models"
-            :items="items_2"
-            :has-remark="false"
-            :get-data="getBreeding"
-            :post-data="postBreeding1"
-            :update-data="updateBreeding"
-            class="data-cur-2">
-        </data-cur>
-        <data-cur
-            title="配种产子实施档案----产子"
-            modpath="nutrition/breed"
-            @update:models="v => models = v"
-            :models.sync="models"
-            :items="items_3"
-            :has-remark="false"
-            :get-data="getBreeding"
-            :post-data="postBreeding1"
-            :update-data="updateBreeding"
-            class="data-cur-2">
         </data-cur>
     </div>
 </template>
@@ -53,23 +29,25 @@ export default {
             postBreeding1,
             updateBreeding,
             items: [
+                {label: '配种时间', model: 'breedingT', type: 'time'},
                 {label: '配种后移至栏/栋', model: 'building'},
                 {label: '母羊商标耳牌', model: 'mEtB'},
-                {label: '种公商标耳牌', model: 'fEtB', mr: 1},
-                {label: '配种时间', model: 'breedingT', type: 'time'},
-                {label: '妊娠时间', model: 'gestationT', type: 'time'},
-                {label: '备注', model: 'info'},                
-            ],
-            items_2: [
-                {label: '产前免疫种类', model: 'prenatalTP'},                
-                {label: '产前免疫时间', model: 'prenatalIT', type: 'time'},
-                {label: '备注', model: 'info'},                                
-            ],
-            items_3: [
-                {label: '移至待产栏/栋', model: 'building'},
-                {label: '产羔时间', model: 'lambingTime', type: 'time'},
-                {label: '产羔数量', model: 'lambingNum'},
-                {label: '备注', model: 'info'}
+                {label: '种公商标耳牌', model: 'fEtB'},
+                {label: '管理批次(前后五天内配种，分批次管理)', modal: 'manage'},
+                {label: '批次平均分配配种日期', modal: 'manage', type: 'time'},   
+                {label: '是否执行妊娠前期营养标准(妊娠前三月)', modal: 'manage', type:'selectYN'},
+                {label: '确定妊娠(配种后20天)', modal: 'manage'},                                                
+                {label: '是否执行妊娠后期营养标准(妊娠后两月)', modal: 'manage', type:'selectYN'},
+                {label: '产前免疫种类(产前10|20天)', modal: 'manage'},
+                {label: '产前免疫时间', modal: 'manage', type: 'time'},   
+                {label: '移至待产栏/栋', model: 'building'},                               
+                {label: '是否执行产期营养标准(产前一周)', modal: 'manage', type:'selectYN'}, 
+                {label: '产羔时间', modal: 'manage', type: 'time'},
+                {label: '产羔数量', modal: 'manage', type: 'number'},                
+                {label: '是否执行哺乳期营养标准(产后一周)', modal: 'manage', type:'selectYN'},
+                {label: '是否执行羔羊代乳料营养标准(羔羊一月龄)', modal: 'manage', type:'selectYN'},       
+                {label: '是否执行断奶前母羊营养标准(断奶前一周)', modal: 'manage', type:'selectYN'},
+                {label: '是否执行羔羊断奶期营养标准', modal: 'manage', type:'selectYN'},
             ],
             models: {
                 building: null,
