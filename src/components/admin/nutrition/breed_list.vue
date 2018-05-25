@@ -4,9 +4,7 @@
             modpath="nutrition/breed"
             :getData="getAllBreeding"
             :deleteData="deleteBreeding"
-            :headers1="headers_1"
-            :headers2="headers_2"
-            :headers3="headers_3">            >
+            :headers="headers">            
         </admin-table>
     </div>
 </template>
@@ -24,33 +22,28 @@ export default {
         return {
             getAllBreeding,
             deleteBreeding,
-            headers_1: [
+            headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},
+                {label: '配种时间', prop: 'breedingT'},
                 {label: '配种后移至栏/栋', prop: 'building'},
                 {label: '母羊商标耳牌', prop: 'mEtB'},
                 {label: '种公商标耳牌', prop: 'fEtB'},
-                {label: '配种时间', prop: 'breedingT'},
-                {label: '妊娠时间', prop: 'gestationT'},           
-                {prop: 'operatorName', label: '操作人员'},
-                {prop: 'professor', label: '技术审核'},
-                {prop: 'supervisor', label: '监督执行'},
-                {prop: 'remark', label: '备注'}
-            ],
-            headers_3: [
-                {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {label: '移至待产栏/栋', prop: 'building'},
-                {label: '产羔时间', prop: 'breedingT'},
-                {label: '产羔数量', prop: 'gestationT'},             
-                {prop: 'operatorName', label: '操作人员'},
-                {prop: 'professor', label: '技术审核'},
-                {prop: 'supervisor', label: '监督执行'},
-                {prop: 'remark', label: '备注'}
-            ],
-            headers_2: [
-                {prop: 'ispassCheck', label: '审核状态', width: '80'},
-                {label: '产前免疫种类', prop: 'prenatalIT'},
-                {label: '产前免疫时间', prop: 'prenatalIT'},     
+                {label: '管理批次(前后五天内配种，分批次管理)', prop: 'manage'},
+                {label: '批次平均分配配种日期', prop: 'manage'},   
+                {label: '是否执行妊娠前期营养标准(妊娠前三月)', prop: 'manage'},
+                {label: '确定妊娠(配种后20天)', prop: 'manage'},                                                
+                {label: '是否执行妊娠后期营养标准(妊娠后两月)', prop: 'manage'},
+                {label: '产前免疫种类(产前10|20天)', prop: 'manage'},
+                {label: '产前免疫时间', prop: 'manage'},   
+                {label: '移至待产栏/栋', model: 'building'},                               
+                {label: '是否执行产期营养标准(产前一周)', prop: 'manage'}, 
+                {label: '产羔时间', prop: 'manage'},
+                {label: '产羔数量', prop: 'manage'},                
+                {label: '是否执行哺乳期营养标准(产后一周)', prop: 'manage'},
+                {label: '是否执行羔羊代乳料营养标准(羔羊一月龄)', prop: 'manage'},       
+                {label: '是否执行断奶前母羊营养标准(断奶前一周)', prop: 'manage'},
+                {label: '是否执行羔羊断奶期营养标准', prop: 'manage'},          
                 {prop: 'operatorName', label: '操作人员'},
                 {prop: 'professor', label: '技术审核'},
                 {prop: 'supervisor', label: '监督执行'},

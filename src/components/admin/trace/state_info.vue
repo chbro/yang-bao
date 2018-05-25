@@ -68,7 +68,9 @@ export default {
 <style lang="stylus" scoped>
 .state-info
 	display inline-block
-	margin-left 80px
+	margin-left 10px
+	p
+		margin-left 12px
 	>div
 		margin-bottom 10px
 		.el-tag

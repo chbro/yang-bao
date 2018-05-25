@@ -3,7 +3,7 @@
 		<area-select></area-select>
         <div class="trace-charts">
             <div>
-                <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend" width="500px" height="500px"></ve-histogram>
+                <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend" width="400px" height="400px"></ve-histogram>
             </div>
         </div>
 		<state-info :data="chartData.rows[0].quality.value" :state="state.quality"  label="质量"></state-info>
@@ -147,7 +147,8 @@ export default {
 <style lang="stylus" scoped>
 .trace-charts
 	display inline-block
-	margin-left 80px
+	margin-left 50px
+	margin-right 10px
 	font-size 0
 	>div
 		display inline-block
