@@ -158,9 +158,5 @@ export default {
 <style lang="stylus">
 .radios-el
     display inline-block
-    vertical-align middle
-.el-input-group
-    width: calc((100% - 60px) / 2) !important    
-.admin-form .time .time-span+.el-input
-    width: 255px !important    
+    vertical-align middle 
 </style>
