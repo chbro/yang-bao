@@ -6,13 +6,13 @@
         </div>
 
         <div class="box">
-            <p>登 录</p>
+            <p @click="testWithoutCode = true">登 录</p>
             <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
                 <el-form-item prop="username">
                     <el-input :autofocus="true" :minlength="4" :maxlength="20" type="text" v-model="ruleForm.username" auto-complete="off" placeholder="用户名/Login Name" class="login-input-username"></el-input>
                 </el-form-item>
 
-                <el-form-item prop="pass" class="login-input-password">
+                <el-form-item @keypress.native.enter="submitForm('ruleForm')" prop="pass" class="login-input-password">
                     <el-input :minlength="6" :maxlength="20" type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="密码/Password"></el-input>
                 </el-form-item>
 
@@ -61,16 +61,21 @@ export default {
             }
         }
         let validateCode = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请输入验证码'))
-            } else if (value.toLowerCase() !== this.identifyCode.toLowerCase()) {
-                callback(new Error('验证码不正确'))
-            } else {
+            if (this.testWithoutCode) {
                 callback()
+            } else {
+                if (value === '') {
+                    callback(new Error('请输入验证码'))
+                } else if (value.toLowerCase() !== this.identifyCode.toLowerCase()) {
+                    callback(new Error('验证码不正确'))
+                } else {
+                    callback()
+                }
             }
         }
 
         return {
+            testWithoutCode: false,
             ruleForm: {
                 username: '',
                 pass: '',

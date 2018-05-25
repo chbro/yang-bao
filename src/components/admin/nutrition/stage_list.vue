@@ -2,6 +2,9 @@
   <div class="mod_stageList">
     <admin-table
       modpath="nutrition/stage"
+      hide-view
+      has-common-tail-header
+      has-common-header
       :headers="headers"
       :getData="getAllStages"
       :deleteData="deleteStage">
@@ -23,9 +26,6 @@
         getAllStages,
         deleteStage,
         headers: [
-          { label: '提交时间', prop: 'gmtCreate' },
-          { label: '养殖场', prop: 'factoryName' },
-          { label: '审核状态', prop: 'ispassCheck' },
           { label: '栏/栋', prop: 'building' },
           { label: '使用日期', prop: 'nutritionT', width: 200 },
           { label: '羊数', prop: 'quantity' },
@@ -57,12 +57,7 @@
           ]},
           { label: '饮水', prop: 'water' },
           { label: '备注', prop: 'remark' }
-        ],
-
-        load: true,
-        tableData: [],
-        page: 1,
-        total: 1
+        ]
       }
     }
   }

@@ -23,28 +23,33 @@ export default {
         dataCur
     },
 
+    watch: {
+        'models.sex' (newV) {
+            this.models.tradeMarkEartag = newV ? 'M' : 'G'
+        }
+    },
+
     data () {
         return {
             getGeneaRec,
             postGeneaRec,
             updateGeneaRec,
             items: [
-                {label: '原耳牌', model: 'nativeEartag'},
-                {label: '免疫耳牌', model: 'immuneEartag'},
-                {label: '商标耳牌', model: 'tradeMarkEartag', mr: true, trade: true},
-                {label: '种羊基地', model: 'breedingSheepBase'},
-                {label: '初登时间', model: 'birthTime', type: 'time'},
-                {label: '初登体重', model: 'birthWeight', mr: true},
-                {label: '颜色', model: 'color'},
                 {label: '性别', model: 'sex', type: 'radio'},
-                {label: '父号', model: 'eartagOfFather', mr: true},
+                {label: '原耳牌', model: 'nativeEartag'},
+                {label: '免疫耳牌', model: 'immuneEartag', mr: 1},
+                {label: '商标耳牌', model: 'tradeMarkEartag', trade: true},
+                {label: '种羊基地', model: 'breedingSheepBase'},
+                {label: '初登时间', model: 'birthTime', type: 'time', mr: 1},
+                {label: '初登体重', model: 'birthWeight'},
+                {label: '颜色', model: 'color'},
+                {label: '父号', model: 'eartagOfFather', mr: 1},
                 {label: '母号', model: 'eartagOfMother'},
                 {label: '父父号', model: 'eartagOfFathersFather'},
-                {label: '父母号', model: 'eartagOfFathersMother', mr: true},
+                {label: '父母号', model: 'eartagOfFathersMother', mr: 1},
                 {label: '母父号', model: 'eartagOfMothersFather'},
                 {label: '母母号', model: 'eartagOfMothersMother'},
-                {label: '品种名', model: 'typeName', mr: true, type: 'select', fetchSuggestions: getTypeName}
-                
+                {label: '品种名', model: 'typeName', type: 'select', fetchSuggestions: getTypeName, mr: 1}
             ],
             // 用于检查字段值是否填写，所以均初始化为null
             models: {

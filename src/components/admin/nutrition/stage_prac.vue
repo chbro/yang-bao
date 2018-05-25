@@ -9,17 +9,17 @@
             <div class="border-main">
                 <div v-for="(item, i) in card.items" :key="i" class="card-item">
                     <template v-for="(input, j) in item.inputs">
-                        <el-input :value="input" @change="change(val, index, i, j)" placeholder="名称和百分比" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
+                        <el-input :value="input" @change="change(input, index, i, j)" :placeholder="item.placeholder || '名称和百分比'" :key="j" v-if="item.type === undefined || item.type === 'text'" size="small" :ref="item.model + '-' + j">
                             <template slot="prepend">{{ item.label }}:</template>
                         </el-input>
                         <div :key="j" v-else-if="item.type === 'select'" class="time el-input-group select">
                             <span class="time-span" v-text="item.label + ':'"></span>
                             <!-- v-model="models[item.model]" -->
                             <el-autocomplete
-                                @select="change(val, index, i, j)"
+                                @select="item => change(item.value, index, i, j)"
                                 :value="input"
                                 :ref="item.model + '-' + j"
-                                placeholder="名称和百分比"
+                                :placeholder="item.placeholder || '名称和百分比'"
                                 size="small"
                                 :fetch-suggestions="item.fetchSuggestions">
                             </el-autocomplete>
@@ -99,11 +99,11 @@ export default {
                 // 临时添加，%
                 {title: '精料配方(%)', items: [
                     {label: '添加剂', model: 'materialA', inputs: ['']},
-                    {label: '精料', model: 'materialM', inputs: ['']},
+                    {label: '精料', model: 'materialM', inputs: [''], type: 'select', fetchSuggestions: getConFeed},
                     {label: '其他', model: 'materialO', inputs: ['']}
                 ]},
                 {title: '精料用量(体重%)', items: [
-                    {label: '精料', model: 'materialWM', type: 'select', fetchSuggestions: getConFeed, inputs: ['']},
+                    {label: '精料', model: 'materialWM', inputs: ['']},
                     {label: '其他', model: 'materialWO', inputs: ['']}
                 ]},
                 {title: '粗饲料配方(%)', items: [
@@ -117,9 +117,9 @@ export default {
                     {label: '其他', model: 'roughageWO', inputs: ['']}
                 ]},
                 {title: '领料总量', items: [
-                    {label: '精料', model: 'pickingM', inputs: ['']},
-                    {label: '粗料', model: 'pickingR', inputs: ['']},
-                    {label: '其他', model: 'pickingO', inputs: ['']}
+                    {label: '精料', model: 'pickingM', inputs: [''], placeholder: '名称和单位（斤 / 公斤）'},
+                    {label: '粗料', model: 'pickingR', inputs: [''], placeholder: '名称和单位（斤 / 公斤）'},
+                    {label: '其他', model: 'pickingO', inputs: [''], placeholder: '名称和单位（斤 / 公斤）'}
                 ]}
             ],
             disableBtn: false,

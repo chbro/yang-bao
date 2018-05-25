@@ -2,6 +2,8 @@
     <div>
         <admin-table
             modpath="health/antiscolic"
+            has-common-tail-header
+            has-common-header
             :get-data="getAllAntiscolic"
             :delete-data="deleteAntiscolic"
             :headers="headers">
@@ -23,17 +25,12 @@ export default {
             getAllAntiscolic,
             deleteAntiscolic,
             headers: [
-                {prop: 'ispassCheck', label: '审核状态'},
-                {prop: 'factoryName', label: '养殖场'},
                 {prop: 'crowdNum', label: '驱虫羊(群)'},
                 {prop: 'eartagFile', label: '耳牌附件号'},
                 {prop: 'repellentTime', label: '驱虫时间', width: 200},
                 {prop: 'repellentName', label: '药物名称', width: 160},
                 {prop: 'repellentWay', label: '给药途径', width: '160'},
                 {prop: 'dose', label: '给药剂量(ml)'},
-                {prop: 'operatorName', label: '操作人员'},
-                {prop: 'professor', label: '技术审核'},
-                {prop: 'supervisor', label: '监督执行'},
                 {prop: 'remark', label: '备注', width: '200'}
             ]
         }

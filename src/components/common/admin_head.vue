@@ -21,10 +21,12 @@
                 <div class="u-info">
                     <span>用户：{{username}}</span>
                     <span>部门：{{department}}</span>
+                    <span>姓名：{{name}}</span>
+                    <span>角色：{{rolename}}</span>
                 </div>
-                <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span>
+                <!-- <span @click="refresh()"><i class="el-icon-refresh"></i>刷新</span> -->
                 <!-- <span><i class="iconfont icon-user yellow"></i>通讯录</span> -->
-                <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span>
+                <!-- <span @click="logout()"><i class="iconfont icon-icon_users"></i>注销</span> -->
             </div>
         </div>
     </div>
@@ -40,6 +42,12 @@ export default {
             type: String
         },
         department: {
+            type: String
+        },
+        name: {
+            type: String
+        },
+        rolename: {
             type: String
         }
     },
@@ -148,5 +156,5 @@ export default {
                 color #bdbd34
     .u-info
         display inline-block
-        width 390px
+        max-width 600px
 </style>

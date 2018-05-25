@@ -2,6 +2,8 @@
     <div>
         <admin-table
             modpath="prevention"
+            has-common-header
+            has-common-tail-header
             :getData="getAllPrevention"
             :deleteData="deletePrevention"
             :headers="headers">
@@ -31,9 +33,6 @@ export default {
                 {label: '治疗方案及用药剂量', prop: 'diagnosisMethod'},
                 {label: '总用药量',prop: 'dose'},
                 {label: '治疗效果',prop: 'treatEffect'},
-                {prop: 'operatorName', label: '操作人员'},
-                {prop: 'professor', label: '技术审核'},
-                {prop: 'supervisor', label: '监督执行'},
                 {prop: 'remark', label: '备注', width: '200'}
             ]
         }

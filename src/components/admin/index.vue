@@ -1,6 +1,6 @@
 <template>
     <div class="app-home">
-        <admin-head :username="user.pkUserid" :department="user.factoryName"></admin-head>
+        <admin-head :username="user.pkUserid" :department="user.factoryName" :name="user.userRealname" :rolename="user.roleName"></admin-head>
         <el-container class="container bg-blue">
             <el-aside :width="side_width" class="main-aside">
                 <el-tree node-key="to" :default-expanded-keys="expanded_key" :data="treedata" :indent="30" accordion @node-click="clickTree"></el-tree>
@@ -24,7 +24,7 @@
                                 <el-button v-if="isProdModule()" class="admin-hl hl-btn" type="primary" @click="changeActive(module, 1)">{{ module.label }}列表</el-button>
                             </div>
                             <div class="options" v-else>
-                                <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" type="primary" @click="checkMod = item.mod">{{ item.label }}</el-button>
+                                <el-button v-for="(item, i) in production" :key="i" class="admin-hl hl-btn" :class="{'active-prod': item.active}" type="primary" @click="activateProd(item, i)">{{ item.label }}</el-button>
                             </div>
    <!--                          <el-input class="search" placeholder="方案搜索" v-model="search_key" size="small">
                                 <el-button slot="append" icon="el-icon-search">搜索</el-button>
@@ -81,7 +81,7 @@ export default {
                     {label: '客户评价', to: 'comment'},
                     {label: '专家在线课堂', to: 'courseintro'},
                     {label: '生产档案审核', to: 'review'},
-                    {lable: '审核', to: 'reviewSheep'},
+                    // {label: '审核', to: 'reviewSheep'},
                     {label: '在线诊断', to: 'prochat'}
                 ]
             },
@@ -151,7 +151,7 @@ export default {
             isProCheck: false,
             // 审核7大生产环节
             production: [
-                {label: '卫生与动物福利', mod: 'welfare'},
+                {label: '卫生与动物福利', mod: 'welfare', active: true},
                 {label: '消毒', mod: 'health/disinfect'},
                 {label: '免疫', mod: 'health/immune'},
                 {label: '驱虫', mod: 'health/antiscolic'},
@@ -215,7 +215,7 @@ export default {
                 break
             }
         }
-        console.log(mod, submod)
+        // console.log(mod, submod)
         // if (!child) {
         //     arr.push({text: })
         // }
@@ -245,8 +245,10 @@ export default {
     },
 
     methods: {
-        checkModule (item) {
-            console.log(item)
+        activateProd (item, idx) {
+            this.checkMod = item.mod
+            this.production.find(v => v.active && delete v.active)
+            this.production[idx].active = true
         },
 
         isProdModule () {
@@ -438,10 +440,9 @@ export default {
             border-bottom-left-radius 0
             border-bottom-right-radius 0
 
-        .active
-            border 1px solid #fff
-            border-bottom 0
-            color #fff
-            background-color color-main
+        .active-prod
+            background: rgb(83, 167, 218);
+            border-color: rgb(83, 167, 218);
+            color: #fff;
 
 </style>

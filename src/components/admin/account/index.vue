@@ -115,7 +115,8 @@ export default {
             headers: [
                 {label: '单位', prop: 'factoryName'},
                 {label: '用户名', prop: 'pkUserid'},
-                {label: '用户角色', prop: 'userRole'},
+                {label: '用户姓名', prop: 'userRealname'},
+                {label: '角色名', prop: 'roleName'},
                 {label: '角色编号', prop: 'userRole'},
                 {label: '手机号', prop: 'userTelephone'},
                 {label: '办公电话', prop: 'officialPhone'},

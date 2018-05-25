@@ -3,6 +3,8 @@
         <admin-table
             is-check
             hide-eartag-filter
+            has-common-header
+            has-common-tail-header
             modpath="review"
             :check-module="this.checkModule"
             :get-data="getData"
@@ -99,12 +101,6 @@ let mapHeaders = {
     ]
 }
 Object.keys(mapHeaders).forEach(v => {
-    mapHeaders[v].unshift({ label: '提交时间', prop: 'gmtCreate' })
-    mapHeaders[v].unshift({ label: '养殖场', prop: 'factoryName' })
-    mapHeaders[v].unshift({ label: '审核状态', prop: 'ispassCheck' })
-    mapHeaders[v].push({prop: 'operatorName', label: '操作人员'})
-    mapHeaders[v].push({prop: 'professor', label: '技术审核'})
-    mapHeaders[v].push({prop: 'supervisor', label: '监督执行'})
     mapHeaders[v].push({prop: 'remark', label: '备注', width: 200})
 })
 export default {

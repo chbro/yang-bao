@@ -34,6 +34,26 @@
             tooltip-effect="dark"
             class="admin-table"
             :data="tableData">
+            <template v-if="hasCommonHeader">
+                <el-table-column
+                    align='center'
+                    width="150"
+                    prop="ispassCheck"
+                    label="审核状态">
+                </el-table-column>
+                <el-table-column
+                    align='center'
+                    width="150"
+                    prop="factoryName"
+                    label="养殖场">
+                </el-table-column>
+                <el-table-column
+                    align='center'
+                    width="200"
+                    prop="gmtCreate"
+                    label="提交时间">
+                </el-table-column>
+            </template>
             <el-table-column
                 show-overflow-tooltip
                 v-for="(th, i) in headers"
@@ -51,6 +71,26 @@
                     :width="thc.width || 150">
                 </el-table-column>
             </el-table-column>
+            <template v-if="hasCommonTailHeader">
+                <el-table-column
+                    align='center'
+                    width="150"
+                    prop="operatorName"
+                    label="操作人员">
+                </el-table-column>
+                <el-table-column
+                    align='center'
+                    width="150"
+                    :prop="isProName ? 'professorName' : 'professor'"
+                    label="技术审核">
+                </el-table-column>
+                <el-table-column
+                    align='center'
+                    width="150"
+                    :prop="isProName ? 'supervisor' : 'supervisorName'"
+                    label="监督执行">
+                </el-table-column>
+            </template>
             <el-table-column
                 v-if="hasSup"
                 align='center'
@@ -184,10 +224,24 @@ export default {
         hasSup: {
             type: Boolean,
             default: true
+        },
+        // 是否有公用尾部表头
+        hasCommonTailHeader: {
+            type: Boolean,
+            default: false
+        },
+        // 是否有公用首部表头
+        hasCommonHeader: {
+            type: Boolean,
+            default: false
         }
     },
 
     watch: {
+        checkModule (newM) {
+            this.isProName = ['prevention', 'nutrition/stage'].includes(newM)
+        },
+
         getData (newV) {
             this.fetchData()
         }
@@ -204,6 +258,7 @@ export default {
 
     data () {
         return {
+            isProName: false,
             load: true, // 是否显示loading动画
             page: 1, // 当前页码
             total: 10, // 总共数据条数
@@ -225,11 +280,7 @@ export default {
 
     methods: {
         Spv (isPass, idx) {
-            let {id, ispassCheck} = this.tableData[idx]
-            if (ispassCheck !== '未审核') {
-                this.$message.warning('该条记录已审核')
-                return
-            }
+            let {id, ispassCheck, ispassSup} = this.tableData[idx]
 
             let superviseMap = {
                 welfare: patchWelfare,
@@ -252,21 +303,32 @@ export default {
             let data = {
                 unpassReason: '',
                 factoryNum: this.user.userFactory,
-                professor: this.$route.params.id
+                name: this.user.userRealname
             }
             // userRole 20羊场监督员
-            console.log(this.checkModule)
             if (this.user.userRole == 20) {
+                if (ispassSup !== '未检查') {
+                    this.$message.warning('该条记录已检查')
+                    return
+                }
+                data.supervisor = +this.$route.params.id
+
                 data.ispassSup = isPass
                 superviseMap[this.checkModule](id, data).then(res => {
                     if (isReqSuccessful(res)) {
                         this.$message.success('监督执行成功')
-                        // this.tableData[idx].ispassCheck = isPass ? '已执行' : '未执行'
+                        this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
                     }
                 }, _ => {
                     this.$message.error('监督执行失败')
                 })
             } else {
+                if (ispassCheck !== '未审核') {
+                    this.$message.warning('该条记录已审核')
+                    return
+                }
+                data.professor = +this.$route.params.id
+
                 data.ispassCheck = isPass
                 professorMap[this.checkModule](id, data).then(res => {
                     if (isReqSuccessful(res)) {
@@ -409,10 +471,14 @@ export default {
         },
 
         deleteItem (index) {
+            let { id, ispassCheck } = this.tableData[index]
+            if (ispassCheck && ispassCheck === '已通过') {
+                this.$message.warning('该条记录已通过审核，无法删除')
+                return
+            }
             this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
                 type: 'warning'
             }).then(() => {
-                let id = this.tableData[index].id
                 this.deleteData(id).then(res => {
                     if (isReqSuccessful(res)) {
                         this.fetchData()

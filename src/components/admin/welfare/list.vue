@@ -1,238 +1,52 @@
 <template>
   <div class="mod_welfareList">
-    <el-table
-      ref="table"
-      class="admin-table"
-      tooltip-effect="light"
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column
-        prop="ispassCheck"
-        label="审核状态"
-        align='center'>
-      </el-table-column>
-      <el-table-column
-        prop="gmtCreate"
-        label="提交时间"
-        width="200"
-        align='center'>
-      </el-table-column>
-      <el-table-column
-        prop="factoryName"
-        label="养殖场"
-        align='center'>
-      </el-table-column>
-      <el-table-column
-        prop="checkTime"
-        label="自检、主管上级检查时间"
-        align='center'
-        width="200">
-      </el-table-column>
-      <el-table-column label="场内外环境卫生" align="center">
-        <el-table-column
-          prop="colonyHouse"
-          width="150"
-          align='center'
-          label="圈舍内外">
-        </el-table-column>
-        <el-table-column
-          prop="warehouseWorkshop"
-          width="150"
-          align='center'
-          label="饲料库房及加工车间">
-        </el-table-column>
-        <el-table-column
-          prop="killWormDeratization"
-          width="150"
-          align='center'
-          label="杀虫灭鼠">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="操作人员卫生与安全" align="center">
-        <el-table-column
-          prop="sterilizingRoom"
-          width="150"
-          align='center'
-          label="消毒室制度执行">
-        </el-table-column>
-        <el-table-column
-          prop="operation"
-          width="150"
-          align='center'
-          label="是否赤手操作">
-        </el-table-column>
-        <el-table-column
-          prop="needleSheep"
-          width="150"
-          align='center'
-          label="是否一羊一针头">
-        </el-table-column>
-        <el-table-column
-          prop="vaccine"
-          width="150"
-          align='center'
-          label="疫苗及针头的消毒处理">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="实验室卫生与安全" align="center">
-        <el-table-column
-          prop="safetyProtection"
-          width="150"
-          align='center'
-          label="是否做到人员安全防护">
-        </el-table-column>
-        <el-table-column
-          prop="rubbishWater"
-          width="150"
-          align='center'
-          label="实验室垃圾与排水是否无害化处理">
-        </el-table-column>
-        <el-table-column
-          prop="operationSpecification"
-          width="150"
-          align='center'
-          label="是否遵守操作规范">
-        </el-table-column>
-      </el-table-column>
-      <el-table-column
-        prop="airTemperature"
-        width="150"
-        align='center'
-        label="羊舍空气与温度">
-      </el-table-column>
-      <el-table-column
-        prop="exerciseDaylighting"
-        width="150"
-        align='center'
-        label="羊只运动与采光">
-      </el-table-column>
-      <el-table-column
-        prop="carDisinfect"
-        width="150"
-        align='center'
-        label="车辆进出消毒">
-      </el-table-column>
-      <el-table-column
-        prop="operatorName"
-        width="150"
-        align='center'
-        label="操作人员">
-      </el-table-column>
-      <el-table-column
-        prop="professorName"
-        width="150"
-        align='center'
-        label="技术审核">
-      </el-table-column>
-      <el-table-column
-        prop="supervisorName"
-        align='center'
-        label="监督执行">
-      </el-table-column>
-      <el-table-column
-        prop="ispassSup"
-        align='center'
-        label="监督执行状态">
-      </el-table-column>
-      <el-table-column
-        class="action"
-        fixed="right"
-        label="操作"
-        align='center'
-        width="160">
-        <template slot-scope="scope">
-          <div class="opr">
-              <span @click="edit(scope.$index)">编辑</span>
-              <span @click="deleteItem(scope.$index)">删除</span>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      class="page"
-      layout="prev, pager, next"
-      :total="total"
-      @current-change="fetchData"
-      :current-page.sync="page">
-    </el-pagination>
+    <admin-table
+      modpath="welfare"
+      has-common-header
+      has-common-tail-header
+      :headers="headers"
+      :getData="getAllWelfare"
+      :deleteData="deleteWelfare">
+    </admin-table>
   </div>
 </template>
 
 <script>
-  import { getAllWelfare, deleteWelfare, getUserById } from '@/util/getdata'
-  import { isReqSuccessful } from '@/util/jskit'
+  import AdminTable from '@/components/admin/table'
+  import { getAllWelfare, deleteWelfare } from '@/util/getdata'
 
   export default {
-    props: {
-      user: {
-        type: Object
-      }
+    components: {
+      AdminTable
     },
 
-    watch: {
-      user: {
-        deep: true,
-        handler (newV) {
-          this.user = newV
-          if (Object.keys(newV).length) {
-            this.fetchData()
-          }
-        }
-      }
-    },
-
-    mounted () {
-      if (Object.keys(this.user).length) {
-        this.fetchData()
-      }
-    },
-
-    data() {
+    data () {
       return {
-        load: true,
-
-        page: 1,
-        total: 1,
-        tableData: []
-      }
-    },
-
-    methods: {
-      async fetchData () {
-        let res = await getAllWelfare(this.user.userFactory, {page: this.page - 1})
-        res.data.List.forEach(v => {
-          let mapCheck = ['未通过', '已通过', '未审核']
-          let mapSup = ['未执行', '执行', '未检查']
-          Object.keys(v).forEach(v2 => {
-            if (v2 === 'ispassCheck') {
-              v[v2] = mapCheck[v[v2]]
-            } else if (v2 === 'ispassSup') {
-              v[v2] = mapSup[v[v2]]
-            }
-          })
-        })
-        this.tableData = res.data.List
-      },
-
-      edit (idx) {
-        let id = this.tableData[idx].id
-        this.$router.push({name: 'welfareprac', query: {edit: id}})
-      },
-
-      deleteItem (idx) {
-        this.$confirm('将永久删除此条记录, 是否继续?', '提示', {
-          type: 'warning'
-        }).then(() => {
-          let id = this.tableData[idx].id
-          deleteWelfare(id).then(res => {
-            if (isReqSuccessful(res)) {
-              this.fetchData()
-              this.$message.success('删除成功!')
-            }
-          })
-        }).catch(() => {
-          return false
-        })
+        getAllWelfare,
+        deleteWelfare,
+        headers: [
+          { label: '自检/主管上级检查时间', prop: 'checkTime', },
+          { label: '场内外环境卫生', children: [
+            { label: '圈舍内外', prop: 'colonyHouse' },
+            { label: '饲料库房及加工车间', prop: 'warehouseWorkshop' },
+            { label: '杀虫灭鼠', prop: 'killWormDeratization' }
+          ]},
+          { label: '操作人员卫生与安全', children: [
+            { label: '消毒制度是否执行', prop: 'sterilizingRoom' },
+            { label: '是否赤手操作', prop: 'operation' },
+            { label: '是否一羊一针头', prop: 'needleSheep' },
+            { label: '疫苗及针头的消毒处理', prop: 'vaccine' }
+          ]},
+          { label: '实验室卫生与安全', children: [
+            { label: '是否做到人员安全防护', prop: 'safetyProtection' },
+            { label: '实验室垃圾与排水是否无害化处理', prop: 'rubbishWater' },
+            { label: '是否遵守操作规范', prop: 'operationSpecification' }
+          ]},
+          { label: '羊舍空气与温度', prop: 'airTemperature' },
+          { label: '羊只运动与采光', prop: 'exerciseDaylighting' },
+          { label: '车辆进出是否消毒', prop: 'carDisinfect' },
+          { prop: 'remark', label: '备注' }
+        ]
       }
     }
   }
