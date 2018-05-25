@@ -24,8 +24,11 @@ export default {
     },
 
     watch: {
-        'models.sex' (newV) {
-            this.models.tradeMarkEartag = newV ? 'M' : 'G'
+        'models.sex': {
+            handler (newV) {
+                this.models.tradeMarkEartag = newV ? 'M' : 'G'
+            },
+            immediate: true
         }
     },
 
