@@ -34,16 +34,14 @@
             tooltip-effect="dark"
             class="admin-table"
             :data="tableData">
-            <el-table-column label="配种产子实施档案" align='center'>
-                <el-table-column
-                    show-overflow-tooltip
-                    v-for="(th, i) in headers"
-                    :key="i"
-                    align='center'
-                    :prop="th.prop"
-                    :label="th.label"
-                    :width="th.width">
-                </el-table-column>
+            <el-table-column
+                show-overflow-tooltip
+                v-for="(th, i) in headers"
+                :key="i"
+                align='center'
+                :prop="th.prop"
+                :label="th.label"
+                :width="th.width">
             </el-table-column>
             <el-table-column
                 class="action"

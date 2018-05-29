@@ -23,6 +23,17 @@
                     </el-date-picker>
                 </div>
 
+                <div :key="i" v-else-if="item.type === 'time_2'" class="time el-input-group" :class="{'double-width': item.doubleWidth, mr: item.mr}">
+                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
+                    <el-date-picker
+                        v-model="models[item.model]"
+                        format="yyyy-MM-dd"
+                        value-format="yyyy-MM-dd"
+                        size="small"
+                        type="datetime">
+                    </el-date-picker>
+                </div>
+
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'number'" class="time el-input-group">
                     <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
                     <el-input-number :min="1" size="small" v-model="models[item.model]"></el-input-number>
@@ -37,13 +48,7 @@
                     </el-autocomplete>
                 </div>
 
-                <div :class="{mr: item.mr, block: item.block}" :key="i" v-else-if="item.type === 'selectYN'" class="time el-input-group select" >
-                    <span class="time-span ellipse" :title="item.label" v-text="item.label + ':'"></span>
-                    <el-select size="small" v-model="models[item.model]" style="width: 95px;" >
-                        <el-option label="是" value="1"></el-option>
-                        <el-option label="否" value="0"></el-option>                        
-                    </el-select>
-                </div>
+        
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
                     <span class="ellipse" :title="item.label" v-text="item.label + ':'"></span>
@@ -51,11 +56,6 @@
                         <el-radio v-model="models[item.model]" :label="0">{{radioSex ? '公' : '否'}}</el-radio>
                         <el-radio v-model="models[item.model]" :label="1">{{radioSex ? '母' : '是'}}</el-radio>
                     </div>
-                    <!-- <el-switch
-                        v-model="models[item.model]"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                    </el-switch> -->
                 </div>
 
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'address'" class="time el-input-group address">
