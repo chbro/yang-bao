@@ -87,10 +87,16 @@
                 <el-table-column
                     align='center'
                     width="150"
-                    :prop="isProName ? 'supervisor' : 'supervisorName'"
+                    :prop="isProName ? 'supervisorName' : 'supervisor'"
                     label="监督执行">
                 </el-table-column>
             </template>
+            <el-table-column
+                width="150"
+                align='center'
+                prop="unpassReason"
+                label="审核拒绝原因">
+            </el-table-column>
             <el-table-column
                 v-if="hasSup"
                 align='center'
@@ -279,65 +285,87 @@ export default {
     },
 
     methods: {
-        Spv (isPass, idx) {
-            let {id, ispassCheck, ispassSup} = this.tableData[idx]
-
-            let superviseMap = {
-                welfare: patchWelfare,
-                prevention: patchPrevention,
-                'nutrition/breed': patchBreeding,
-                'nutrition/stage': patchStage,
-                'health/antiscolic': patchAntiscolic,
-                'health/disinfect': patchDisinfect,
-                'health/immune': patchImmune
-            }
-            let professorMap = {
-                welfare: patchProWelfare,
-                prevention: patchProPrevention,
-                'nutrition/breed': patchProBreeding,
-                'nutrition/stage': patchProStage,
-                'health/antiscolic': patchProAntiscolic,
-                'health/disinfect': patchProDisinfect,
-                'health/immune': patchProImmune
-            }
-            let data = {
-                unpassReason: '',
-                factoryNum: this.user.userFactory,
-                name: this.user.userRealname
-            }
-            // userRole 20羊场监督员
-            if (this.user.userRole == 20) {
-                if (ispassSup !== '未检查') {
-                    this.$message.warning('该条记录已检查')
-                    return
+        async Spv (isPass, idx) {
+            try {
+                let result
+                if (isPass === 0) {
+                    result = await this.$prompt('请输入不通过原因', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /\w+/,
+                        inputErrorMessage: '原因不能为空'
+                    })
                 }
-                data.supervisor = +this.$route.params.id
-
-                data.ispassSup = isPass
-                superviseMap[this.checkModule](id, data).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.$message.success('监督执行成功')
-                        this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
-                    }
-                }, _ => {
-                    this.$message.error('监督执行失败')
-                })
-            } else {
-                if (ispassCheck !== '未审核') {
-                    this.$message.warning('该条记录已审核')
-                    return
+                let {id, ispassCheck, ispassSup} = this.tableData[idx]
+                let superviseMap = {
+                    welfare: patchWelfare,
+                    prevention: patchPrevention,
+                    'nutrition/breed': patchBreeding,
+                    'nutrition/stage': patchStage,
+                    'health/antiscolic': patchAntiscolic,
+                    'health/disinfect': patchDisinfect,
+                    'health/immune': patchImmune
                 }
-                data.professor = +this.$route.params.id
+                let professorMap = {
+                    welfare: patchProWelfare,
+                    prevention: patchProPrevention,
+                    'nutrition/breed': patchProBreeding,
+                    'nutrition/stage': patchProStage,
+                    'health/antiscolic': patchProAntiscolic,
+                    'health/disinfect': patchProDisinfect,
+                    'health/immune': patchProImmune
+                }
+                let unpassReason = result && result.value
+                let data = {
+                    unpassReason: unpassReason || '',
+                    factoryNum: this.user.userFactory,
+                    name: this.user.userRealname
+                }
 
-                data.ispassCheck = isPass
-                professorMap[this.checkModule](id, data).then(res => {
-                    if (isReqSuccessful(res)) {
-                        this.$message.success('审核成功')
-                        this.tableData[idx].ispassCheck = isPass ? '已通过' : '未通过'
+                // userRole 20羊场监督员
+                if (this.user.userRole == 20) {
+                    if (ispassSup !== '未检查') {
+                        this.$message.warning('该条记录已检查')
+                        return
                     }
-                }, _ => {
-                    this.$message.error('审核失败')
-                })
+                    data.supervisor = +this.$route.params.id
+
+                    data.ispassSup = isPass
+                    superviseMap[this.checkModule](id, data).then(res => {
+                        if (isReqSuccessful(res)) {
+                            this.$message.success('监督执行成功')
+                            this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
+                            this.tableData[idx].supervisor = this.user.userRealname
+                            this.tableData[idx].supervisorName = this.user.userRealname
+                        }
+                    }, _ => {
+                        this.$message.error('监督执行失败')
+                    })
+                } else {
+                    if (ispassCheck !== '未审核') {
+                        this.$message.warning('该条记录已审核')
+                        return
+                    }
+                    data.professor = +this.$route.params.id
+
+                    data.ispassCheck = isPass
+                    professorMap[this.checkModule](id, data).then(res => {
+                        if (isReqSuccessful(res)) {
+                            this.$message.success('审核成功')
+                            this.tableData[idx].ispassCheck = isPass ? '已通过' : '未通过'
+                            this.tableData[idx].professor = this.user.userRealname
+                            this.tableData[idx].professorName = this.user.userRealname
+                            if (isPass === 0) {
+                                this.tableData[idx].unpassReason = unpassReason
+                            }
+                        }
+                    }, _ => {
+                        this.$message.error('审核失败')
+                    })
+                }
+            } catch(e) {
+                e.message && console.log(e.message)
+                return false
             }
         },
 

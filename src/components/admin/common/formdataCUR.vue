@@ -168,9 +168,9 @@ export default {
 
             let headers = {}
             headers[authStr] = window.localStorage.getItem(tokenStr)
-            let { userFactory, userRealname, id, factoryName } = this.user
+            let { userFactory, userRealname, factoryName } = this.user
             this.models.operatorName = userRealname
-            this.models.operatorId = id
+            this.models.operatorId = this.$route.params.id
             this.models.factoryNum = userFactory
             this.models.factoryName = factoryName
             // console.log(this.models)

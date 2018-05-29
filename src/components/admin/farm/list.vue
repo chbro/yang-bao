@@ -26,7 +26,8 @@ export default {
             getFarms,
             deleteFarm,
             headers: [
-                {prop: 'agent', label: '上级代理'},
+                {prop: 'agentName', label: '上级代理名称'},
+                {prop: 'agent', label: '上级代理编号'},
                 {prop: 'pkNumber', label: '羊场编号'},
                 {prop: 'breedName', label: '羊场名称'},
                 {prop: 'breedLocation', label: '羊场地理位置', width: 250},
