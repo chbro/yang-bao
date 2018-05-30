@@ -1,7 +1,7 @@
 <template>
 	<div class="admin-form">
 		<p class="card-title">回收化验指标</p>
-		<basic-info :items="items" :models="models"></basic-info>
+		<basic-info :items="items" :models="models" :radio-index="2"></basic-info>
 
 		<div class="check">
 			<el-table

@@ -5,6 +5,7 @@
             modpath="welfare"
             @update:models="v => models = v"
             :has-remark="false"
+            :radio-index="1"
             :models.sync="models"
             :items="items"
             :get-data="getWelfare"

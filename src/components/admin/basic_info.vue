@@ -40,8 +40,8 @@
                 <div :class="{mr: item.mr}" :key="i" v-else-if="item.type === 'radio'" class="time el-input-group radio">
                     <span class="ellipse" :title="item.label" v-text="item.label + ':'"></span>
                     <div class="radios-el">
-                        <el-radio v-model="models[item.model]" :label="0">{{radioSex ? '公' : '否'}}</el-radio>
-                        <el-radio v-model="models[item.model]" :label="1">{{radioSex ? '母' : '是'}}</el-radio>
+                        <el-radio v-model="models[item.model]" :label="0">{{ ['公', '否', '种羊'][radioIndex] }}</el-radio>
+                        <el-radio v-model="models[item.model]" :label="1">{{ ['母', '是', '商品羊'][radioIndex] }}</el-radio>
                     </div>
                     <!-- <el-switch
                         v-model="models[item.model]"
@@ -98,9 +98,9 @@ export default {
                 return {}
             }
         },
-        radioSex: {
-            type: Boolean,
-            default: false
+        radioIndex: {
+            type: Number,
+            default: 0
         },
         updateSubmitter: {
             type: Boolean,
