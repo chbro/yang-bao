@@ -8,7 +8,7 @@
             :items="items"
             :has-remark="false"
             :get-data="getBreeding"
-            :post-data="postBreeding1"
+            :post-data="postBreeding"
             :update-data="updateBreeding">
         </data-cur>
     </div>
@@ -16,7 +16,7 @@
 
 <script>
 import dataCur from '@/components/admin/common/dataCUR'
-import { getBreeding, postBreeding1, postBreeding2, updateBreeding } from '@/util/getdata'
+import { getBreeding, postBreeding, updateBreeding } from '@/util/getdata'
 
 export default {
     components: {
@@ -26,7 +26,7 @@ export default {
     data () {
         return {
             getBreeding,
-            postBreeding1,
+            postBreeding,
             updateBreeding,
             items: [
                 {label: '配种时间', model: 'breedingT', type: 'time_2'},

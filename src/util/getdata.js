@@ -86,9 +86,7 @@ export const evaluateChat = data => fetch('/evaluation', data, 'POST')
 /**
  * 配种产子
  */
-export const postBreeding1 = data => fetch('/breeding', data, 'POST')
-
-export const postBreeding2 = data => fetch('/breeding', data, 'POST')
+export const postBreeding = data => fetch('/breeding', data, 'POST')
 
 export const updateBreeding = (id, data) => fetch(`/breeding/${id}`, data, 'PUT')
 

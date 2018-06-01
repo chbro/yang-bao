@@ -33,7 +33,8 @@
             ref="table"
             tooltip-effect="dark"
             class="admin-table"
-            :data="tableData">
+            :data="tableData"
+            >
             <el-table-column
                 show-overflow-tooltip
                 v-for="(th, i) in headers"
@@ -41,7 +42,8 @@
                 align='center'
                 :prop="th.prop"
                 :label="th.label"
-                :width="th.width">
+                :width="100"
+            >
             </el-table-column>
             <el-table-column
                 class="action"
@@ -51,7 +53,7 @@
                 width="160">
                 <template slot-scope="scope">
                     <div class="opr" v-if="!releaseType && !isCheck">
-                        <span v-if="!hideView" @click="edit(scope.$index, 1)">查看</span>
+                        <span v-if="!hideView" @click="cellClick(scope.row, scope.column)">查看</span>
                         <template>
                             <span @click="edit(scope.$index)" v-if="showEdit">编辑</span>
                             <span @click="deleteItem(scope.$index)">删除</span>
@@ -98,7 +100,7 @@ import {
     patchProAntiscolic,
     patchProStage
 } from '@/util/getdata'
-
+import Bus from '@/components/bus.js'
 
 export default {
     props: {
@@ -187,7 +189,13 @@ export default {
             load: true, // 是否显示loading动画
             page: 1, // 当前页码
             total: 10, // 总共数据条数
-            tableData: [], // 表格数据
+            tableData: [
+                {
+                    id: 1,
+                    manage: '2018-01-01',
+                    eNutritionT: '2018-05-10'
+                }
+            ], // 表格数据
 
             isPass: null, // 筛选条件-是否通过
             factoryName: null, // 筛选条件-工厂名称
@@ -204,6 +212,13 @@ export default {
     },
 
     methods: {
+        cellClick(row) {
+            let id = row.id
+            let pathid = this.$route.params.id
+            let path = `/admin/${pathid}/${this.modpath}/more?more=${id}`
+            Bus.$emit('getTableData', row);
+            this.$router.push(path)
+        },
         Spv (isPass, idx) {
             let {id, ispassCheck} = this.tableData[idx]
             if (ispassCheck !== '未审核') {
@@ -293,7 +308,7 @@ export default {
             if (!this.releaseType) {
                 this.getData(pathid, param).then(res => {
                     if (isReqSuccessful(res)) {
-                        let data = res.data
+                        let data = res.data;
 
                         if (this.isAgent) {
                             data.List.forEach(v => {
