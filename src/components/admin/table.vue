@@ -121,8 +121,8 @@
                         <span  @click="viewPlan(scope.$index)">查看</span>
                     </div>
                     <div class="opr" v-else>
-                        <span @click="Spv(1, scope.$index)">通过</span>
-                        <span @click="Spv(0, scope.$index)">拒绝</span>
+                        <span @click="Spv(1, scope.$index)">{{isSpv ? '执行' : '通过'}}</span>
+                        <span v-if="!isSpv" @click="Spv(0, scope.$index)">拒绝</span>
                     </div>
                 </template>
             </el-table-column>
@@ -258,12 +258,14 @@ export default {
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
                 this.user = res.data.model
+                this.isSpv = res.data.model.userRole === 20
             }
         }).then(this.fetchData)
     },
 
     data () {
         return {
+            isSpv: false, // 是否监督员登录
             isProName: false,
             load: true, // 是否显示loading动画
             page: 1, // 当前页码
@@ -331,15 +333,13 @@ export default {
                     data.supervisor = +this.$route.params.id
 
                     data.ispassSup = isPass
+                    delete data.unpassReason
                     superviseMap[this.checkModule](id, data).then(res => {
                         if (isReqSuccessful(res)) {
                             this.$message.success('监督执行成功')
                             this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
                             this.tableData[idx].supervisor = this.user.userRealname
                             this.tableData[idx].supervisorName = this.user.userRealname
-                            if (isPass === 0) {
-                                this.tableData[idx].unpassReason = unpassReason
-                            }
                         }
                     }, _ => {
                         this.$message.error('监督执行失败')
