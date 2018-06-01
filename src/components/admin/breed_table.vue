@@ -216,7 +216,6 @@ export default {
             let id = row.id
             let pathid = this.$route.params.id
             let path = `/admin/${pathid}/${this.modpath}/more?more=${id}`
-            Bus.$emit('getTableData', row);
             this.$router.push(path)
         },
         Spv (isPass, idx) {
