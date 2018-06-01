@@ -6,7 +6,7 @@
                 <ve-histogram :data="chartData" :settings="chartSettings" :extend="chartExtend" width="400px" height="400px"></ve-histogram>
             </div>
         </div>
-		<state-info :data="chartData.rows[0].quality.value" :state="state.quality"  label="质量"></state-info>
+		<state-info :data="chartData.rows[0].quality.value" :state="state.quality"  label="温度"></state-info>
 		<state-info :data="chartData.rows[0].ph.value" :state="state.ph"  label="PH值"></state-info>		
 		 <el-table
 			:data="chartData.rows"
@@ -20,12 +20,12 @@
 			</el-table-column>
 			<el-table-column
 			prop="quality.value"
-			label="质量"
+			label="温度"
 			align="center"			
 			>
 			</el-table-column>
 			<el-table-column
-			label="质量状态"
+			label="温度状态"
 			align="center"			
 			>
 				<template slot-scope="scope">
@@ -90,7 +90,7 @@ export default {
 					right: ['ph']
 				},
 				labelMap: {
-					quality: '质量',
+					quality: '温度',
 					ph: 'PH值'
 				}
 			},			

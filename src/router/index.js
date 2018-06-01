@@ -52,6 +52,8 @@ const StageList = () => import('@/components/admin/nutrition/stage_list')
 const BreedPlan = () => import('@/components/admin/nutrition/breed_plan')
 const BreedPrac = () => import('@/components/admin/nutrition/breed_prac')
 const BreedList = () => import('@/components/admin/nutrition/breed_list')
+const BreedMore = () => import('@/components/admin/nutrition/breed_more')
+
 // 疫病防治
 const PreventionPlan = () => import('@/components/admin/prevention/prevention_plan')
 const PreventionPrac = () => import('@/components/admin/prevention/prevention_prac')
@@ -151,6 +153,7 @@ export default new Router({
             {path: 'nutrition/breed/plan', name: 'breedplan', component: BreedPlan},
             {path: 'nutrition/breed/prac', name: 'breedprac', component: BreedPrac},
             {path: 'nutrition/breed/list', name: 'breedlist', component: BreedList},
+            {path: 'nutrition/breed/more', name: 'breedmore', component: BreedMore},            
             {path: 'nutrition/stage/plan', name: 'stageplan', component: StagePlan},
             {path: 'nutrition/stage/prac', name: 'stageprac', component: StagePrac},
             {path: 'nutrition/stage/list', name: 'stagelist', component: StageList},
