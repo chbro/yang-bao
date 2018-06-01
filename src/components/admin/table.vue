@@ -292,7 +292,7 @@ export default {
                     result = await this.$prompt('请输入不通过原因', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
-                        inputPattern: /\w+/,
+                        inputPattern: /.+/,
                         inputErrorMessage: '原因不能为空'
                     })
                 }
@@ -337,6 +337,9 @@ export default {
                             this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
                             this.tableData[idx].supervisor = this.user.userRealname
                             this.tableData[idx].supervisorName = this.user.userRealname
+                            if (isPass === 0) {
+                                this.tableData[idx].unpassReason = unpassReason
+                            }
                         }
                     }, _ => {
                         this.$message.error('监督执行失败')
