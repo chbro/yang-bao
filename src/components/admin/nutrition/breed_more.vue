@@ -5,6 +5,7 @@
             tooltip-effect="dark"
             class="admin-table"
             :data="tableData"
+            @cell-click="cellClick"
             >
             <el-table-column
                 show-overflow-tooltip
@@ -17,11 +18,30 @@
             >
             </el-table-column>
         </el-table>
+        <p class="table-title">阶段营养配方</p>
+        <el-table
+            ref="table_2"
+            tooltip-effect="dark"
+            class="admin-table-2"
+            :data="tableData_2"
+            >
+            <el-table-column
+                show-overflow-tooltip
+                v-for="(th, i) in headers_2"
+                :key="i"
+                align='center'
+                :prop="th.prop"
+                :label="th.label"
+                :width="100"
+            >
+            </el-table-column>
+        </el-table>
     </div>
 </template>
 
 <script>
-import { getAllBreeding, deleteBreeding } from '@/util/getdata'
+import { getBreeding } from '@/util/getdata'
+import { isReqSuccessful } from '@/util/jskit'
 import Bus from '@/components/bus.js'
 
 export default {
@@ -29,8 +49,13 @@ export default {
     data () {
         return {
 			tableData: [
-				
+				{
+                    manage: '2018'
+                }
 			],
+            tableData_2: [
+
+            ],
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},
@@ -57,20 +82,70 @@ export default {
                 {prop: 'professor', label: '技术审核'},
                 {prop: 'supervisor', label: '监督执行'},
                 {prop: 'remark', label: '备注'}
+            ],
+            headers_2: [
+                { label: '栏/栋', prop: 'building' },
+                { label: '使用日期', prop: 'nutritionT', width: 200 },
+                { label: '羊数', prop: 'quantity' },
+                { label: '羊只均重/斤', prop: 'average' },
+                { label: '阶段', prop: 'period' },
+                { label: '精料配方(%)', children: [
+                    { label: '预混料', prop: 'materialA'},
+                    { label: '精料', prop: 'materialM'},
+                    { label: '其他', prop: 'materialO'}
+                ]},
+                { label: '精料用量(体重%)', children: [
+                    { label: '精料', prop: 'materialWM'},
+                    { label: '其他', prop: 'materialWO'}
+                ]},
+                { label: '粗饲料配方(%)', children: [
+                    { label: '青料', prop: 'roughageP'},
+                    { label: '干料', prop: 'roughageD'},
+                    { label: '其他', prop: 'roughageO'}
+                ]},
+                { label: '粗饲料用量(体重%)', children: [
+                    { label: '青料', prop: 'roughageWP'},
+                    { label: '干料', prop: 'roughageWD'},
+                    { label: '其他', prop: 'roughageWO' }
+                ]},
+                { label: '领料总量', children: [
+                    { label: '精料', prop: 'pickingM'},
+                    { label: '粗饲料', prop: 'pickingR'},
+                    { label: '其他', prop: 'pickingO' }
+                ]},
+                { label: '饮水', prop: 'water' },
+                { label: '备注', prop: 'remark' }
             ]
         }
 	},
 
-	
-	mounted() {				
-		Bus.$once('getTableData', tableDat => {
-			console.log( tableDat )
-			this.tableData.push( tableDat );
-		});		
+    methods: {
+        cellClick( row, column, cell ) {
+            console.log( column );
+            console.log( cell );            
+            // getBreeding(id).then(res => {
+            //     if (isReqSuccessful(res)) {
+            //         this.tableData = res.data;
+            //     }
+            // });
+        }
+    },
+    
+	mounted() {	
+        let id = this.$route.query.more
+        getBreeding(id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.tableData.push( res.data );
+            }
+        });
 	}
 }
 </script>
 
 <style lang="stylus" scoped>
-
+.table-title
+    text-align center
+    margin-top 30px
+.admin-table-2 
+    margin-top 20px
 </style>
