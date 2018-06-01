@@ -81,7 +81,6 @@ export default {
                     {label: '客户评价', to: 'comment'},
                     {label: '专家在线课堂', to: 'courseintro'},
                     {label: '生产档案审核', to: 'review'},
-                    // {label: '审核', to: 'reviewSheep'},
                     {label: '在线诊断', to: 'prochat'}
                 ]
             },
