@@ -130,7 +130,7 @@ export default new Router({
             {path: 'comment/result', name: 'commentres', component: CommentResult},
             {path: 'comment/summary', name: 'commentsum', component: CommentSummary},
             {path: 'passmod', name: 'passmod', component: PasswordModify},
-            //审核
+            // 审核
             {path: 'review', name: 'review', component: Review},
             {path: 'reviewSheep', name: 'reviewSheep', component: ReviewSheep},
             // 动物福利
@@ -153,7 +153,7 @@ export default new Router({
             {path: 'nutrition/breed/plan', name: 'breedplan', component: BreedPlan},
             {path: 'nutrition/breed/prac', name: 'breedprac', component: BreedPrac},
             {path: 'nutrition/breed/list', name: 'breedlist', component: BreedList},
-            {path: 'nutrition/breed/more', name: 'breedmore', component: BreedMore},            
+            {path: 'nutrition/breed/more', name: 'breedmore', component: BreedMore},
             {path: 'nutrition/stage/plan', name: 'stageplan', component: StagePlan},
             {path: 'nutrition/stage/prac', name: 'stageprac', component: StagePrac},
             {path: 'nutrition/stage/list', name: 'stagelist', component: StageList},

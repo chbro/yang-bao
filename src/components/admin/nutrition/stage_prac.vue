@@ -61,7 +61,7 @@ export default {
         return {
             items: [
                 {label: '栏/栋', model: 'building'},
-                {label: '使用日期', model: 'nutritionT', type: 'time'},
+                {label: '使用日期(序号)', model: 'nutritionT', type: 'time'},
                 {label: '羊数', model: 'quantity', type: 'number', mr: true},
                 {label: '羊只均重/斤',model: 'average',type: 'number'},
                 {label: '阶段', model: 'period', type: 'select', fetchSuggestions: getStages},
