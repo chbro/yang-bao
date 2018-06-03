@@ -111,7 +111,7 @@ export default {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
                     // 0审核未通过 1审核通过 2未审核
-                    if (res.data.ispassCheck && res.data.ispassCheck != '2') {
+                    if (res.data.ispassCheck && res.data.ispassCheck === '1') {
                         this.canModify = false
                     }
                     this.$emit('update:models', obj)

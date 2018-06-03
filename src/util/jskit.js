@@ -142,7 +142,6 @@ export const checkForm = (form, checkFull) => {
         app.$message.warning(val)
         return false
     }
-    console.log(checkFull)
     if (checkFull && Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
         app.$message.warning('请完善表单信息')
         return false
