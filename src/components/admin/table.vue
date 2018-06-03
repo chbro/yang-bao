@@ -326,7 +326,7 @@ export default {
 
                 // userRole 20羊场监督员
                 if (this.user.userRole == 20) {
-                    if (ispassSup !== '未检查') {
+                    if (ispassSup === '执行') {
                         this.$message.warning('该条记录已检查')
                         return
                     }
