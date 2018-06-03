@@ -36,6 +36,7 @@ export default {
         getUserById(id).then(res => {
             if(isReqSuccessful(res)) {
                 this.user = res.data.model
+                this.models.expert = this.user.userRealname;
                 this.models.uploader = this.user.pkUserid
             }
         })
@@ -43,39 +44,37 @@ export default {
 
     data () {
         let sexs = [
-            {value: '雌'},
-            {value: '雄'}
+            {value: '母'},
+            {value: '公'}
         ]
         let getSex = (q, cb) => {
             cb(sexs)
         }
 
         let experts = [
-            {value: '孙二狗'},
-            {value: '孙二娘'},
-            {value: '孙牢记'}
+            //this.user
         ]
         let getExpert = (q, cb) => {
             cb(experts)
         }
         return {
             items: [ {
-                label: '商标耳牌',
-                model: 'brand'
-            }, {
-                label: '检疫耳牌',
-                model: 'vaccine'
-            }, {
                 label: '性别',
                 model: 'sex',
                 type: 'select',
                 fetchSuggestions: getSex,
+            }, {
+                label: '商标耳牌',
+                model: 'brand'
+            }, {
+                label: '检疫耳牌',
+                model: 'vaccine',
                 mr: 1
             }, {
                 label: '就诊专家',
                 model: 'expert',
                 type: 'select',
-                fetchSuggestions: getExpert
+                //fetchSuggestions: getExpert
             }, {
                 label: '上传图片或视频:',
                 model: 'file',
@@ -90,6 +89,12 @@ export default {
                 expert: null,
                 uploader: null
             }
+        }
+    },
+
+    watch: {
+        'models.sex' ( val ) {
+            val === "公"? this.models.brand = 'G' : this.models.brand = 'M'
         }
     },
     methods: {

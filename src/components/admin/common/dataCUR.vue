@@ -8,7 +8,7 @@
             <el-input type="textarea" v-model="models.remark"></el-input>
         </div>
         <div class="admin-send" v-if="canModify">
-            <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit()">提交/更新</el-button>
+            <el-button type="primary" v-if="!check && !view" :disabled="disableBtn" @click="submit(checkFull)">提交/更新</el-button>
             <template v-else-if="!view">
                 <el-button type="primary" :disabled="disableBtn" @click="Spv(1)">通过</el-button>
                 <el-button type="primary" :disabled="disableBtn" @click="Spv(0)">拒绝</el-button>
@@ -42,6 +42,10 @@ export default {
             type: Object
         },
         hasRemark: {
+            type: Boolean,
+            default: true
+        },
+        checkFull: {
             type: Boolean,
             default: true
         },
@@ -107,7 +111,7 @@ export default {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
                     // 0审核未通过 1审核通过 2未审核
-                    if (res.data.ispassCheck && res.data.ispassCheck != '2') {
+                    if (res.data.ispassCheck && res.data.ispassCheck === '1') {
                         this.canModify = false
                     }
                     this.$emit('update:models', obj)
@@ -164,8 +168,8 @@ export default {
             // }
         },
 
-        submit () {
-            if (!checkForm(this.models)) {
+        submit ( checkFull ) {
+            if (!checkForm(this.models, checkFull)) {
                 return
             }
 

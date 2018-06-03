@@ -32,6 +32,15 @@ export default {
         }
     },
 
+    mounted() {
+        this.models.eartagOfFather = 'G';
+        this.models.eartagOfMother = 'M';
+        this.models.eartagOfFathersFather = 'G';        
+        this.models.eartagOfFathersMother = 'M';        
+        this.models.eartagOfMothersFather = 'G';  
+        this.models.eartagOfMothersMother = 'M';                                                      
+    },
+
     data () {
         return {
             getGeneaRec,
@@ -44,7 +53,7 @@ export default {
                 {label: '商标耳牌', model: 'tradeMarkEartag', trade: true},
                 {label: '种羊基地', model: 'breedingSheepBase'},
                 {label: '初登时间', model: 'birthTime', type: 'time', mr: 1},
-                {label: '初登体重', model: 'birthWeight'},
+                {label: '初登体重(kg)', model: 'birthWeight'},
                 {label: '颜色', model: 'color'},
                 {label: '父号', model: 'eartagOfFather', mr: 1},
                 {label: '母号', model: 'eartagOfMother'},

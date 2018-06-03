@@ -94,6 +94,8 @@ export const getAllBreeding = (id, data) => fetch(`/breeding/${id}`, data)
 
 export const getBreeding = (id, data) => fetch(`/breeding/find/${id}`, data)
 
+export const findNutrition = data => fetch(`/breeding/findN`, data, 'POST')
+
 export const deleteBreeding = id => fetch(`/breeding/${id}`, null, 'DELETE')
 
 /**
