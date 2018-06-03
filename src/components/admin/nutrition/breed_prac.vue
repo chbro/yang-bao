@@ -9,7 +9,8 @@
             :has-remark="false"
             :get-data="getBreeding"
             :post-data="postBreeding"
-            :update-data="updateBreeding">
+            :update-data="updateBreeding"
+            :checkFull="false">
         </data-cur>
         <p class="form-info">
             备注:配种产子实施档案由配种，产前营养标准，产子，产后营养实施等环节组成。操作员按生产顺序填写每一步操作记录，每次填写完毕提交。下次再继续输入信息时，到配种产子实施档案列表找到该条记录点击编辑按钮在弹出的页面中继续填写下一步操作记录，直至最后该记录内容填写完毕。

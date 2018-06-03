@@ -78,13 +78,12 @@ export const checkSubmit = info => {
     return true
 }
 
-export const checkForm = form => {
+export const checkForm = (form, checkFull) => {
     let trade = form.tradeMarkEartag || form.earTag
 
     let checkTrade = (data) => {
         return data.every(val => {
             if (val.model !== undefined && !/^[G|M]\d{5}$/.test(val.model)) {
-                console.log(val)
                 app.$message.warning(val.name + '必须是G或M加上5位数字')
                 return false
             } else {
@@ -94,27 +93,33 @@ export const checkForm = form => {
     }
 
     let res = checkTrade([{
-            model: trade,
-            name: '商标耳牌'
-        }, {
-            model: form.eartagOfFather,
-            name: '父号'
-        }, {
-            model: form.eartagOfMother,
-            name: '母号'
-        }, {
-            model: form.eartagOfFathersFather,
-            name: '父父号'
-        }, {
-            model: form.eartagOfFathersMother,
-            name: '父母号'
-        }, {
-            model: form.eartagOfMothersFather,
-            name: '母父号'
-        }, {
-            model: form.eartagOfMothersMother,
-            name: '母母号'
-        }])
+        model: trade,
+        name: '商标耳牌'
+    }, {
+        model: form.eartagOfFather,
+        name: '父号'
+    }, {
+        model: form.eartagOfMother,
+        name: '母号'
+    }, {
+        model: form.eartagOfFathersFather,
+        name: '父父号'
+    }, {
+        model: form.eartagOfFathersMother,
+        name: '父母号'
+    }, {
+        model: form.eartagOfMothersFather,
+        name: '母父号'
+    }, {
+        model: form.eartagOfMothersMother,
+        name: '母母号'
+    }, {
+        model: form.ramSheepTrademark,
+        name: '母羊商标耳牌'
+    }, {
+        model: form.eweSheepTrademar,
+        name: '种公商标耳牌'
+    }])
 
     if (!res) return res
 
@@ -137,8 +142,8 @@ export const checkForm = form => {
         app.$message.warning(val)
         return false
     }
-
-    if (Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
+    console.log(checkFull)
+    if (checkFull && Object.keys(form).some(v => (form[v] === null || form[v] === '') && v !== 'remark')) {
         app.$message.warning('请完善表单信息')
         return false
     }
