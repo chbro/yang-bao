@@ -173,14 +173,26 @@ export default {
                 return
             }
 
+            let ArrayToString = arr => {
+                return arr.join();
+            }
+
+            let StringToArray = string => {
+                return string.split(',');
+            }
+
             let data = Object.assign({}, this.models)
+
+            if ( data.prenatalImmunityType !== undefined ) {
+                data.prenatalImmunityType = ArrayToString(data.prenatalImmunityType);
+            }
+            if ( data.prenatalImmunityTime !== undefined ) {
+                data.prenatalImmunityTime = ArrayToString(data.prenatalImmunityTime);
+            }
+
             let { userFactory, userRealname, id, factoryName } = this.user
             data.factoryNum = this.models.factoryNum || userFactory
-            // if (this.updateSubmitter) {
-            //     data.factoryNum = this.models.factoryNum || userFactory
-            // } else {
-            //     data.factoryNum = userFactory
-            // }
+            
             if (!this.isAgent) {
                 data.operatorName = userRealname
                 data.operatorId = id

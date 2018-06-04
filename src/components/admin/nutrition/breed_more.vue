@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getBreeding, findNutrition } from '@/util/getdata'
+import { getBreeding, findNutrition, getUserById } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 import Bus from '@/components/bus.js'
 
@@ -56,6 +56,9 @@ export default {
             tableData_2: [
 
             ],
+            user: {
+
+            },
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},
@@ -129,6 +132,8 @@ export default {
             }).then(res => {
                 if (isReqSuccessful(res)) {
                     this.tableData_2 = res.data.List;
+                } else {
+                    this.$message.error(res.data.errMessage[0].defaultMessage)
                 }
             });
         }
