@@ -2,7 +2,7 @@
     <div class="admin-form">
         <p class="card-title" v-text="title"></p>
 
-        <basic-info :radio-index="radioIndex" :items="items" :models.sync="models" :update-submitter="updateSubmitter"></basic-info>
+        <basic-info ref="info" :radio-index="radioIndex" :items="items" :models.sync="models" :update-submitter="updateSubmitter"></basic-info>
         <div class="card" v-if="hasRemark">
             <p class="card-title">备注:</p>
             <el-input type="textarea" v-model="models.remark"></el-input>
@@ -110,6 +110,19 @@ export default {
                     if ('breedLocation' in obj) {
                         obj.breedLocation = addressToArray(obj.breedLocation)
                     }
+
+                    if ( 'prenatalImmunityType' in obj ) {
+                        obj.prenatalImmunityType = obj.prenatalImmunityType.split(',')
+                    }
+
+                    if ( 'prenatalImmunityTime' in obj ) {
+                        obj.prenatalImmunityTime = obj.prenatalImmunityTime.split(',')
+                        let length = obj.prenatalImmunityTime.length - 1;
+                        for ( let i = 0; i < length; i++ ) {
+                            this.$refs.info.$refs.add[0].click()
+                        }
+                    }
+
                     // 0审核未通过 1审核通过 2未审核
                     if (res.data.ispassCheck && res.data.ispassCheck === '1') {
                         this.canModify = false
@@ -173,14 +186,26 @@ export default {
                 return
             }
 
+            let ArrayToString = arr => {
+                return arr.join();
+            }
+
+            let StringToArray = string => {
+                return string.split(',');
+            }
+
             let data = Object.assign({}, this.models)
+
+            if ( data.prenatalImmunityType !== undefined ) {
+                data.prenatalImmunityType = ArrayToString(data.prenatalImmunityType);
+            }
+            if ( data.prenatalImmunityTime !== undefined ) {
+                data.prenatalImmunityTime = ArrayToString(data.prenatalImmunityTime);
+            }
+
             let { userFactory, userRealname, id, factoryName } = this.user
             data.factoryNum = this.models.factoryNum || userFactory
-            // if (this.updateSubmitter) {
-            //     data.factoryNum = this.models.factoryNum || userFactory
-            // } else {
-            //     data.factoryNum = userFactory
-            // }
+            
             if (!this.isAgent) {
                 data.operatorName = userRealname
                 data.operatorId = id

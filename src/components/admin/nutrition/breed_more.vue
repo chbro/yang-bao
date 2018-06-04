@@ -1,11 +1,12 @@
 <template>
-    <div>
+    <div class="breed_more">
         <el-table
             ref="table"
             tooltip-effect="dark"
             class="admin-table"
             :data="tableData"
             @cell-click="cellClick"
+            @header-click="headerClick"
             >
             <el-table-column
                 show-overflow-tooltip
@@ -36,11 +37,12 @@
             >
             </el-table-column>
         </el-table>
+        <el-button type="primary"  @click="$router.back()">返回</el-button>
     </div>
 </template>
 
 <script>
-import { getBreeding, findNutrition } from '@/util/getdata'
+import { getBreeding, findNutrition, getUserById } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 import Bus from '@/components/bus.js'
 
@@ -49,13 +51,14 @@ export default {
     data () {
         return {
 			tableData: [
-				{
-                    manage: '2018'
-                }
+
 			],
             tableData_2: [
 
             ],
+            user: {
+
+            },
             headers: [
                 {prop: 'ispassCheck', label: '审核状态', width: '80'},
                 {prop: 'factoryName', label: '工厂名'},
@@ -122,15 +125,23 @@ export default {
     methods: {
         cellClick( row, column, cell ) {
             let text = cell.innerText         
-            console.log( text )
             findNutrition({
                 time: text,
-                factoryNumber: this.user.userFactory
+                factoryNumber: this.tableData[0].factoryNumber
             }).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.tableData_2 = res.data.List;
+                   if ( res.data.List.length == 0 ) {
+                        this.$message.info('未找到对应的数据');
+                   } else {
+                       this.tableData_2 = res.data.List;
+                   }    
+                } else {
+                    this.$message.error(res.data.errMessage[0].defaultMessage)
                 }
             });
+        },
+        headerClick( column, event) {
+            console.log( column)
         }
     },
     
@@ -144,20 +155,22 @@ export default {
     },
 
     created () {
-        let id = this.$route.params.id
-        getUserById(id).then(res => {
-            if (isReqSuccessful(res)) {
-                this.user = res.data.model
-            }
-        })
+        
     },
 }
 </script>
 
-<style lang="stylus" scoped>
-.table-title
-    text-align center
-    margin-top 30px
-.admin-table-2 
-    margin-top 20px
+<style lang="stylus">
+.breed_more
+    .table-title
+        text-align center
+        margin-top 50px
+    .admin-table-2 
+        margin-top 20px
+    .el-button
+        display: block;
+        margin: 20px auto;    
+    .el-table
+        .cell
+            cursor pointer
 </style>
