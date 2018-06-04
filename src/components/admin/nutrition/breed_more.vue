@@ -6,6 +6,7 @@
             class="admin-table"
             :data="tableData"
             @cell-click="cellClick"
+            @header-click="headerClick"
             >
             <el-table-column
                 show-overflow-tooltip
@@ -36,6 +37,7 @@
             >
             </el-table-column>
         </el-table>
+        <el-button type="primary"  @click="$router.back()">返回</el-button>
     </div>
 </template>
 
@@ -49,9 +51,7 @@ export default {
     data () {
         return {
 			tableData: [
-				{
-                    manage: '2018'
-                }
+
 			],
             tableData_2: [
 
@@ -125,17 +125,23 @@ export default {
     methods: {
         cellClick( row, column, cell ) {
             let text = cell.innerText         
-            console.log( text )
             findNutrition({
                 time: text,
-                factoryNumber: this.user.userFactory
+                factoryNumber: this.tableData[0].factoryNumber
             }).then(res => {
                 if (isReqSuccessful(res)) {
-                    this.tableData_2 = res.data.List;
+                   if ( res.data.List.length == 0 ) {
+                        this.$message.info('未找到对应的数据');
+                   } else {
+                       this.tableData_2 = res.data.List;
+                   }    
                 } else {
                     this.$message.error(res.data.errMessage[0].defaultMessage)
                 }
             });
+        },
+        headerClick( column, event) {
+            console.log( column)
         }
     },
     
@@ -149,12 +155,7 @@ export default {
     },
 
     created () {
-        let id = this.$route.params.id
-        getUserById(id).then(res => {
-            if (isReqSuccessful(res)) {
-                this.user = res.data.model
-            }
-        })
+        
     },
 }
 </script>
@@ -162,7 +163,13 @@ export default {
 <style lang="stylus" scoped>
 .table-title
     text-align center
-    margin-top 30px
+    margin-top 50px
 .admin-table-2 
     margin-top 20px
+.el-button
+    display: block;
+    margin: 20px auto;    
+.el-table
+    .cell
+        cursor pointer !important   
 </style>

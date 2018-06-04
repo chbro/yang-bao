@@ -82,7 +82,7 @@
                     <area-select type='text' :level='0' v-model="models[item.model]" :data="pcaa"></area-select>
                 </div>
 
-                <span class="cursor-p"  ref="add" @click="deleteItem(item, i)" v-if="item.type === 'addTime' && i !== 10"><i class="el-icon-caret-right"></i>删除</span>
+                <span class="cursor-p"  ref="del" @click="deleteItem(item, i)" v-if="item.type === 'addTime' && i !== 10"><i class="el-icon-caret-right"></i>删除</span>
                 <span class="cursor-p"  ref="add" @click="addItem(item, i)" v-if="item.type === 'addTime' && count === i-10 "><i class="el-icon-caret-right"></i>增加</span>
             </template>
 

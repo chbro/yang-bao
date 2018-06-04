@@ -88,7 +88,7 @@ export const evaluateChat = data => fetch('/evaluation', data, 'POST')
  */
 export const postBreeding = data => fetch('/breeding', data, 'POST')
 
-export const updateBreeding = (id, data) => fetch(`/breeding/${id}`, data, 'PUT')
+export const updateBreeding = (id, data) => fetch(`/breeding/${id}`, data, 'PATCH')
 
 export const getAllBreeding = (id, data) => fetch(`/breeding/${id}`, data)
 
