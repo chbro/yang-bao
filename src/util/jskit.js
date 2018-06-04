@@ -117,7 +117,7 @@ export const checkForm = (form, checkFull) => {
         model: form.ramSheepTrademark,
         name: '母羊商标耳牌'
     }, {
-        model: form.eweSheepTrademar,
+        model: form.eweSheepTrademark,
         name: '种公商标耳牌'
     }])
 
