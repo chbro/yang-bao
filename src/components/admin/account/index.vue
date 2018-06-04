@@ -195,7 +195,7 @@ export default {
 
         async fetchData () {
             this.load = true
-            let res = await getFactoryUsers(this.user.userFactory)
+            let res = await getFactoryUsers(this.user.userFactory, {page: this.page - 1})
             this.tableData = res.data.List
             this.total = res.data.size
             this.load = false

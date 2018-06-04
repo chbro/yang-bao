@@ -252,7 +252,7 @@ export const deleteRole = roleid => fetch('/role/' + roleid, null, 'DELETE')
 
 export const updateRole = (roleid, data) => fetch('/role/' + roleid, data, 'PUT')
 
-export const getFactoryUsers = facid => fetch('/user/' + facid)
+export const getFactoryUsers = (facid, data) => fetch('/user/' + facid, data)
 
 export const updateUserRole = (uid, roleid) => fetch('/user/role/' + uid, {role: roleid}, 'PATCH')
 

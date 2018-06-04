@@ -95,7 +95,7 @@
                 width="150"
                 align='center'
                 v-if="hasUnpass"
-                prop="unpassReason"
+                prop="upassReason"
                 label="审核拒绝原因">
             </el-table-column>
             <el-table-column
@@ -251,7 +251,7 @@ export default {
 
     watch: {
         checkModule (newM) {
-            this.isProName = ['prevention', 'nutrition/stage'].includes(newM)
+            this.isProName = ['prevention', 'nutrition/stage', 'welfare'].includes(newM)
         },
 
         getData (newV) {
@@ -260,6 +260,7 @@ export default {
     },
 
     mounted () {
+        this.isProName = ['prevention', 'nutrition/stage', 'welfare'].includes(this.modpath)
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
