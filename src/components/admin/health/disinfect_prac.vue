@@ -34,12 +34,12 @@ export default {
             ],
             models: {
                 eartagFile: null,
-                disinfectName: null,
-                dose: null,
-                place: null,
-                disinfectTime: null,
-                disinfectWay: null,
-                remark: null
+                disinfectName: "",
+                dose: "",
+                place: "",
+                disinfectTime: "",
+                disinfectWay: "",
+                remark: ""
             }
         }
     }
