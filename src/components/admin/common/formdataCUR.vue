@@ -104,7 +104,10 @@ export default {
                     Object.keys(this.models).forEach(v => {
                         obj[v] = data[v]
                     })
-                    this.canModify = data.ispassCheck !== '1'
+                    // 0审核未通过 1审核通过 2未审核
+                    if (data.ispassCheck && data.ispassCheck === '1') {
+                        this.canModify = false
+                    }
                     this.$emit('update:models', obj)
                 }
             }).catch(_ => {

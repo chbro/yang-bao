@@ -80,17 +80,15 @@ export default {
 </script>
 
 <style lang="stylus">
-// .form-summary
-//     height: 730px !important
 .breed_prac
     position relative
     .form-info 
         position: absolute;
-        width: 47%;
-        right: 3%;
+        width: 40%;
+        right: 8%;
         bottom: 268px;
     .form-summary
-        height: 485px;
+        height: 730px;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
