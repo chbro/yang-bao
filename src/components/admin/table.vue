@@ -251,7 +251,7 @@ export default {
 
     watch: {
         checkModule (newM) {
-            this.isProName = ['prevention', 'nutrition/stage', 'welfare'].includes(newM)
+            this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(newM)
         },
 
         getData (newV) {
@@ -260,7 +260,7 @@ export default {
     },
 
     mounted () {
-        this.isProName = ['prevention', 'nutrition/stage', 'welfare'].includes(this.modpath)
+        this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(this.modpath)
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
