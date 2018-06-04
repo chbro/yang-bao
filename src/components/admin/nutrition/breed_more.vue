@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="breed_more">
         <el-table
             ref="table"
             tooltip-effect="dark"
@@ -160,16 +160,17 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.table-title
-    text-align center
-    margin-top 50px
-.admin-table-2 
-    margin-top 20px
-.el-button
-    display: block;
-    margin: 20px auto;    
-.el-table
-    .cell
-        cursor pointer !important   
+<style lang="stylus">
+.breed_more
+    .table-title
+        text-align center
+        margin-top 50px
+    .admin-table-2 
+        margin-top 20px
+    .el-button
+        display: block;
+        margin: 20px auto;    
+    .el-table
+        .cell
+            cursor pointer
 </style>

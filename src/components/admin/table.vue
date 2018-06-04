@@ -245,7 +245,7 @@ export default {
 
     watch: {
         checkModule (newM) {
-            this.isProName = ['prevention', 'nutrition/stage'].includes(newM)
+            this.isProName = ['prevention', 'nutrition/stage', 'nutrition/breed'].includes(newM)
         },
 
         getData (newV) {
