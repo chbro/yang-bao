@@ -94,6 +94,7 @@
             <el-table-column
                 width="150"
                 align='center'
+                v-if="hasUnpass"
                 prop="unpassReason"
                 label="审核拒绝原因">
             </el-table-column>
@@ -240,6 +241,11 @@ export default {
         hasCommonHeader: {
             type: Boolean,
             default: false
+        },
+        // 是否有审核拒绝原因
+        hasUnpass: {
+            type: Boolean,
+            default: true
         }
     },
 

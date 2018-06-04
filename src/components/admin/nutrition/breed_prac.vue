@@ -80,8 +80,8 @@ export default {
 </script>
 
 <style lang="stylus">
-.form-summary
-    height: 730px !important
+// .form-summary
+//     height: 730px !important
 .breed_prac
     position relative
     .form-info 

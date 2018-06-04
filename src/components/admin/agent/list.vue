@@ -3,6 +3,7 @@
         <admin-table
             modpath="agent"
             :has-sup="false"
+            :has-unpass="false"
             :is-agent="true"
             :no-prac="true"
             :hide-filter="true"

@@ -48,6 +48,7 @@ export default {
                 {prop: 'operatorName', label: '操作人员'},
                 {prop: 'professor', label: '技术审核'},
                 {prop: 'supervisor', label: '监督执行'},
+                {prop: 'unpassReason', label: '审核拒绝原因'},
                 {prop: 'remark', label: '备注'}
             ]
         }

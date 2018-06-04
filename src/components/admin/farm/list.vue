@@ -2,6 +2,7 @@
     <div>
         <admin-table
             modpath="farm"
+            :has-unpass="false"
             :has-sup="false"
             :no-prac="true"
             :hide-filter="true"

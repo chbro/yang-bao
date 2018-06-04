@@ -2,6 +2,7 @@
     <div>
         <admin-table
             modpath="genealogic"
+            :has-unpass="false"
             :has-sup="false"
             :getData="getGeneas"
             :deleteData="deleteGeneaRec"
