@@ -46,9 +46,9 @@ export default {
                 {label: '执行断奶前母羊营养标准(断奶前一周)', prop: 'nutritionBeforeCutBreastFeeding'},
                 {label: '执行羔羊断奶期营养标准', prop: 'nutritionCutBreastFeeding'},          
                 {prop: 'operatorName', label: '操作人员'},
-                {prop: 'professor', label: '技术审核'},
-                {prop: 'supervisor', label: '监督执行'},
-                {prop: 'unpassReason', label: '审核拒绝原因'},
+                {prop: 'professorName', label: '技术审核'},
+                {prop: 'supervisorName', label: '监督执行'},
+                {prop: 'upassReason', label: '审核拒绝原因'},
                 {prop: 'remark', label: '备注'}
             ]
         }

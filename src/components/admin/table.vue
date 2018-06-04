@@ -95,7 +95,7 @@
                 width="150"
                 align='center'
                 v-if="hasUnpass"
-                prop="upassReason"
+                prop="isBreed ? 'professorNotPassReason' : 'upassReason'"
                 label="审核拒绝原因">
             </el-table-column>
             <el-table-column
@@ -261,6 +261,7 @@ export default {
 
     mounted () {
         this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(this.modpath)
+        this.isBreed = this.modpath === 'nutrition/breed'
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
@@ -272,6 +273,7 @@ export default {
 
     data () {
         return {
+            isBreed: false, // 是否配种产子页面
             isSpv: false, // 是否监督员登录
             isProName: false,
             load: true, // 是否显示loading动画
@@ -366,7 +368,7 @@ export default {
                             this.tableData[idx].professor = this.user.userRealname
                             this.tableData[idx].professorName = this.user.userRealname
                             if (isPass === 0) {
-                                this.tableData[idx].unpassReason = unpassReason
+                                this.tableData[idx].upassReason = unpassReason
                             }
                         }
                     }, _ => {
