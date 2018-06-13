@@ -27,6 +27,7 @@
                 align="right">
             </el-date-picker>
             <el-button @click="fetchData()" size="small" type="primary">查询</el-button>
+            <el-button @click="export2xls()" size="small" type="primary" icon="el-icon-download">导出表格</el-button>
         </div>
         <el-table
             v-loading="load"
@@ -139,6 +140,7 @@
 </template>
 
 <script>
+import XLSX from 'xlsx'
 import { isReqSuccessful } from '@/util/jskit'
 import { getUserById, getReleaseByName } from '@/util/getdata'
 import {
@@ -294,6 +296,78 @@ export default {
     },
 
     methods: {
+        // 导出表格数据为 xls 表单并自动下载
+        export2xls () {
+            if (!this.tableData.length) {
+                this.$message.warning('表格数据为空')
+            }
+
+            let s2ab = s => {
+                if (typeof ArrayBuffer !== 'undefined') {
+                    var buf = new ArrayBuffer(s.length)
+                    var view = new Uint8Array(buf)
+                    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
+                    return buf
+                } else {
+                    var buf = new Array(s.length)
+                    for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF
+                    return buf
+                }
+            }
+
+            let eBody = this.tableData.slice(0)
+            eBody.forEach(v => {
+                Object.keys(v).forEach(vk => {
+                    let inTable = false
+                    // 有的表头含有 children ，要特殊处理
+                    this.headers.forEach(vh => {
+                        if (vh.children) {
+                            inTable = vh.children.find(v => v.prop === vk)
+                        }
+                    })
+
+                    if (!inTable) {
+                        inTable = this.headers.find(v => v.prop === vk)
+                    }
+                    if (inTable && inTable.label) {
+                        v[inTable.label] = v[vk]
+                    }
+
+                    // this.header 不含有一些公共表头如养殖场 factoryName 等，在这里手动加入
+                    if (!['ispassCheck', 'factoryName', 'gmtCreate', 'remark', 'ispassSup', 'operatorName', 'professorName', 'upassReason', 'supervisorName'].includes(vk)) {
+                        delete v[vk]
+                    } else {
+                        let map = {
+                            ispassCheck: '审核状态',
+                            factoryName: '养殖场',
+                            gmtCreate: '提交时间',
+                            remark: '备注',
+                            ispassSup: '监督执行状态',
+                            operatorName: '操作人员',
+                            professorName: '技术审核',
+                            upassReason: '审核拒绝原因',
+                            supervisorName: '监督执行'
+                        }
+                        v[map[vk]] = v[vk]
+                        delete v[vk]
+                    }
+                })
+            })
+            // console.log(eBody)
+            const wb = { SheetNames: ['Sheet1'], Sheets: {}, Props: {} }
+            const wopts = { bookType: 'biff8', bookSST: false, type: 'binary' }
+            wb.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(eBody)
+
+            let tmpa = document.createElement("a");
+            let obj = new Blob([s2ab(XLSX.write(wb, wopts))], { type: 'application/octet-stream' })
+            tmpa.download = '下载.xls'
+            tmpa.href = URL.createObjectURL(obj) //绑定a标签
+            tmpa.click() //模拟点击实现下载
+            setTimeout(function () { //延时释放
+                URL.revokeObjectURL(obj) //用URL.revokeObjectURL()来释放这个object URL
+            }, 100)
+        },
+
         async Spv (isPass, idx) {
             try {
                 let result
