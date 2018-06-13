@@ -95,7 +95,7 @@
                 width="150"
                 align='center'
                 v-if="hasUnpass"
-                prop="isBreed ? 'professorNotPassReason' : 'upassReason'"
+                prop="upassReason"
                 label="审核拒绝原因">
             </el-table-column>
             <el-table-column
@@ -261,7 +261,6 @@ export default {
 
     mounted () {
         this.isProName = ['prevention', 'nutrition/stage', 'welfare', 'nutrition/breed'].includes(this.modpath)
-        this.isBreed = this.modpath === 'nutrition/breed'
         let id = this.$route.params.id
         getUserById(id).then(res => {
             if (isReqSuccessful(res)) {
@@ -273,7 +272,6 @@ export default {
 
     data () {
         return {
-            isBreed: false, // 是否配种产子页面
             isSpv: false, // 是否监督员登录
             isProName: false,
             load: true, // 是否显示loading动画
@@ -347,8 +345,8 @@ export default {
                         if (isReqSuccessful(res)) {
                             this.$message.success('监督执行成功')
                             this.tableData[idx].ispassSup = isPass ? '已执行' : '未执行'
-                            this.tableData[idx].supervisor = this.user.userRealname
-                            this.tableData[idx].supervisorName = this.user.userRealname
+                            this.$set(this.tableData[idx], 'supervisor', this.user.userRealname)
+                            this.$set(this.tableData[idx], 'supervisorName', this.user.userRealname)
                         }
                     }, _ => {
                         this.$message.error('监督执行失败')
@@ -368,7 +366,7 @@ export default {
                             this.tableData[idx].professor = this.user.userRealname
                             this.tableData[idx].professorName = this.user.userRealname
                             if (isPass === 0) {
-                                this.tableData[idx].upassReason = unpassReason
+                                this.$set(this.tableData[idx], 'upassReason', unpassReason)
                             }
                         }
                     }, _ => {
@@ -417,6 +415,14 @@ export default {
                 this.getData(pathid, param).then(res => {
                     if (isReqSuccessful(res)) {
                         let data = res.data
+
+                        // 是否配种产子页面
+                        if (this.checkModule === 'nutrition/breed') {
+                            data.List.forEach(v => {
+                                v.upassReason = v.professorNotPassReason
+                                delete v.professorNotPassReason
+                            })
+                        }
 
                         if (this.isAgent) {
                             data.List.forEach(v => {

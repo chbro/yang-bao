@@ -180,11 +180,13 @@ export const postUser = data => fetch('/user', data, 'POST')
 
 export const getUserById = id => fetch('/user/detail/' + id)
 
+export const getAdminUser = id => fetch('/user/find/' + id)
+
 export const getUserByName = id => fetch('/user/id/' + id)
 
 export const getUsers = (facid, data) => fetch('/user/' + facid, data)
 
-export const updateUser = (id, data) => fetch('/user/' + id, data)
+export const updateUser = (id, data) => fetch('/user/' + id, data, 'PUT')
 
 export const deleteUser = id => fetch('/user/' + id, null, 'DELETE')
 

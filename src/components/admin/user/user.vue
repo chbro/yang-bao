@@ -16,22 +16,10 @@
 
 <script>
 import BasicInfo from '@/components/admin/basic_info'
-import { getUserById, updateUser } from '@/util/getdata'
+import { getAdminUser, updateUser } from '@/util/getdata'
 import { isReqSuccessful } from '@/util/jskit'
 
 export default {
-    props: {
-        user: {
-            type: Object
-        }
-    },
-
-    watch: {
-        user (newV) {
-            this.models = newV
-        }
-    },
-
     components: {
         BasicInfo
     },
@@ -104,14 +92,14 @@ export default {
         }
     },
 
-    // mounted () {
-    //     this.id = this.$route.params.id
-    //     getUserById(this.id).then(res => {
-    //         if (isReqSuccessful(res)) {
-    //             this.models = res.data.model
-    //         }
-    //     })
-    // },
+    mounted () {
+        this.id = this.$route.params.id
+        getAdminUser(this.id).then(res => {
+            if (isReqSuccessful(res)) {
+                this.models = res.data.model
+            }
+        })
+    },
 
     methods: {
         submit () {
