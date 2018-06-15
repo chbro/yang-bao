@@ -305,3 +305,5 @@ export const diaSearchByVaccine = data => fetch('/searchfile/searchByVaccine', d
 export const diaSearchBySymptom = data => fetch('/searchfile/searchBySymptom', data, 'POST')
 
 export const diaSearchByUploader = data => fetch('/searchfile/searchByUploader', data, 'POST')
+
+export const deleteDiagnose = id => fetch('/pic/delete/' + id, null, 'DELETE')

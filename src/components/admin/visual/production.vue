@@ -22,6 +22,9 @@
             </el-date-picker>
             <el-input v-else-if="condition !== 'all'" v-model="keyWords" placeholder="请输入查询关键字" class="search-input"></el-input>
             <el-button type="primary" @click="getProList()">搜索</el-button>
+
+            <el-button @click="getProList(0)">图片</el-button>
+            <el-button @click="getProList(1)">视频</el-button>
         </div>
         <div class="production-view">
             <div class="production-content" v-for="(item, i) in proList" :key="i">
@@ -50,6 +53,9 @@
                                 <li><el-tag>上传日期</el-tag> {{ item.udate }}</li>
                             </ul>
                         </div>
+                        <div slot="footer">
+                            <el-button size="small" type="primary" @click="deleteItem(item, i)">删除</el-button>
+                        </div>
                     </el-dialog>
                 </el-card>
             </div>
@@ -66,7 +72,7 @@
 </template>
 
 <script>
-import { diaSearchAll, diaSearchByExpert, diaSearchByDate, diaSearchByBrand, diaSearchByVaccine, diaSearchBySymptom, diaSearchByUploader } from '@/util/getdata'
+import { diaSearchAll, diaSearchByExpert, diaSearchByDate, diaSearchByBrand, diaSearchByVaccine, diaSearchBySymptom, diaSearchByUploader, deleteDiagnose } from '@/util/getdata'
 import { baseUrl } from '@/util/fetch'
 import { isReqSuccessful } from '@/util/jskit'
 
@@ -108,17 +114,32 @@ export default {
     },
 
     methods: {
+        deleteItem (item, index) {
+            deleteDiagnose(item.id).then(res => {
+                if (isReqSuccessful(res)) {
+                    this.$message.success('删除成功')
+                    this.$set(this.productionShow, index, true)
+                    this.getProList()
+                }
+            })
+        },
+
         showPop (i) {
             this.$set(this.productionShow, i, true);
         },
         change () {
             this.pageNumb = 1
         },
-        getProList () {
+
+        // 0 只获取图片
+        // 1 只获取视频
+        // 2 获取全部（默认值）
+        getProList (isImg = 2) {
             if(this.condition === 'all') { // 查询所有数据
                 diaSearchAll({
                     pageNumb: this.pageNumb - 1,
-                    limit: this.limit
+                    limit: this.limit,
+                    filetype: isImg
                 }).then(res => {
                     if(isReqSuccessful(res)) {
                         if(!res.data.List.length) {
@@ -129,19 +150,21 @@ export default {
                         }
                         let arr = []
                         res.data.List.forEach((item) => {
-                            arr.push({
-                                symptom: item.symptom,
-                                solution: item.solution,
-                                brand: item.brand,
-                                vaccine: item.vaccine,
-                                sex: item.sex,
-                                expert: item.expert,
-                                udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`,
-                                filetype: item.filetype
-                            })
+                            item.url = `${baseUrl}/pic/${item.filename}`
                         })
-                        this.proList = arr
+                        //     arr.push({
+                        //         symptom: item.symptom,
+                        //         solution: item.solution,
+                        //         brand: item.brand,
+                        //         vaccine: item.vaccine,
+                        //         sex: item.sex,
+                        //         expert: item.expert,
+                        //         udate: item.udate,
+                        //         url: `${baseUrl}/pic/${item.filename}`,
+                        //         filetype: item.filetype
+                        //     })
+                        // })
+                        this.proList = res.data.List
                         this.total = res.data.size
                         this.productionShow = new Array(arr.length).fill(false);
                     }
@@ -153,7 +176,8 @@ export default {
                     sdate: this.time[0] || null,
                     edate: this.time[1] || null,
                     pageNumb: this.pageNumb - 1,
-                    limit: this.limit
+                    limit: this.limit,
+                    filetype: isImg
                 }).then(res => {
                     if(isReqSuccessful(res)) {
                         if(!res.data.List.length) {
@@ -164,19 +188,21 @@ export default {
                         }
                         let arr = []
                         res.data.List.forEach((item) => {
-                            arr.push({
-                                symptom: item.symptom,
-                                solution: item.solution,
-                                brand: item.brand,
-                                vaccine: item.vaccine,
-                                sex: item.sex,
-                                expert: item.expert,
-                                udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`,
-                                filetype: item.filetype
-                            })
+                            item.url = `${baseUrl}/pic/${item.filename}`
                         })
-                        this.proList = arr
+                        //     arr.push({
+                        //         symptom: item.symptom,
+                        //         solution: item.solution,
+                        //         brand: item.brand,
+                        //         vaccine: item.vaccine,
+                        //         sex: item.sex,
+                        //         expert: item.expert,
+                        //         udate: item.udate,
+                        //         url: `${baseUrl}/pic/${item.filename}`,
+                        //         filetype: item.filetype
+                        //     })
+                        // })
+                        this.proList = res.data.List
                         this.total = res.data.size
                         this.productionShow = new Array(arr.length).fill(false);
                     }
@@ -187,7 +213,8 @@ export default {
                 this.diaSearch[this.condition]({
                     [this.condition]: this.keyWords,
                     pageNumb: this.pageNumb - 1,
-                    limit: this.limit
+                    limit: this.limit,
+                    filetype: isImg
                 }).then(res => {
                     if(isReqSuccessful(res)) {
                         if(!res.data.List.length) {
@@ -198,19 +225,21 @@ export default {
                         }
                         let arr = []
                         res.data.List.forEach((item) => {
-                            arr.push({
-                                symptom: item.symptom,
-                                solution: item.solution,
-                                brand: item.brand,
-                                vaccine: item.vaccine,
-                                sex: item.sex,
-                                expert: item.expert,
-                                udate: item.udate,
-                                url: `${baseUrl}/pic/${item.filename}`,
-                                filetype: item.filetype
-                            })
+                            item.url = `${baseUrl}/pic/${item.filename}`
                         })
-                        this.proList = arr
+                        //     arr.push({
+                        //         symptom: item.symptom,
+                        //         solution: item.solution,
+                        //         brand: item.brand,
+                        //         vaccine: item.vaccine,
+                        //         sex: item.sex,
+                        //         expert: item.expert,
+                        //         udate: item.udate,
+                        //         url: `${baseUrl}/pic/${item.filename}`,
+                        //         filetype: item.filetype
+                        //     })
+                        // })
+                        this.proList = res.data.List
                         this.total = res.data.size
                     }
                 }).catch(_ => {
